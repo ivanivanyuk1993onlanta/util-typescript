@@ -9,7 +9,7 @@ $color-warning: orange;
 $color-white: #fff;
 
 @mixin color-focused($color) {
-  background-color: lighten($color, 5%);
+  background-color: lighten($color, 10%);
 }
 
 @mixin bg-focused() {
