@@ -15,6 +15,20 @@
 
   &_item {
     background-color: inherit;
+
+    &-image {
+      display: contents;
+      text-align: center;
+
+      & > img {
+        box-shadow: 0 $shadow-offset $shadow-size 0 $color-black;
+        max-width: 100%;
+      }
+    }
+
+    &-image + &-text {
+      margin-top: $margin;
+    }
   }
 
   &_item > * > & > &_item > * > & {

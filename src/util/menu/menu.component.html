@@ -9,13 +9,32 @@
   >
     <a
       class="a"
-      href="https://www.google.com/"
+      routerLink="/home"
+      routerLinkActive="active"
     >
       <app-block
         class="b--ns"
-        *ngIf="data.text"
       >
-        {{ data.text }}
+        <span
+          *ngIf="data.imgUrl"
+          class="menu_item-image"
+        >
+          <img
+            src="{{ data.imgUrl }}"
+          >
+        </span>
+
+        <span class="menu_item-text">
+          <i
+            *ngIf="data.iClass"
+            class="{{ data.iClass }}"
+          ></i>
+          <ng-container
+            *ngIf="data.text"
+          >
+            {{ data.text }}
+          </ng-container>
+        </span>
       </app-block>
     </a>
 
