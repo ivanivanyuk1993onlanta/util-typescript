@@ -1,6 +1,7 @@
 import {Component, ElementRef, Input} from '@angular/core';
 import {MenuData} from './menuData';
 import {HideMenuService} from './hide-menu.service';
+import {TouchMoveWatcherService} from '../touch-move-watcher/touch-move-watcher.service';
 
 @Component({
   selector: 'app-menu',
@@ -12,18 +13,21 @@ export class MenuComponent {
 
   constructor(
     private elementRef: ElementRef,
-    private hideMenuService: HideMenuService
+    private hideMenuService: HideMenuService,
+    private touchMoveWatcherService: TouchMoveWatcherService
   ) {
   }
 
   onTouch(event) {
     if (
+      !TouchMoveWatcherService.getIsMoving()
+      &&
       event.currentTarget.querySelector('.menu')
       &&
       !event.currentTarget.classList.contains('menu_item--touched')
     ) {
       event.currentTarget.classList.add('menu_item--touched');
-      return false;
+      event.preventDefault();
     }
   }
 }
