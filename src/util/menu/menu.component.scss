@@ -1,20 +1,16 @@
+@import "../block/block";
 @import "../common-style/variables";
 
-:host {
-  .menu_item > & {
-    background-color: inherit;
-  }
-  :not(.menu_item) > & {
-    display: contents;
-  }
-}
-
 .menu {
-  background-color: inherit;
+  cursor: default;
   justify-content: center;
 
   &_item {
-    background-color: inherit;
+    @include block-interactive();
+
+    &--touched {
+      @include block-focus();
+    }
 
     &-image {
       display: contents;
@@ -31,11 +27,6 @@
     }
   }
 
-  &_item > * > & > &_item > * > & {
-    margin: 0;
-    width: 100%;
-  }
-
   &_item > * > & {
     display: none;
     left: 0;
@@ -43,6 +34,11 @@
     position: absolute;
     width: calc(100% - #{2 * $margin});
     z-index: 1;
+  }
+
+  &_item > * > & > &_item > * > & {
+    margin: 0;
+    width: 100%;
   }
 
   &_item:hover > * > &,

@@ -1,20 +1,12 @@
-$color-black: #000;
-$color-bottom: lightslategray;
-$color-danger: brown;
-$color-invisible: #eff;
-$color-main: teal;
-$color-success: #28a745;
-$color-top: #87ceeb;
-$color-warning: orange;
-$color-white: #fff;
+@import "./variables/colors";
 
 $font-size: 18pt;
 
 $margin: 1rem;
 
 $shadow-size: .2rem;
-$shadow-size-2: $shadow-size*2;
-$shadow-size-4: $shadow-size*4;
+$shadow-size-bigger-1: $shadow-size*2;
+$shadow-size-bigger-2: $shadow-size*6;
 $shadow-offset: $shadow-size/10;
-$shadow-offset-2: $shadow-size-2/10;
-$shadow-offset-4: $shadow-size-4/10;
+$shadow-offset-bigger-1: $shadow-size-bigger-1/10;
+$shadow-offset-bigger-2: $shadow-size-bigger-2/10;

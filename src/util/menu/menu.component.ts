@@ -9,6 +9,7 @@ import {TouchMoveWatcherService} from '../touch-move-watcher/touch-move-watcher.
   styleUrls: ['./menu.component.scss']
 })
 export class MenuComponent {
+  @Input() backgroundColorClass: string;
   @Input() data: MenuData;
 
   constructor(

@@ -5,12 +5,15 @@
 $fa-font-path: "~font-awesome/fonts";
 @import "~font-awesome/scss/font-awesome";
 
+* {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
 }
 
 html {
-  box-sizing: border-box;
   background: $color-invisible;
   color: $color-white;
   font-family: 'Roboto Mono', monospace;

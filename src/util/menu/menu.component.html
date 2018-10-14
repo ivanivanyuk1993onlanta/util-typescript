@@ -1,11 +1,11 @@
 <app-block
-  class="b--c menu"
   *ngIf="data.items"
+  class="b--c menu {{ backgroundColorClass }}"
 >
   <app-block
     (touchend)="onTouch($event)"
     *ngFor="let data of data.items"
-    class="menu_item"
+    class="menu_item {{ backgroundColorClass }}"
   >
     <a
       class="a"
@@ -39,6 +39,7 @@
     </a>
 
     <app-menu
+      [backgroundColorClass]="backgroundColorClass"
       [data]="data"
     ></app-menu>
   </app-block>

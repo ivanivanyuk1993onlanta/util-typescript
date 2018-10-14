@@ -1,14 +1,8 @@
 @import "../common-style/variables";
+@import "./block";
 
 :host {
-  border-radius: 1rem;
-  box-shadow: 0 $shadow-offset $shadow-size 0 $color-black;
-  display: inline-flex;
-  flex-direction: column;
-  flex-wrap: wrap;
-  margin: $margin;
-  max-width: 100%;
-  width: fit-content;
+  @include block();
 
   // b stands for block
   // c stands for columns
@@ -18,11 +12,11 @@
 
   // i stands for interactive
   &.b--i {
-    box-shadow: 0 $shadow-offset-2 $shadow-size-2 0 $color-black;
-    cursor: pointer;
+    @include block-interactive();
 
-    &:hover {
-      box-shadow: 0 $shadow-offset-4 $shadow-size-4 0 $color-black;
+    // f stands for focused
+    &.b--f {
+      @include block-focus();
     }
   }
 

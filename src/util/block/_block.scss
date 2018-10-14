@@ -1,0 +1,27 @@
+@import "../common-style/variables";
+
+@mixin block() {
+  border-radius: 1rem;
+  box-shadow: 0 $shadow-offset $shadow-size 0 $color-black;
+  display: inline-flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  margin: $margin;
+  max-width: 100%;
+  width: fit-content;
+}
+
+@mixin block-focus() {
+  box-shadow: 0 $shadow-offset-bigger-2 $shadow-size-bigger-2 0 $color-black;
+
+  @include bg-focused();
+}
+
+@mixin block-interactive() {
+  box-shadow: 0 $shadow-offset-bigger-1 $shadow-size-bigger-1 0 $color-black;
+  cursor: pointer;
+
+  &:hover {
+    @include block-focus();
+  }
+}
