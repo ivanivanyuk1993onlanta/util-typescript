@@ -1,20 +1,111 @@
-<!--The content below is only a placeholder and can be replaced.-->
-<div style="text-align:center">
-  <h1>
-    Welcome to {{ title }}!
-  </h1>
-  <img width="300" alt="Angular Logo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg==">
-</div>
-<h2>Here are some links to help you start: </h2>
-<ul>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://angular.io/tutorial">Tour of Heroes</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://github.com/angular/angular-cli/wiki">CLI Documentation</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://blog.angular.io/">Angular blog</a></h2>
-  </li>
-</ul>
+<app-menu
+  [data]="menuData"
+  class="bg-main"
+></app-menu>
 
+<app-block class="bg-main">
+  <app-block class="bg-top b--c">
+    <app-block class="b--ns">
+      Header
+    </app-block>
+    <app-block class="bg-success b--i">
+      <app-block class="b--ns">
+        <span>
+          <i class="fa fa-save"></i>
+          Success
+        </span>
+      </app-block>
+    </app-block>
+    <app-block class="bg-warning b--i">
+      <app-block class="b--ns">
+        Warning
+      </app-block>
+    </app-block>
+    <app-block class="bg-danger b--i">
+      <app-block class="b--ns">
+        Danger
+      </app-block>
+    </app-block>
+  </app-block>
+
+  <app-block class="b--ns b--r">
+    Mini Metro — компьютерная игра-головоломка в жанре симулятора метрополитена, разработанная командой независимых разработчиков Dinosaur Polo Club. Mini Metro предлагает построить и эффективно развивать сеть метрополитена растущего города, возрастание пассажиропотока которого постепенно приводит к переполнению станций. Станции представлены узлами из простых геометрических фигур, а игрок может соединять их и создавать ветки метро, рисуя на карте новые линии.
+
+    Первый прототип Mini Metro создан в апреле 2013 года в рамках соревнования по разработке компьютерных игр Ludum Dare. В дальнейшем разработчики продолжили работу над проектом, в сентябре 2013 года выпустив свободно распространяемую версию для веб-браузеров. 11 августа 2014 года Mini Metro вышла в раннем доступе для персональных компьютеров. Официальный выход Mini Metro для персональных компьютеров состоялся 6 ноября 2015 года.
+
+    Mini Metro получила преимущественно положительные отзывы игровой прессы, в которых её хвалили за интуитивно понятный интерфейс, простоту игрового процесса, изящный минималистский дизайн. Критики хорошо отнеслись к интерактивному звуковому сопровождению, предоставленной симуляции и игровому балансу. Mini Metro удостоилась ряда наград игровой индустрии.
+  </app-block>
+
+  <app-block class="bg-bottom b--c">
+    <app-block class="b--ns">
+      Footer
+    </app-block>
+    <app-block class="bg-success b--i">
+      <app-block class="b--ns">
+        Success
+      </app-block>
+    </app-block>
+    <app-block class="bg-warning b--i">
+      <app-block class="b--ns">
+        Warning
+      </app-block>
+    </app-block>
+    <app-block class="bg-danger b--i">
+      <app-block class="b--ns">
+        Danger
+      </app-block>
+    </app-block>
+  </app-block>
+</app-block>
+
+<app-block class="bg-main">
+  <app-block class="bg-top b--c">
+    <app-block class="b--ns">
+      Header
+    </app-block>
+    <app-block class="bg-success b--i">
+      <app-block class="b--ns">
+        Success
+      </app-block>
+    </app-block>
+    <app-block class="bg-warning b--i">
+      <app-block class="b--ns">
+        Warning
+      </app-block>
+    </app-block>
+    <app-block class="bg-danger b--i">
+      <app-block class="b--ns">
+        Danger
+      </app-block>
+    </app-block>
+  </app-block>
+
+  <app-block class="b--ns b--r">
+    Mini Metro — компьютерная игра-головоломка в жанре симулятора метрополитена, разработанная командой независимых разработчиков Dinosaur Polo Club. Mini Metro предлагает построить и эффективно развивать сеть метрополитена растущего города, возрастание пассажиропотока которого постепенно приводит к переполнению станций. Станции представлены узлами из простых геометрических фигур, а игрок может соединять их и создавать ветки метро, рисуя на карте новые линии.
+
+    Первый прототип Mini Metro создан в апреле 2013 года в рамках соревнования по разработке компьютерных игр Ludum Dare. В дальнейшем разработчики продолжили работу над проектом, в сентябре 2013 года выпустив свободно распространяемую версию для веб-браузеров. 11 августа 2014 года Mini Metro вышла в раннем доступе для персональных компьютеров. Официальный выход Mini Metro для персональных компьютеров состоялся 6 ноября 2015 года.
+
+    Mini Metro получила преимущественно положительные отзывы игровой прессы, в которых её хвалили за интуитивно понятный интерфейс, простоту игрового процесса, изящный минималистский дизайн. Критики хорошо отнеслись к интерактивному звуковому сопровождению, предоставленной симуляции и игровому балансу. Mini Metro удостоилась ряда наград игровой индустрии.
+  </app-block>
+
+  <app-block class="bg-bottom b--c">
+    <app-block class="b--ns">
+      Footer
+    </app-block>
+    <app-block class="bg-success b--i">
+      <app-block class="b--ns">
+        Success
+      </app-block>
+    </app-block>
+    <app-block class="bg-warning b--i">
+      <app-block class="b--ns">
+        Warning
+      </app-block>
+    </app-block>
+    <app-block class="bg-danger b--i">
+      <app-block class="b--ns">
+        Danger
+      </app-block>
+    </app-block>
+  </app-block>
+</app-block>

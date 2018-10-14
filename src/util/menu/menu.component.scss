@@ -1,0 +1,38 @@
+@import "../common-style/variables";
+
+:host {
+  .menu_item > & {
+    background-color: inherit;
+  }
+  :not(.menu_item) > & {
+    display: contents;
+  }
+}
+
+.menu {
+  background-color: inherit;
+  justify-content: center;
+
+  &_item {
+    background-color: inherit;
+  }
+
+  &_item > * > & > &_item > * > & {
+    margin: 0;
+    width: 100%;
+  }
+
+  &_item > * > & {
+    display: none;
+    left: 0;
+    margin-top: 0;
+    position: absolute;
+    width: calc(100% - #{2 * $margin});
+    z-index: 1;
+  }
+
+  &_item:hover > * > &,
+  &_item--touched > * > & {
+    display: inline-flex;
+  }
+}

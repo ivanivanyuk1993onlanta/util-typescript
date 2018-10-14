@@ -1,0 +1,50 @@
+@import "variables";
+
+@import url('https://fonts.googleapis.com/css?family=Roboto+Mono');
+
+$fa-font-path: "~font-awesome/fonts";
+@import "~font-awesome/scss/font-awesome";
+
+body {
+  margin: 0;
+}
+
+html {
+  box-sizing: border-box;
+  background: $color-invisible;
+  color: $color-white;
+  font-family: 'Roboto Mono', monospace;
+  font-size: $font-size;
+  text-shadow: 0 $shadow-offset $shadow-size $color-black;
+}
+
+.a {
+  color: inherit;
+  text-decoration: inherit;
+}
+
+.bg- {
+  &bottom {
+    background: $color-bottom;
+  }
+
+  &danger {
+    background: $color-danger;
+  }
+
+  &main {
+    background: $color-main;
+  }
+
+  &success {
+    background: $color-success;
+  }
+
+  &top {
+    background: $color-top;
+  }
+
+  &warning {
+    background: $color-warning;
+  }
+}

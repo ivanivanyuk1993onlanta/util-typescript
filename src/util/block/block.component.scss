@@ -1,0 +1,41 @@
+@import "../common-style/variables";
+
+:host {
+  border-radius: 1rem;
+  box-shadow: 0 $shadow-offset $shadow-size 0 $color-black;
+  display: inline-flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  margin: $margin;
+  width: fit-content;
+
+  // b stands for block
+  // c stands for columns
+  &.b--c {
+    flex-direction: row;
+  }
+
+  // i stands for interactive
+  &.b--i {
+    box-shadow: 0 $shadow-offset-2 $shadow-size-2 0 $color-black;
+    cursor: pointer;
+
+    &:hover {
+      box-shadow: 0 $shadow-offset-4 $shadow-size-4 0 $color-black;
+    }
+  }
+
+  // ns stands for no-shadow
+  &.b--ns {
+    box-shadow: none;
+  }
+
+  // r stands for readable
+  &.b--r {
+    max-width: 36rem;
+  }
+
+  :host-context > & {
+    height: fit-content;
+  }
+}

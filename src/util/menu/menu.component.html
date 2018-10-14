@@ -1,0 +1,26 @@
+<app-block
+  class="b--c menu"
+  *ngIf="data.items"
+>
+  <app-block
+    (touchend)="onTouch($event)"
+    *ngFor="let data of data.items"
+    class="menu_item"
+  >
+    <a
+      class="a"
+      href="https://www.google.com/"
+    >
+      <app-block
+        class="b--ns"
+        *ngIf="data.text"
+      >
+        {{ data.text }}
+      </app-block>
+    </a>
+
+    <app-menu
+      [data]="data"
+    ></app-menu>
+  </app-block>
+</app-block>
