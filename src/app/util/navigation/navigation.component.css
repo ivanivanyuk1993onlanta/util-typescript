@@ -1,0 +1,8 @@
+.sidenav-container {
+  height: 100%;
+}
+
+.mat-toolbar.mat-primary {
+  position: sticky;
+  top: 0;
+}
