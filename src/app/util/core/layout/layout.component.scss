@@ -1,0 +1,13 @@
+.layout {
+  display: flex;
+  flex-flow: column;
+  height: 100%;
+
+  &_top {
+    flex: 0 1 auto;
+  }
+
+  &_page {
+    flex: 1 1 auto;
+  }
+}

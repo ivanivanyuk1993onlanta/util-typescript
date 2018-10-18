@@ -1,0 +1,55 @@
+<div
+  class="layout"
+>
+  <mat-toolbar
+    class="layout_top"
+    color="primary"
+  >
+    <button
+      (click)="drawer.toggle()"
+      aria-label="Toggle sidenav"
+      mat-icon-button
+      type="button"
+    >
+      <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+    </button>
+    <span>user-interface-source</span>
+  </mat-toolbar>
+
+  <mat-sidenav-container
+    autosize
+    class="layout_page"
+  >
+    <mat-sidenav
+      #drawer
+      [mode]="'push'"
+      role="navigation"
+    >
+      <mat-nav-list>
+        <a mat-list-item href="javascript:void(0)">Link 1</a>
+        <a mat-list-item href="javascript:void(0)">Link 2</a>
+        <a mat-list-item href="javascript:void(0)">Link 3</a>
+        <a mat-list-item href="javascript:void(0)">Link 3</a>
+        <a mat-list-item href="javascript:void(0)">Link 3</a>
+        <a mat-list-item href="javascript:void(0)">Link 3</a>
+        <a mat-list-item href="javascript:void(0)">Link 3</a>
+        <a mat-list-item href="javascript:void(0)">Link 3</a>
+        <a mat-list-item href="javascript:void(0)">Link 3</a>
+        <a mat-list-item href="javascript:void(0)">Link 3</a>
+        <a mat-list-item href="javascript:void(0)">Link 3</a>
+        <a mat-list-item href="javascript:void(0)">Link 3</a>
+        <a mat-list-item href="javascript:void(0)">Link 3</a>
+        <a mat-list-item href="javascript:void(0)">Link 3</a>
+        <a mat-list-item href="javascript:void(0)">Link 3</a>
+        <a mat-list-item href="javascript:void(0)">Link 3</a>
+        <a mat-list-item href="javascript:void(0)">Link 3</a>
+        <a mat-list-item href="javascript:void(0)">Link 3</a>
+        <a mat-list-item href="javascript:void(0)">Link 3</a>
+        <a mat-list-item href="javascript:void(0)">Link 3</a>
+      </mat-nav-list>
+    </mat-sidenav>
+    <mat-sidenav-content>
+      Content
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>
