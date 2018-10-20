@@ -18,7 +18,6 @@ import {NgModule} from '@angular/core';
     LayoutModule,
     MatButtonModule,
     MatIconModule,
-    MatListModule,
     MatSidenavModule,
     MatToolbarModule,
   ],
