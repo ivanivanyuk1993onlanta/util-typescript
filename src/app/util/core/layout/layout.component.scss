@@ -8,6 +8,10 @@
     padding: 1rem;
   }
 
+  &_menu {
+    z-index: 9999;
+  }
+
   &_page {
     display: flex;
     max-height: 100%;

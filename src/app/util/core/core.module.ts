@@ -7,6 +7,7 @@ import {LayoutModule} from '@angular/cdk/layout';
 import {NgModule} from '@angular/core';
 import {MaterialUsedModule} from './material-used/material-used.module';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {ScrollDispatchModule} from '@angular/cdk/scrolling';
 
 @NgModule({
   exports: [
@@ -17,6 +18,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
     LayoutComponent,
     MaterialUsedModule,
     ReactiveFormsModule,
+    ScrollDispatchModule,
   ],
   imports: [
     BrowserAnimationsModule,
@@ -25,6 +27,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
     LayoutModule,
     MaterialUsedModule,
     ReactiveFormsModule,
+    ScrollDispatchModule,
   ],
   declarations: [LayoutComponent, InputAutocompletedComponent]
 })
