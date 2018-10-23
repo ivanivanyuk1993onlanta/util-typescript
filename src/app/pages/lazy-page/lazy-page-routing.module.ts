@@ -1,11 +1,13 @@
 import {IndexComponent} from './index/index.component';
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
+import {LazyPageGuard} from './lazy-page.guard';
 
 const lazyPageRoutes: Routes = [
   {
-    path: '',
+    canActivate: [LazyPageGuard],
     component: IndexComponent,
+    path: '',
   },
 ];
 
