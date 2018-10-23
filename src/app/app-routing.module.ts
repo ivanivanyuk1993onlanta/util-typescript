@@ -13,6 +13,10 @@ const routes: Routes = [
     component: HomeComponent,
     path: 'home',
   },
+  {
+    path: 'lazy-page',
+    loadChildren: './pages/lazy-page/lazy-page.module#LazyPageModule',
+  },
 
   {
     component: PageNotFoundComponent,
