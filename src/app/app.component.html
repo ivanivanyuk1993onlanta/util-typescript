@@ -3,32 +3,19 @@
   <div class="layout_sidenav">
     <app-input-autocompleted></app-input-autocompleted>
     <mat-nav-list>
-      <a mat-list-item href="javascript:void(0)">Link 1</a>
-      <a mat-list-item href="javascript:void(0)">Link 2</a>
-      <a mat-list-item href="javascript:void(0)">Link 3</a>
-      <a mat-list-item href="javascript:void(0)">Link 4</a>
-      <a mat-list-item href="javascript:void(0)">Link 5</a>
-      <a mat-list-item href="javascript:void(0)">Link 6</a>
-      <a mat-list-item href="javascript:void(0)">Link 7</a>
-      <a mat-list-item href="javascript:void(0)">Link 8</a>
-      <a mat-list-item href="javascript:void(0)">Link 9</a>
-      <a mat-list-item href="javascript:void(0)">Link 10</a>
-      <a mat-list-item href="javascript:void(0)">-</a>
-      <a mat-list-item href="javascript:void(0)">Link 1</a>
-      <a mat-list-item href="javascript:void(0)">Link 2</a>
-      <a mat-list-item href="javascript:void(0)">Link 3</a>
-      <a mat-list-item href="javascript:void(0)">Link 4</a>
-      <a mat-list-item href="javascript:void(0)">Link 5</a>
-      <a mat-list-item href="javascript:void(0)">Link 6</a>
-      <a mat-list-item href="javascript:void(0)">Link 7</a>
-      <a mat-list-item href="javascript:void(0)">Link 8</a>
-      <a mat-list-item href="javascript:void(0)">Link 9</a>
-      <a mat-list-item href="javascript:void(0)">Link 10</a>
+      <a
+        mat-list-item
+        routerLink="/home"
+        routerLinkActive="active"
+      >Home</a>
+      <a
+        mat-list-item
+        routerLink="/not-found"
+        routerLinkActive="active"
+      >Not found</a>
     </mat-nav-list>
   </div>
   <div class="layout_content">
-    <app-input-autocompleted></app-input-autocompleted>
-
     <router-outlet></router-outlet>
   </div>
 </app-layout>
