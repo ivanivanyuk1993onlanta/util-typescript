@@ -3,21 +3,21 @@
   <div class="layout_sidenav">
     <app-input-autocompleted></app-input-autocompleted>
     <mat-nav-list>
-      <a
-        mat-list-item
-        routerLink="/home"
-        routerLinkActive="active"
-      >Home</a>
-      <a
-        mat-list-item
-        routerLink="/not-found"
-        routerLinkActive="active"
-      >Not found</a>
-      <a
-        mat-list-item
-        routerLink="/lazy-page"
-        routerLinkActive="active"
-      >Lazy page</a>
+      <ng-container
+        *ngFor="let routeData of routeDataList"
+      >
+        <a
+          mat-list-item
+          [routerLink]="routeData.route"
+          routerLinkActive="active"
+        >
+          <ng-container
+            *ngIf="routeData.langKey"
+          >
+            <ng-container i18n="route text|Navigation text for route@@routeText">{ routeData.langKey, select, home {home} notFound {notFound} lazyPage {lazyPage}}</ng-container>
+          </ng-container>
+        </a>
+      </ng-container>
     </mat-nav-list>
   </div>
   <div class="layout_content">

@@ -1,10 +1,20 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
-  <file source-language="ru" datatype="plaintext" original="ng2.template">
+  <file source-language="en" datatype="plaintext" original="ng2.template">
     <body>
+      <trans-unit id="routeText" datatype="html">
+        <source>{VAR_SELECT, select, home {home} notFound {notFound} lazyPage {lazyPage} }</source>
+        <target>{VAR_SELECT, select, home {Home trans} notFound {Not found trans} lazyPage {Lazy page trans} }</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/app.component.html</context>
+          <context context-type="linenumber">14</context>
+        </context-group>
+        <note priority="1" from="description">Navigation text for route</note>
+        <note priority="1" from="meaning">route text</note>
+      </trans-unit>
       <trans-unit id="introductionHeader" datatype="html">
         <source>Hello i18n!</source>
-        <target>Hiasd i18n!</target>
+        <target>Hello i18n! trans</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/pages/home/home.component.html</context>
           <context context-type="linenumber">2</context>
