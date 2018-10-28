@@ -48,6 +48,24 @@
               "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": true
+            },
+            "en-dev": {
+              "aot": true,
+              "outputPath": "dist/my-project-en/",
+              "baseHref": "/en/",
+              "i18nFile": "src/locale/messages.en.xlf",
+              "i18nFormat": "xlf",
+              "i18nLocale": "en",
+              "i18nMissingTranslation": "error"
+            },
+            "ru-dev": {
+              "aot": true,
+              "outputPath": "dist/my-project-ru/",
+              "baseHref": "/ru/",
+              "i18nFile": "src/locale/messages.ru.xlf",
+              "i18nFormat": "xlf",
+              "i18nLocale": "ru",
+              "i18nMissingTranslation": "error"
             }
           }
         },
@@ -59,6 +77,12 @@
           "configurations": {
             "production": {
               "browserTarget": "user-interface-source:build:production"
+            },
+            "en": {
+              "browserTarget": "user-interface-source:build:en-dev"
+            },
+            "ru": {
+              "browserTarget": "user-interface-source:build:ru-dev"
             }
           }
         },
