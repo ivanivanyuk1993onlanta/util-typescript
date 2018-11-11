@@ -1,0 +1,36 @@
+<mat-nav-list>
+  <div
+    *ngFor="let routeData of routeDataList"
+    [ngClass]="routerLink.isActive ? 'active' : ''"
+  >
+    <a
+      #routerLink="routerLinkActive"
+      [routerLink]="routeData.route"
+      mat-list-item
+      routerLinkActive="active"
+    >
+      <ng-container
+        *ngIf="routeData.langKey"
+      >
+        <mat-icon aria-label="Navigation route icon">{{ routeData.iconKey }}</mat-icon>
+      </ng-container>
+
+      <span
+        *ngIf="routeData.langKey"
+        i18n="route text|Navigation text for route@@routeText"
+      >
+        {{ routeData.langKey | i18nSelect: routeLangMap }}
+      </span>
+    </a>
+
+    <div
+      *ngIf="routeData.childRouteList"
+      class="route-list"
+    >
+      <app-route-list
+        [routeDataList]="routeData.childRouteList"
+        [routeLangMap]="routeLangMap"
+      ></app-route-list>
+    </div>
+  </div>
+</mat-nav-list>

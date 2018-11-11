@@ -2,23 +2,10 @@
   <div class="layout_header">123</div>
   <div class="layout_sidenav">
     <app-input-autocompleted></app-input-autocompleted>
-    <mat-nav-list>
-      <ng-container
-        *ngFor="let routeData of routeDataList"
-      >
-        <a
-          mat-list-item
-          [routerLink]="routeData.route"
-          routerLinkActive="active"
-        >
-          <ng-container
-            *ngIf="routeData.langKey"
-          >
-            <ng-container i18n="route text|Navigation text for route@@routeText">{ routeData.langKey, select, home {home} notFound {notFound} lazyPage {lazyPage}}</ng-container>
-          </ng-container>
-        </a>
-      </ng-container>
-    </mat-nav-list>
+    <app-route-list
+      [routeDataList]="routeDataList"
+      [routeLangMap]="routeLangMap"
+    ></app-route-list>
   </div>
   <div class="layout_content">
     <router-outlet></router-outlet>

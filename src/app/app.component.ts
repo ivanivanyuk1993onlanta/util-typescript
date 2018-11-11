@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-import {RouteListLoaderService} from './util/core/route-list-loader/route-list-loader.service';
-import {RouteData} from './util/core/route-list-loader/route-data';
+import {RouteListService} from './util/core/route-list-service/route-list.service';
+import {RouteData} from './util/core/route-list-service/route-data';
 
 @Component({
   selector: 'app-root',
@@ -9,14 +9,16 @@ import {RouteData} from './util/core/route-list-loader/route-data';
 })
 export class AppComponent implements OnInit {
   routeDataList: RouteData[];
+  routeLangMap: Object;
 
-  constructor(private routeListLoader: RouteListLoaderService) {
+  constructor(private routeListService: RouteListService) {
   }
 
   ngOnInit() {
-    this.routeListLoader.load().subscribe(
+    this.routeListService.load().subscribe(
       (routeDataList) => {
         this.routeDataList = routeDataList;
+        this.routeLangMap = RouteListService.getLangMap(routeDataList);
       },
     );
   }
