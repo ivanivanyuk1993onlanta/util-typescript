@@ -9,7 +9,6 @@ import {RouteData} from './util/core/route-list-service/route-data';
 })
 export class AppComponent implements OnInit {
   routeDataList: RouteData[];
-  routeLangMap: Object;
 
   constructor(private routeListService: RouteListService) {
   }
@@ -18,7 +17,6 @@ export class AppComponent implements OnInit {
     this.routeListService.load().subscribe(
       (routeDataList) => {
         this.routeDataList = routeDataList;
-        this.routeLangMap = RouteListService.getLangMap(routeDataList);
       },
     );
   }

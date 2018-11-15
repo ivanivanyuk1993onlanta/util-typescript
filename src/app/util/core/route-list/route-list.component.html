@@ -12,15 +12,29 @@
       <ng-container
         *ngIf="routeData.langKey"
       >
-        <mat-icon aria-label="Navigation route icon">{{ routeData.iconKey }}</mat-icon>
+        <mat-icon aria-label="Navigation route icon">{{ routeData.iconKey }}
+        </mat-icon>
       </ng-container>
 
-      <span
+      <ng-container
         *ngIf="routeData.langKey"
         i18n="route text|Navigation text for route@@routeText"
-      >
-        {{ routeData.langKey | i18nSelect: routeLangMap }}
-      </span>
+      >{
+        routeData.langKey, select,
+
+        home-1 {Home 1}
+        home-1-1 {Home 1-1}
+        home-1-2 {Home 1-2}
+        home-2 {Home 2}
+        home-2-1 {Home 2-1}
+        home-2-2 {Home 2-2}
+        home-root {Home root}
+        lazyPage {Lazy page}
+        notFound {404}
+
+        other {Other}
+        }
+      </ng-container>
     </a>
 
     <div
@@ -29,7 +43,6 @@
     >
       <app-route-list
         [routeDataList]="routeData.childRouteList"
-        [routeLangMap]="routeLangMap"
       ></app-route-list>
     </div>
   </div>
