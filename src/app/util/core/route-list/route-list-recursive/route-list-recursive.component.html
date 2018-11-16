@@ -8,30 +8,29 @@
       [routerLink]="routeData.route"
       mat-list-item
       routerLinkActive="active"
+      [ngClass]="{hidden: !searchRegExp.value.test(translationElement.translatedText)}"
     >
       <ng-container
-        *ngIf="routeData.langKey"
+        *ngIf="routeData.iconKey"
       >
         <mat-icon aria-label="Navigation route icon">{{ routeData.iconKey }}
         </mat-icon>
       </ng-container>
 
-      <ng-container
-        *ngIf="routeData.langKey"
-      >
-        <app-route-translation
-          [langKey]="routeData.langKey"
-        ></app-route-translation>
-      </ng-container>
+      <app-route-translation
+        #translationElement
+        [langKey]="routeData.langKey"
+      ></app-route-translation>
     </a>
 
     <div
       *ngIf="routeData.childRouteList"
       class="route-list"
     >
-      <app-route-list
+      <app-route-list-recursive
         [routeDataList]="routeData.childRouteList"
-      ></app-route-list>
+        [searchRegExp]="searchRegExp"
+      ></app-route-list-recursive>
     </div>
   </div>
 </mat-nav-list>

@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { RouteListComponent } from './route-list.component';
+import { RouteListRecursiveComponent } from './route-list-recursive.component';
 
-describe('RouteListComponent', () => {
-  let component: RouteListComponent;
-  let fixture: ComponentFixture<RouteListComponent>;
+describe('RouteListRecursiveComponent', () => {
+  let component: RouteListRecursiveComponent;
+  let fixture: ComponentFixture<RouteListRecursiveComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ RouteListComponent ]
+      declarations: [ RouteListRecursiveComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(RouteListComponent);
+    fixture = TestBed.createComponent(RouteListRecursiveComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

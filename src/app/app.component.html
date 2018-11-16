@@ -1,10 +1,8 @@
 <app-layout>
   <div class="layout_header">123</div>
   <div class="layout_sidenav">
-    <app-input-autocompleted></app-input-autocompleted>
-    <app-route-list
-      [routeDataList]="routeDataList"
-    ></app-route-list>
+    <!--<app-input-autocompleted></app-input-autocompleted>-->
+    <app-route-list-root [routeDataList]="routeDataList"></app-route-list-root>
   </div>
   <div class="layout_content">
     <router-outlet></router-outlet>

@@ -1,0 +1,15 @@
+<hr>
+
+<mat-form-field style="width: 100%;">
+  <input
+    [formControl]="searchString"
+    matInput
+  >
+</mat-form-field>
+
+<app-route-list-recursive
+  [routeDataList]="routeDataList"
+  [searchRegExp]="searchRegExp"
+></app-route-list-recursive>
+
+<hr>
