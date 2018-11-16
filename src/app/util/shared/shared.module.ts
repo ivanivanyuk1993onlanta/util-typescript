@@ -1,14 +1,8 @@
 import {NgModule} from '@angular/core';
-import {MatListItem, MatListModule, MatNavList} from '@angular/material';
 
 @NgModule({
-  exports: [
-    MatListItem,
-    MatNavList,
-  ],
-  imports: [
-    MatListModule,
-  ],
+  exports: [],
+  imports: [],
 })
 export class SharedModule {
 }

@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-import {RouteListService} from './util/core/route-list-service/route-list.service';
-import {RouteData} from './util/core/route-list-service/route-data';
+import {RouteListService} from './util/core/route-list/route-list.service';
+import {RouteData} from './util/core/route-list/route-data';
 
 @Component({
   selector: 'app-root',

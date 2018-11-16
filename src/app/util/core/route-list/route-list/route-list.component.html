@@ -18,22 +18,10 @@
 
       <ng-container
         *ngIf="routeData.langKey"
-        i18n="route text|Navigation text for route@@routeText"
-      >{
-        routeData.langKey, select,
-
-        home-1 {Home 1}
-        home-1-1 {Home 1-1}
-        home-1-2 {Home 1-2}
-        home-2 {Home 2}
-        home-2-1 {Home 2-1}
-        home-2-2 {Home 2-2}
-        home-root {Home root}
-        lazyPage {Lazy page}
-        notFound {404}
-
-        other {Other}
-        }
+      >
+        <app-route-translation
+          [langKey]="routeData.langKey"
+        ></app-route-translation>
       </ng-container>
     </a>
 

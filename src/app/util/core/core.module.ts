@@ -7,7 +7,7 @@ import {LayoutComponent} from './layout/layout.component';
 import {LayoutModule} from '@angular/cdk/layout';
 import {MaterialUsedModule} from './material-used/material-used.module';
 import {NgModule} from '@angular/core';
-import {RouteListComponent} from './route-list/route-list.component';
+import {RouteListModule} from './route-list/route-list.module';
 import {RouterModule} from '@angular/router';
 import {ScrollDispatchModule} from '@angular/cdk/scrolling';
 
@@ -17,12 +17,11 @@ import {ScrollDispatchModule} from '@angular/cdk/scrolling';
     InputAutocompletedComponent,
     LayoutComponent,
     MaterialUsedModule,
-    RouteListComponent,
+    RouteListModule,
   ],
   declarations: [
     InputAutocompletedComponent,
     LayoutComponent,
-    RouteListComponent,
   ],
   imports: [
     BrowserAnimationsModule,
@@ -32,6 +31,7 @@ import {ScrollDispatchModule} from '@angular/cdk/scrolling';
     LayoutModule,
     MaterialUsedModule,
     ReactiveFormsModule,
+    RouteListModule,
     RouterModule,
     ScrollDispatchModule,
   ],

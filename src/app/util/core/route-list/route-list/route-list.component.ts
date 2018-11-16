@@ -1,16 +1,16 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {RouteData} from '../route-list-service/route-data';
+import {RouteData} from '../route-data';
 
 @Component({
   selector: 'app-route-list',
   templateUrl: './route-list.component.html',
-  styleUrls: ['./route-list.component.scss']
+  styleUrls: ['./route-list.component.scss'],
 })
 export class RouteListComponent implements OnInit {
   @Input() routeDataList: RouteData[];
-  @Input() routeLangMap: Object;
 
-  constructor() { }
+  constructor() {
+  }
 
   ngOnInit() {
   }
