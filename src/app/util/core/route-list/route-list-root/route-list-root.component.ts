@@ -1,6 +1,8 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {RouteData} from '../route-data';
 import {FormControl} from '@angular/forms';
+import {map, startWith} from 'rxjs/operators';
+import {Observable} from 'rxjs';
+import {RouteData} from '../route-data';
 
 @Component({
   selector: 'app-route-list-root',
@@ -9,16 +11,19 @@ import {FormControl} from '@angular/forms';
 })
 export class RouteListRootComponent implements OnInit {
   @Input() routeDataList: RouteData[];
-  searchRegExp = new FormControl(new RegExp(''));
+  searchRegExp$: Observable<RegExp>;
   searchString = new FormControl('');
 
   constructor() {
   }
 
   ngOnInit() {
-    this.searchString.valueChanges.subscribe((searchString: string) => {
-      this.searchRegExp.setValue(new RegExp(searchString, 'i'));
-    });
+    this.searchRegExp$ = this.searchString.valueChanges.pipe(
+      startWith(''),
+      map((searchString: string): RegExp => {
+        return new RegExp(searchString, 'i');
+      }),
+    );
   }
 
 }

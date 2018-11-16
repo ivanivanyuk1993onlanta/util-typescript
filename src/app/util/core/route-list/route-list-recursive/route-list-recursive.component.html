@@ -5,10 +5,10 @@
   >
     <a
       #routerLink="routerLinkActive"
+      [ngClass]="{hidden: !(searchRegExp$ | async).test(translationElement.translatedText)}"
       [routerLink]="routeData.route"
       mat-list-item
       routerLinkActive="active"
-      [ngClass]="{hidden: !searchRegExp.value.test(translationElement.translatedText)}"
     >
       <ng-container
         *ngIf="routeData.iconKey"
@@ -29,7 +29,7 @@
     >
       <app-route-list-recursive
         [routeDataList]="routeData.childRouteList"
-        [searchRegExp]="searchRegExp"
+        [searchRegExp$]="searchRegExp$"
       ></app-route-list-recursive>
     </div>
   </div>

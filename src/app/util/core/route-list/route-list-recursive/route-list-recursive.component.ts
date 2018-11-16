@@ -3,7 +3,7 @@ import {
   Input,
 } from '@angular/core';
 import {RouteData} from '../route-data';
-import {FormControl} from '@angular/forms';
+import {Observable} from 'rxjs';
 
 @Component({
   selector: 'app-route-list-recursive',
@@ -12,7 +12,7 @@ import {FormControl} from '@angular/forms';
 })
 export class RouteListRecursiveComponent {
   @Input() routeDataList: RouteData[];
-  @Input() searchRegExp: FormControl;
+  @Input() searchRegExp$: Observable<string>;
 
   constructor() {
   }
