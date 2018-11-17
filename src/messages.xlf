@@ -15,7 +15,7 @@
         <source>{VAR_SELECT, select, home-1 {Home 1} home-1-1 {Home 1-1} home-1-2 {Home 1-2} home-2 {Home 2} home-2-1 {Home 2-1} home-2-2 {Home 2-2} home-root {Home root} lazyPage {Lazy page} notFound {404} other {Other} }</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/util/core/route-list/route-translation/route-translation.component.html</context>
-          <context context-type="linenumber">3</context>
+          <context context-type="linenumber">4</context>
         </context-group>
         <note priority="1" from="description">Navigation text for route</note>
         <note priority="1" from="meaning">route text</note>

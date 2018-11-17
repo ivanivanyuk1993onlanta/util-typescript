@@ -1,4 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
+import {escapeRegExp} from 'tslint/lib/utils';
 import {FormControl} from '@angular/forms';
 import {map, startWith} from 'rxjs/operators';
 import {Observable} from 'rxjs';
@@ -21,7 +22,7 @@ export class RouteListRootComponent implements OnInit {
     this.searchRegExp$ = this.searchString.valueChanges.pipe(
       startWith(''),
       map((searchString: string): RegExp => {
-        return new RegExp(searchString, 'i');
+        return new RegExp(escapeRegExp(searchString), 'i');
       }),
     );
   }

@@ -5,7 +5,7 @@
   >
     <a
       #routerLink="routerLinkActive"
-      [ngClass]="{hidden: !(searchRegExp$ | async).test(translationElement.translatedText)}"
+      [ngClass]="{hidden: !(routeData.matchesSearchRegExp$ | async)}"
       [routerLink]="routeData.route"
       mat-list-item
       routerLinkActive="active"
@@ -18,16 +18,17 @@
       </ng-container>
 
       <app-route-translation
-        #translationElement
-        [langKey]="routeData.langKey"
+        [routeData]="routeData"
       ></app-route-translation>
     </a>
 
     <div
       *ngIf="routeData.childRouteList"
+      [ngClass]="{hidden: routeData.countOfFilteredChildRouteList < 1}"
       class="route-list"
     >
       <app-route-list-recursive
+        [parentRouteData]="routeData"
         [routeDataList]="routeData.childRouteList"
         [searchRegExp$]="searchRegExp$"
       ></app-route-list-recursive>

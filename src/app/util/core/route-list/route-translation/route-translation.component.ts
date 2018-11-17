@@ -5,6 +5,7 @@ import {
   Input,
   ViewChild,
 } from '@angular/core';
+import {RouteData} from '../route-data';
 
 @Component({
   selector: 'app-route-translation',
@@ -12,18 +13,18 @@ import {
   styleUrls: ['./route-translation.component.scss'],
 })
 export class RouteTranslationComponent implements AfterViewInit {
-  @Input() langKey: string;
+  @Input() routeData: RouteData;
+
   @ViewChild(
     'translationElement',
     {read: ElementRef},
   ) translationElement: ElementRef;
-  public translatedText = '';
 
   constructor() {
   }
 
   ngAfterViewInit(): void {
-    this.translatedText = this.translationElement.nativeElement.textContent;
+    this.routeData.textTranslated = this.translationElement.nativeElement.textContent;
   }
 
 }
