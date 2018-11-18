@@ -1,4 +1,5 @@
 import {
+  ChangeDetectorRef,
   Component,
   Input,
   OnInit,
@@ -18,7 +19,7 @@ export class RouteListRecursiveComponent implements OnInit {
   @Input() routeDataList: RouteData[];
   @Input() searchRegExp$: Observable<RegExp>;
 
-  constructor() {
+  constructor(private changerDetectorRef: ChangeDetectorRef) {
   }
 
   ngOnInit() {
@@ -66,6 +67,8 @@ export class RouteListRecursiveComponent implements OnInit {
         }
       }
     }
+
+    this.changerDetectorRef.detectChanges();
   }
 
 }
