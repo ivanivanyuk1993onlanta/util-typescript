@@ -5,7 +5,7 @@ import {LazyPageGuard} from './lazy-page.guard';
 
 const lazyPageRoutes: Routes = [
   {
-    canActivate: [LazyPageGuard],
+    canLoad: [LazyPageGuard],
     component: IndexComponent,
     path: '',
   },
