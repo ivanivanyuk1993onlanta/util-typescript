@@ -4,6 +4,7 @@ import {
   OnInit,
 } from '@angular/core';
 import {distinctUntilChanged, map} from 'rxjs/operators';
+import {FormControl} from '@angular/forms';
 import {Observable} from 'rxjs';
 import {RouteData} from '../route-data';
 
@@ -22,15 +23,20 @@ export class RouteListRecursiveComponent implements OnInit {
 
   ngOnInit() {
     for (const routeData of this.routeDataList) {
-      if (routeData.childRouteList) {
-        routeData.countOfFilteredChildRouteList = 0;
-      }
-
       routeData.matchesSearchRegExp$ = this.searchRegExp$.pipe(
         map((searchRegExp: RegExp): boolean => {
           return searchRegExp.test(routeData.textTranslated);
         }),
       );
+
+      if (routeData.childRouteList) {
+        routeData.countOfFilteredChildRouteList = new FormControl(0);
+        routeData.hasFilteredChildRouteList$ = routeData.countOfFilteredChildRouteList.valueChanges.pipe(
+          map((countOfFilteredChildRouteList: number): boolean => {
+            return countOfFilteredChildRouteList > 0;
+          }),
+        );
+      }
     }
 
     if (this.parentRouteData) {
@@ -38,12 +44,26 @@ export class RouteListRecursiveComponent implements OnInit {
         routeData.matchesSearchRegExp$.pipe(
           distinctUntilChanged(),
         ).subscribe((matchesSearchRegExp: boolean) => {
-          if (matchesSearchRegExp || routeData.countOfFilteredChildRouteList > 0) {
-            this.parentRouteData.countOfFilteredChildRouteList++;
+          const countOfParenReference = this.parentRouteData.countOfFilteredChildRouteList;
+          if (matchesSearchRegExp) {
+            countOfParenReference.setValue(countOfParenReference.value + 1);
           } else {
-            this.parentRouteData.countOfFilteredChildRouteList--;
+            countOfParenReference.setValue(countOfParenReference.value - 1);
           }
         });
+
+        if (routeData.hasFilteredChildRouteList$) {
+          routeData.hasFilteredChildRouteList$.pipe(
+            distinctUntilChanged(),
+          ).subscribe((hasFilteredChildRouteList: boolean) => {
+            const countOfParenReference = this.parentRouteData.countOfFilteredChildRouteList;
+            if (hasFilteredChildRouteList) {
+              countOfParenReference.setValue(countOfParenReference.value + 1);
+            } else {
+              countOfParenReference.setValue(countOfParenReference.value - 1);
+            }
+          });
+        }
       }
     }
   }

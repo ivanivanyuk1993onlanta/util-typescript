@@ -24,7 +24,7 @@
 
     <div
       *ngIf="routeData.childRouteList"
-      [ngClass]="{hidden: routeData.countOfFilteredChildRouteList < 1}"
+      [ngClass]="{hidden: !(routeData.hasFilteredChildRouteList$ | async)}"
       class="route-list"
     >
       <app-route-list-recursive
