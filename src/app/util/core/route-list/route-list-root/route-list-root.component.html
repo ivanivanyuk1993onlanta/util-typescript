@@ -1,4 +1,22 @@
-<hr>
+<!--<mat-form-field>-->
+  <!--<input-->
+    <!--[formControl]="searchString"-->
+    <!--[matAutocomplete]="auto"-->
+    <!--aria-label="Number"-->
+    <!--matInput-->
+    <!--placeholder="Pick one"-->
+    <!--type="text"-->
+  <!--&gt;-->
+  <!--<mat-autocomplete-->
+    <!--#auto="matAutocomplete"-->
+    <!--autoActiveFirstOption-->
+  <!--&gt;-->
+    <!--<app-route-list-recursive-->
+      <!--[routeDataList]="routeDataList"-->
+      <!--[searchRegExp$]="searchRegExp$"-->
+    <!--&gt;</app-route-list-recursive>-->
+  <!--</mat-autocomplete>-->
+<!--</mat-form-field>-->
 
 <mat-form-field style="width: 100%;">
   <input
@@ -7,13 +25,7 @@
   >
 </mat-form-field>
 
-<!--{{ routeDataList | json }}-->
-
 <app-route-list-recursive
   [routeDataList]="routeDataList"
   [searchRegExp$]="searchRegExp$"
 ></app-route-list-recursive>
-
-<!--{{ routeDataList | json }}-->
-
-<hr>
