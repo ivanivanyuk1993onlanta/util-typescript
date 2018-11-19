@@ -17,7 +17,9 @@ export class MediaQueryObserverService {
     breakpointObserver: BreakpointObserver,
   ) {
     this.matchesMediumQuery$ = breakpointObserver.observe([
+      Breakpoints.Large,
       Breakpoints.Medium,
+      Breakpoints.XLarge,
     ]).pipe(
       map(
         (breakpointState: BreakpointState): boolean => {
