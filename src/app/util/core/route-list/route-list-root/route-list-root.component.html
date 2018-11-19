@@ -1,14 +1,17 @@
 <mat-form-field
   class="w-100"
 >
+  <span matPrefix>&nbsp;</span>
+  <mat-icon matPrefix>search</mat-icon>
+  <span matPrefix>&nbsp;</span>
+  <mat-label
+    i18n="route list search placeholder|Route list search placeholder@@routeListSearchPlaceholder"
+  >Search</mat-label>
   <input
     [formControl]="searchString"
     [matAutocomplete]="matAutocomplete"
-    aria-label="Route search"
-    i18n-placeholder="navigation route search placeholder|Route search placeholder@@routeSearchPlaceholder"
     matInput
-    placeholder="Search in site map"
-    type="text"
+    type="search"
   >
   <mat-autocomplete
     #matAutocomplete="matAutocomplete"

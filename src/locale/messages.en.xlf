@@ -2,15 +2,15 @@
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
   <file source-language="en" datatype="plaintext" original="ng2.template">
     <body>
-      <trans-unit id="routeSearchPlaceholder" datatype="html">
-        <source>Search in site map</source>
-        <target>Search in site map en</target>
+      <trans-unit id="routeListSearchPlaceholder" datatype="html">
+        <source>Search</source>
+        <target>Search en</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/util/core/route-list/route-list-root/route-list-root.component.html</context>
-          <context context-type="linenumber">10</context>
+          <context context-type="linenumber">9</context>
         </context-group>
-        <note priority="1" from="description">Route search placeholder</note>
-        <note priority="1" from="meaning">navigation route search placeholder</note>
+        <note priority="1" from="description">Route list search placeholder</note>
+        <note priority="1" from="meaning">route list search placeholder</note>
       </trans-unit>
       <trans-unit id="introductionHeader" datatype="html">
         <source>Hello i18n!</source>
