@@ -6,10 +6,11 @@ import {
 import {escapeRegExp} from 'tslint/lib/utils';
 import {FormControl} from '@angular/forms';
 import {map, startWith} from 'rxjs/operators';
+import {MatOptionSelectionChange} from '@angular/material';
+import {MediaQueryObserverService} from '../../media-query-matcher/media-query-observer.service';
 import {Observable} from 'rxjs';
 import {RouteData} from '../route-data';
 import {Router} from '@angular/router';
-import {MatOptionSelectionChange} from '@angular/material';
 
 @Component({
   selector: 'app-route-list-root',
@@ -25,6 +26,7 @@ export class RouteListRootComponent implements OnInit {
 
   constructor(
     private router: Router,
+    public mediaQueryObserverService: MediaQueryObserverService,
   ) {
   }
 

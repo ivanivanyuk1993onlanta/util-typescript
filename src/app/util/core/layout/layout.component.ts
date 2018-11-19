@@ -1,4 +1,5 @@
 import {Component} from '@angular/core';
+import {MediaQueryObserverService} from '../media-query-matcher/media-query-observer.service';
 
 @Component({
   selector: 'app-layout',
@@ -6,7 +7,9 @@ import {Component} from '@angular/core';
   styleUrls: ['./layout.component.scss'],
 })
 export class LayoutComponent {
-  constructor() {
+  constructor(
+    public mediaQueryObserverService: MediaQueryObserverService,
+  ) {
   }
 
 }

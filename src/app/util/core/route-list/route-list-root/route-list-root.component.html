@@ -18,7 +18,7 @@
     [autoActiveFirstOption]="true"
   >
     <ng-container
-      *ngFor="let routeData of routeDataListFlat"
+      *ngFor="let routeData of (mediaQueryObserverService.matchesMediumQuery$ | async) ? routeDataListFlat : []"
     >
       <mat-option
         (onSelectionChange)="selectOption($event, routeData)"
