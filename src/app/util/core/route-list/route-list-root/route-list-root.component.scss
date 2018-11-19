@@ -1,0 +1,8 @@
+::ng-deep {
+  .mat-autocomplete-panel.mat-autocomplete-panel {
+    max-height: unset;
+  }
+  .mat-option .mat-icon.mat-icon {
+    margin-right: 0;
+  }
+}
