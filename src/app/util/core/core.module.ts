@@ -6,7 +6,6 @@ import {LayoutComponent} from './layout/layout.component';
 import {LayoutModule} from '@angular/cdk/layout';
 import {MaterialUsedModule} from './material-used/material-used.module';
 import {NgModule} from '@angular/core';
-import {RouteListModule} from './route-list/route-list.module';
 import {RouterModule} from '@angular/router';
 import {ScrollDispatchModule} from '@angular/cdk/scrolling';
 import {SharedModule} from '../shared/shared.module';
@@ -16,7 +15,6 @@ import {SharedModule} from '../shared/shared.module';
     CommonModule,
     LayoutComponent,
     MaterialUsedModule,
-    RouteListModule,
     SharedModule,
   ],
   declarations: [
@@ -30,7 +28,6 @@ import {SharedModule} from '../shared/shared.module';
     LayoutModule,
     MaterialUsedModule,
     ReactiveFormsModule,
-    RouteListModule,
     RouterModule,
     ScrollDispatchModule,
     SharedModule,

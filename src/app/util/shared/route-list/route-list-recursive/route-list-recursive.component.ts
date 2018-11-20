@@ -7,7 +7,7 @@ import {
 import {distinctUntilChanged, map} from 'rxjs/operators';
 import {FormControl} from '@angular/forms';
 import {Observable} from 'rxjs';
-import {RouteData} from '../route-data';
+import {RouteData} from '../../../core/route-list/route-data';
 
 @Component({
   selector: 'app-route-list-recursive',

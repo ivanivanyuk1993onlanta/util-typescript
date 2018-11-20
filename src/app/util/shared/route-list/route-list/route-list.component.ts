@@ -7,18 +7,18 @@ import {escapeRegExp} from 'tslint/lib/utils';
 import {FormControl} from '@angular/forms';
 import {map, startWith} from 'rxjs/operators';
 import {MatOptionSelectionChange} from '@angular/material';
-import {MediaQueryObserverService} from '../../media-query-observer/media-query-observer.service';
+import {MediaQueryObserverService} from '../../../core/media-query-observer/media-query-observer.service';
 import {Observable} from 'rxjs';
-import {RouteData} from '../route-data';
+import {RouteData} from '../../../core/route-list/route-data';
 import {Router} from '@angular/router';
 
 @Component({
-  selector: 'app-route-list-root',
-  templateUrl: './route-list-root.component.html',
-  styleUrls: ['./route-list-root.component.scss'],
+  selector: 'app-route-list',
+  templateUrl: './route-list.component.html',
+  styleUrls: ['./route-list.component.scss'],
 })
 
-export class RouteListRootComponent implements OnInit {
+export class RouteListComponent implements OnInit {
   @Input() routeDataList: RouteData[];
   routeDataListFlat: RouteData[];
   searchRegExp$: Observable<RegExp>;
@@ -38,7 +38,7 @@ export class RouteListRootComponent implements OnInit {
 
     if (routeData.childRouteList) {
       for (const routeDataChild of routeData.childRouteList) {
-        RouteListRootComponent.appendRouteDataToRouteDataListFlat(
+        RouteListComponent.appendRouteDataToRouteDataListFlat(
           routeDataChild,
           routeDataListFlat,
         );
@@ -50,8 +50,10 @@ export class RouteListRootComponent implements OnInit {
     const routeDataListFlat: RouteData[] = [];
 
     for (const routeData of this.routeDataList) {
-      RouteListRootComponent.appendRouteDataToRouteDataListFlat(routeData,
-        routeDataListFlat);
+      RouteListComponent.appendRouteDataToRouteDataListFlat(
+        routeData,
+        routeDataListFlat,
+      );
     }
 
     return routeDataListFlat;

@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { RouteListRootComponent } from './route-list-root.component';
+import { RouteListComponent } from './route-list.component';
 
-describe('RouteListRootComponent', () => {
-  let component: RouteListRootComponent;
-  let fixture: ComponentFixture<RouteListRootComponent>;
+describe('RouteListComponent', () => {
+  let component: RouteListComponent;
+  let fixture: ComponentFixture<RouteListComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ RouteListRootComponent ]
+      declarations: [ RouteListComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(RouteListRootComponent);
+    fixture = TestBed.createComponent(RouteListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
