@@ -8,8 +8,9 @@
     padding: 1rem;
   }
 
-  &_menu {
-    z-index: 9999;
+  ::ng-deep &_header {
+    display: flex;
+    width: 100%
   }
 
   &_page {

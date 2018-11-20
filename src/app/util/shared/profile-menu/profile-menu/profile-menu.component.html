@@ -1,0 +1,23 @@
+<button
+  [matMenuTriggerFor]="profileMenu"
+  aria-label="Toggle profile menu"
+  mat-icon-button
+  type="button"
+>
+  <mat-icon aria-label="Profile menu toggle button">person</mat-icon>
+</button>
+
+<mat-menu
+  #profileMenu="matMenu"
+  [overlapTrigger]="false"
+  [hasBackdrop]="true"
+>
+  <button mat-menu-item>
+    <mat-icon>dialpad</mat-icon>
+    <span>Redial</span>
+  </button>
+  <button mat-menu-item disabled>
+    <mat-icon>voicemail</mat-icon>
+    <span>Check voicemail</span>
+  </button>
+</mat-menu>

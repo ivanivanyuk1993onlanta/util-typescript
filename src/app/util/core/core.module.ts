@@ -9,6 +9,7 @@ import {NgModule} from '@angular/core';
 import {RouteListModule} from './route-list/route-list.module';
 import {RouterModule} from '@angular/router';
 import {ScrollDispatchModule} from '@angular/cdk/scrolling';
+import {SharedModule} from '../shared/shared.module';
 
 @NgModule({
   exports: [
@@ -16,6 +17,7 @@ import {ScrollDispatchModule} from '@angular/cdk/scrolling';
     LayoutComponent,
     MaterialUsedModule,
     RouteListModule,
+    SharedModule,
   ],
   declarations: [
     LayoutComponent,
@@ -31,6 +33,7 @@ import {ScrollDispatchModule} from '@angular/cdk/scrolling';
     RouteListModule,
     RouterModule,
     ScrollDispatchModule,
+    SharedModule,
   ],
 })
 

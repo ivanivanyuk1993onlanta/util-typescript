@@ -1,5 +1,10 @@
 <app-layout>
-  <div class="layout_header"></div>
+  <div class="layout_header">
+    <app-flex-spacer></app-flex-spacer>
+    <app-profile-menu></app-profile-menu>
+    <app-flex-spacer></app-flex-spacer>
+    <app-profile-menu></app-profile-menu>
+  </div>
   <div class="layout_sidenav">
     <app-route-list-root
       *ngIf="routeDataList"
