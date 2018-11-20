@@ -1,5 +1,5 @@
 import {CommonModule} from '@angular/common';
-import {MaterialUsedModule} from '../../core/material-used/material-used.module';
+import {MaterialUsedModule} from '../material-used/material-used.module';
 import {NgModule} from '@angular/core';
 import {ReactiveFormsModule} from '@angular/forms';
 import {RouteListComponent} from './route-list/route-list.component';
