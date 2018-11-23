@@ -49,19 +49,65 @@
               "vendorChunk": false,
               "buildOptimizer": true
             },
-            "en-dev": {
+            "prod-en": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
               "aot": true,
-              "outputPath": "dist/my-project-en/",
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+
+              "outputPath": "dist/en/",
               "baseHref": "/en/",
               "i18nFile": "src/locale/messages.en.xlf",
               "i18nFormat": "xlf",
               "i18nLocale": "en",
               "i18nMissingTranslation": "error"
             },
-            "ru-dev": {
+            "prod-ru": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
               "aot": true,
-              "outputPath": "dist/my-project-ru/",
-              "baseHref": "/ru/",
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+
+              "outputPath": "dist/ru/",
+              "i18nFile": "src/locale/messages.ru.xlf",
+              "i18nFormat": "xlf",
+              "i18nLocale": "ru",
+              "i18nMissingTranslation": "error"
+            },
+            "dev-en": {
+              "aot": true,
+              "outputPath": "dist/dev-en/",
+              "baseHref": "/en/",
+              "i18nFile": "src/locale/messages.en.xlf",
+              "i18nFormat": "xlf",
+              "i18nLocale": "en",
+              "i18nMissingTranslation": "error"
+            },
+            "dev-ru": {
+              "aot": true,
+              "outputPath": "dist/dev-ru/",
               "i18nFile": "src/locale/messages.ru.xlf",
               "i18nFormat": "xlf",
               "i18nLocale": "ru",
@@ -79,10 +125,10 @@
               "browserTarget": "user-interface-source:build:production"
             },
             "en": {
-              "browserTarget": "user-interface-source:build:en-dev"
+              "browserTarget": "user-interface-source:build:dev-en"
             },
             "ru": {
-              "browserTarget": "user-interface-source:build:ru-dev"
+              "browserTarget": "user-interface-source:build:dev-ru"
             }
           }
         },
