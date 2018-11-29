@@ -33,86 +33,81 @@
           },
           "configurations": {
             "production": {
+              "aot": true,
+              "buildOptimizer": true,
+              "extractCss": true,
+              "extractLicenses": true,
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
                   "with": "src/environments/environment.prod.ts"
                 }
               ],
+              "namedChunks": false,
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
-              "extractCss": true,
-              "namedChunks": false,
-              "aot": true,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true
+              "vendorChunk": false
             },
             "prod-en": {
+              "aot": true,
+              "buildOptimizer": true,
+              "extractCss": true,
+              "extractLicenses": true,
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
                   "with": "src/environments/environment.prod.ts"
                 }
               ],
-              "optimization": true,
-              "outputHashing": "all",
-              "sourceMap": false,
-              "extractCss": true,
-              "namedChunks": false,
-              "aot": true,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
-
-              "outputPath": "dist/en/",
-              "baseHref": "/en/",
               "i18nFile": "src/locale/messages.en.xlf",
               "i18nFormat": "xlf",
               "i18nLocale": "en",
-              "i18nMissingTranslation": "error"
+              "i18nMissingTranslation": "error",
+              "namedChunks": false,
+              "optimization": true,
+              "outputHashing": "all",
+              "outputPath": "dist/en/",
+              "sourceMap": false,
+              "vendorChunk": false
             },
             "prod-ru": {
+              "aot": true,
+              "buildOptimizer": true,
+              "extractCss": true,
+              "extractLicenses": true,
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
                   "with": "src/environments/environment.prod.ts"
                 }
               ],
-              "optimization": true,
-              "outputHashing": "all",
-              "sourceMap": false,
-              "extractCss": true,
-              "namedChunks": false,
-              "aot": true,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
-
-              "baseHref": "/",
-              "outputPath": "dist/ru/",
               "i18nFile": "src/locale/messages.ru.xlf",
               "i18nFormat": "xlf",
               "i18nLocale": "ru",
-              "i18nMissingTranslation": "error"
+              "i18nMissingTranslation": "error",
+              "namedChunks": false,
+              "optimization": true,
+              "outputHashing": "all",
+              "outputPath": "dist/ru/",
+              "sourceMap": false,
+              "vendorChunk": false
             },
             "dev-en": {
               "aot": true,
-              "outputPath": "dist/dev-en/",
-              "baseHref": "/en/",
               "i18nFile": "src/locale/messages.en.xlf",
               "i18nFormat": "xlf",
               "i18nLocale": "en",
-              "i18nMissingTranslation": "error"
+              "i18nMissingTranslation": "error",
+              "outputPath": "dist/dev-en/"
             },
             "dev-ru": {
               "aot": true,
-              "outputPath": "dist/dev-ru/",
               "i18nFile": "src/locale/messages.ru.xlf",
               "i18nFormat": "xlf",
               "i18nLocale": "ru",
-              "i18nMissingTranslation": "error"
+              "i18nMissingTranslation": "error",
+              "outputPath": "dist/dev-ru/"
             }
           }
         },

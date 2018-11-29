@@ -5,7 +5,7 @@
       <trans-unit id="routeListSearchPlaceholder" datatype="html">
         <source>Search</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">app/util/core/route-list/route-list-root/route-list.component.html</context>
+          <context context-type="sourcefile">app/util/shared/route-list/route-list/route-list.component.html</context>
           <context context-type="linenumber">9</context>
         </context-group>
         <note priority="1" from="description">Route list search placeholder</note>
@@ -23,11 +23,20 @@
       <trans-unit id="routeText" datatype="html">
         <source>{VAR_SELECT, select, home-1 {Home 1} home-1-1 {Home 1-1} home-1-2 {Home 1-2} home-2 {Home 2} home-2-1 {Home 2-1} home-2-2 {Home 2-2} home-root {Home root} lazyPage {Lazy page} notFound {404} other {Other} }</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">app/util/core/route-list/route-translation/route-translation.component.html</context>
+          <context context-type="sourcefile">app/util/shared/route-list/route-translation/route-translation.component.html</context>
           <context context-type="linenumber">4</context>
         </context-group>
         <note priority="1" from="description">Navigation text for route</note>
         <note priority="1" from="meaning">route text</note>
+      </trans-unit>
+      <trans-unit id="test" datatype="html">
+        <source>test</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/lazy-page/index/index.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+        <note priority="1" from="description">test</note>
+        <note priority="1" from="meaning">test</note>
       </trans-unit>
     </body>
   </file>
