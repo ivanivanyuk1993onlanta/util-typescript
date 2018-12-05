@@ -24,7 +24,8 @@
             "tsConfig": "src/tsconfig.app.json",
             "assets": [
               "src/favicon.ico",
-              "src/assets"
+              "src/assets",
+              "src/manifest.json"
             ],
             "styles": [
               "src/styles.scss"
@@ -46,6 +47,7 @@
               "namedChunks": false,
               "optimization": true,
               "outputHashing": "all",
+              "serviceWorker": true,
               "sourceMap": false,
               "vendorChunk": false
             },
@@ -68,6 +70,7 @@
               "optimization": true,
               "outputHashing": "all",
               "outputPath": "dist/en/",
+              "serviceWorker": true,
               "sourceMap": false,
               "vendorChunk": false
             },
@@ -90,6 +93,7 @@
               "optimization": true,
               "outputHashing": "all",
               "outputPath": "dist/ru/",
+              "serviceWorker": true,
               "sourceMap": false,
               "vendorChunk": false
             },
@@ -147,7 +151,8 @@
             "scripts": [],
             "assets": [
               "src/favicon.ico",
-              "src/assets"
+              "src/assets",
+              "src/manifest.json"
             ]
           }
         },
