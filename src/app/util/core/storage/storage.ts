@@ -1,15 +1,14 @@
-import {Injectable} from '@angular/core';
-import {StorageInterface} from './storage-interface';
 import * as localForage from 'localforage';
 
-@Injectable({
-  providedIn: 'root',
-})
-export class StorageService implements StorageInterface {
-  private storage: LocalForage;
+export class StorageWrap {
+  storage: LocalForage;
 
-  constructor() {
-    this.storage = localForage.createInstance({});
+  constructor(name: string) {
+    this.storage = localForage.createInstance({
+      name: name,
+    });
+
+    return this;
   }
 
   clear(): Promise<void> {
