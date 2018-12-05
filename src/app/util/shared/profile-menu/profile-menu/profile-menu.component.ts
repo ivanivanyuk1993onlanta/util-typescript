@@ -1,4 +1,6 @@
+import {AuthService} from '../../../core/auth/auth.service';
 import {Component, OnInit} from '@angular/core';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-profile-menu',
@@ -7,7 +9,10 @@ import {Component, OnInit} from '@angular/core';
 })
 export class ProfileMenuComponent implements OnInit {
 
-  constructor() {
+  constructor(
+    public authService: AuthService,
+    public router: Router,
+  ) {
   }
 
   ngOnInit() {
