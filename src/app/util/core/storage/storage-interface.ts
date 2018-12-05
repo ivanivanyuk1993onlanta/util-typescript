@@ -1,35 +1,9 @@
 export interface StorageInterface {
-  /**
-   * Removes all stored values.
-   * @returns {Promise<any>}
-   */
-  clear(): Promise<any>;
+  clear(): Promise<void>;
 
-  /**
-   * Gets a stored item
-   * @param reference {string}
-   * @returns {Promise<any>}
-   */
-  getItem(reference: string): Promise<any>;
+  get<T>(key: string): Promise<T>;
 
-  /**
-   * Retrieving all keys
-   * @returns {Promise<any>}
-   */
-  keys(): Promise<any>;
+  remove(key: string): Promise<void>;
 
-  /**
-   * Removes a single stored item
-   * @param reference {string}
-   * @returns {Promise<any>}
-   */
-  remove(reference: string): Promise<any>;
-
-  /**
-   * Stores a value
-   * @param reference {string}
-   * @param value
-   * @returns {Promise<any>}
-   */
-  setItem(reference: string, value: any): Promise<any>;
+  set<T>(key: string, value: T): Promise<T>;
 }

@@ -1,55 +1,30 @@
 import {Injectable} from '@angular/core';
-import {NativeStorage} from '@ionic-native/native-storage';
 import {StorageInterface} from './storage-interface';
+import * as localForage from 'localforage';
 
 @Injectable({
   providedIn: 'root',
 })
 export class StorageService implements StorageInterface {
-  constructor(private nativeStorage: NativeStorage) {
+  private storage: LocalForage;
+
+  constructor() {
+    this.storage = localForage.createInstance({});
   }
 
-  /**
-   * Removes all stored values.
-   * @returns {Promise<any>}
-   */
-  clear(): Promise<any> {
-    return this.nativeStorage.clear();
+  clear(): Promise<void> {
+    return this.storage.clear();
   }
 
-  /**
-   * Gets a stored item
-   * @param reference {string}
-   * @returns {Promise<any>}
-   */
-  getItem(reference: string): Promise<any> {
-    return this.nativeStorage.getItem(reference);
+  get<T>(key: string): Promise<T> {
+    return this.storage.getItem(key);
   }
 
-  /**
-   * Retrieving all keys
-   * @returns {Promise<any>}
-   */
-  keys(): Promise<any> {
-    return this.nativeStorage.keys();
+  remove(key: string): Promise<void> {
+    return this.storage.removeItem(key);
   }
 
-  /**
-   * Removes a single stored item
-   * @param reference {string}
-   * @returns {Promise<any>}
-   */
-  remove(reference: string): Promise<any> {
-    return this.nativeStorage.remove(reference);
-  }
-
-  /**
-   * Stores a value
-   * @param reference {string}
-   * @param value
-   * @returns {Promise<any>}
-   */
-  setItem(reference: string, value: any): Promise<any> {
-    return this.nativeStorage.setItem(reference, value);
+  set<T>(key: string, value: T): Promise<T> {
+    return this.storage.setItem<T>(key, value);
   }
 }
