@@ -1,15 +1,11 @@
-import {
-  Component,
-  Input,
-  OnInit,
-} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {escapeRegExp} from 'tslint/lib/utils';
 import {FormControl} from '@angular/forms';
 import {map, startWith} from 'rxjs/operators';
 import {MatOptionSelectionChange} from '@angular/material';
 import {MediaQueryObserverService} from '../../../core/media-query-observer/media-query-observer.service';
 import {Observable} from 'rxjs';
-import {RouteData} from '../../../core/route-list/route-data';
+import {RouteData} from '../../../core/route/route-data';
 import {Router} from '@angular/router';
 
 @Component({
