@@ -1,23 +1,12 @@
-import {Component, OnInit} from '@angular/core';
-import {RouteListService} from './util/core/route-list/route-list.service';
-import {RouteData} from './util/core/route-list/route-data';
+import {Component} from '@angular/core';
+import {AuthService} from './util/core/auth/auth.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent implements OnInit {
-  routeDataList: RouteData[];
-
-  constructor(private routeListService: RouteListService) {
-  }
-
-  ngOnInit() {
-    this.routeListService.load().subscribe(
-      (routeDataList) => {
-        this.routeDataList = routeDataList;
-      },
-    );
+export class AppComponent {
+  constructor(public authService: AuthService) {
   }
 }

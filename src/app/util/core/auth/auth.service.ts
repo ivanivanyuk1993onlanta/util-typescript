@@ -10,26 +10,28 @@ import {StorageWrap} from '../storage/storage';
   providedIn: 'root',
 })
 export class AuthService {
-  readonly isLoggedIn$: Observable<boolean>;
-  readonly routeDataList = new FormControl([]);
-  readonly routeDataListUrl = 'http://localhost:8080/route';
-  readonly storage: StorageWrap;
-  readonly userName = new FormControl('');
+  private _isSignedInFormControl = new FormControl(false);
+  private _routeDataListFormControl = new FormControl(new Array<RouteData>());
+  private _routeDataListUrl = 'http://localhost:8080/route';
+  private _storage: StorageWrap;
+  private _userNameFormControl = new FormControl('');
+
+  readonly isSignedIn$: Observable<boolean>;
+  readonly routeDataList$: Observable<RouteData[]>;
+  readonly userName$: Observable<string>;
 
   constructor(
     private httpClient: HttpClient,
   ) {
-    this.storage = new StorageWrap('auth');
+    this._storage = new StorageWrap('auth');
 
-    this.isLoggedIn$ = this.userName.valueChanges.pipe(
-      map((userName: string): boolean => {
-        return userName !== '';
-      }),
+    this.registerFieldObservers<boolean>(
+      'isSignedIn',
+      () => Promise.resolve(false),
     );
-
     this.registerFieldObservers<RouteData[]>(
       'routeDataList',
-      this.loadRouteDataList,
+      this.loadRouteDataList.bind(this),
     );
     this.registerFieldObservers<string>(
       'userName',
@@ -39,7 +41,7 @@ export class AuthService {
 
   private loadRouteDataList(): Promise<RouteData[]> {
     return this.httpClient.
-      get<RouteData[]>(this.routeDataListUrl).
+      get<RouteData[]>(this._routeDataListUrl).
       toPromise<RouteData[]>().
       then((routeDataList: RouteData[]) => {
         return routeDataList;
@@ -53,34 +55,54 @@ export class AuthService {
     fieldName: string,
     getValueDefaultFunc: () => Promise<T>,
   ): void {
-    this[fieldName].valueChanges.subscribe(
+    const fieldNameFormControl = `_${fieldName}FormControl`;
+    const fieldNameObservable = `${fieldName}$`;
+
+    this[fieldNameObservable] = this[fieldNameFormControl].valueChanges.pipe(
+      map((value) => {
+        return value;
+      }),
+    );
+
+    this[fieldNameFormControl].valueChanges.subscribe(
       (value: T) => {
-        this.storage.set<T>(fieldName, value);
+        this._storage.set<T>(fieldName, value);
       },
     );
 
-    this.storage.get<T>(fieldName).
+    this._storage.get<T>(fieldName).
       then((valueStored: T) => {
         if (valueStored !== null) {
-          this[fieldName].setValue(valueStored);
+          this[fieldNameFormControl].setValue(valueStored);
         } else {
           getValueDefaultFunc().then(
             (value: T) => {
-              this[fieldName].setValue(value);
+              this[fieldNameFormControl].setValue(value);
             },
           );
         }
       }).
       catch(() => {
-        this[fieldName].setValue(getValueDefaultFunc());
+        getValueDefaultFunc().
+          then((value: T) => {
+            this[fieldNameFormControl].setValue(value);
+          });
       });
   }
 
   signIn() {
-    this.userName.setValue('ivanivanyuk1993');
+    this._isSignedInFormControl.setValue(true);
+    this.loadRouteDataList().then((routeDataList: RouteData[]) => {
+      this._routeDataListFormControl.setValue(routeDataList);
+    });
+    this._userNameFormControl.setValue('ivanivanyuk1993');
   }
 
   signOut() {
-    this.userName.setValue('');
+    this._isSignedInFormControl.setValue(false);
+    this.loadRouteDataList().then((routeDataList: RouteData[]) => {
+      this._routeDataListFormControl.setValue([routeDataList[0]]);
+    });
+    this._userNameFormControl.setValue('');
   }
 }

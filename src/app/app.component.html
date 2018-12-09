@@ -6,10 +6,12 @@
     <app-profile-menu></app-profile-menu>
   </div>
   <div class="layout_sidenav">
-    <app-route-list
-      *ngIf="routeDataList"
-      [routeDataList]="routeDataList"
-    ></app-route-list>
+    {{ authService.isSignedIn$ | async }}
+    {{ authService.routeDataList$ | async }}
+    {{ authService.userName$ | async }}
+    <!--<app-route-list-->
+      <!--[routeDataList]="authService.routeDataList.value"-->
+    <!--&gt;</app-route-list>-->
   </div>
   <div class="layout_content">
     <router-outlet></router-outlet>
