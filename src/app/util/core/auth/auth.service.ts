@@ -1,6 +1,6 @@
 import {FormControl} from '@angular/forms';
 import {HttpClient} from '@angular/common/http';
-import {Injectable} from '@angular/core';
+import {Injectable, OnInit} from '@angular/core';
 import {map} from 'rxjs/operators';
 import {Observable} from 'rxjs';
 import {RouteData} from '../route/route-data';
@@ -19,8 +19,6 @@ export class AuthService {
   constructor(
     private httpClient: HttpClient,
   ) {
-    this.storage = new StorageWrap('auth');
-
     this.isLoggedIn$ = this.userName.valueChanges.pipe(
       map((userName: string): boolean => {
         return userName !== '';
@@ -62,7 +60,7 @@ export class AuthService {
       });
   }
 
-  registerUserNameObservers() {
+  private registerUserNameObservers() {
     const storageRecordName = 'userName';
     const defaultValue = '';
 
