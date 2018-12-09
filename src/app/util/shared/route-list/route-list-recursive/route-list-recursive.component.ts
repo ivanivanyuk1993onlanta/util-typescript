@@ -1,13 +1,8 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  Input,
-  OnInit,
-} from '@angular/core';
+import {ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
 import {distinctUntilChanged, map} from 'rxjs/operators';
 import {FormControl} from '@angular/forms';
 import {Observable} from 'rxjs';
-import {RouteData} from '../../../core/route-list/route-data';
+import {RouteData} from '../../../core/route/route-data';
 
 @Component({
   selector: 'app-route-list-recursive',

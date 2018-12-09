@@ -5,7 +5,7 @@ import {
   Input,
   ViewChild,
 } from '@angular/core';
-import {RouteData} from '../../../core/route-list/route-data';
+import {RouteData} from '../../../core/route/route-data';
 
 @Component({
   selector: 'app-route-translation',
