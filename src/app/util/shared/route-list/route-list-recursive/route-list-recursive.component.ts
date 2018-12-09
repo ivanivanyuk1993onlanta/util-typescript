@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, Input, OnChanges} from '@angular/core';
 import {distinctUntilChanged, map} from 'rxjs/operators';
 import {FormControl} from '@angular/forms';
 import {Observable} from 'rxjs';
@@ -9,7 +9,7 @@ import {RouteData} from '../../../core/route/route-data';
   templateUrl: './route-list-recursive.component.html',
   styleUrls: ['./route-list-recursive.component.scss'],
 })
-export class RouteListRecursiveComponent implements OnInit {
+export class RouteListRecursiveComponent implements OnChanges {
   @Input() parentRouteData: RouteData;
   @Input() routeDataList: RouteData[];
   @Input() searchRegExp$: Observable<RegExp>;
@@ -17,7 +17,7 @@ export class RouteListRecursiveComponent implements OnInit {
   constructor(private changerDetectorRef: ChangeDetectorRef) {
   }
 
-  ngOnInit() {
+  ngOnChanges() {
     for (const routeData of this.routeDataList) {
       routeData.matchesSearchRegExp$ = this.searchRegExp$.pipe(
         map((searchRegExp: RegExp): boolean => {
