@@ -1,6 +1,6 @@
 import {FormControl} from '@angular/forms';
 import {HttpClient} from '@angular/common/http';
-import {Injectable, OnInit} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {map} from 'rxjs/operators';
 import {Observable} from 'rxjs';
 import {RouteData} from '../route/route-data';
@@ -19,67 +19,60 @@ export class AuthService {
   constructor(
     private httpClient: HttpClient,
   ) {
+    this.storage = new StorageWrap('auth');
+
     this.isLoggedIn$ = this.userName.valueChanges.pipe(
       map((userName: string): boolean => {
         return userName !== '';
       }),
     );
 
-    this.registerRouteListObservers();
-    this.registerUserNameObservers();
+    this.registerFieldObservers<RouteData[]>(
+      'routeDataList',
+      this.loadRouteDataList,
+    );
+    this.registerFieldObservers<string>(
+      'userName',
+      () => Promise.resolve(''),
+    );
   }
 
-  private registerRouteListObservers() {
-    const storageRecordName = 'routeDataList';
-    const defaultValue = [];
-
-    this.routeDataList.valueChanges.subscribe(
-      (routeDataList: RouteData[]): void => {
-        this.storage.set<RouteData[]>(storageRecordName, routeDataList);
-      },
-    );
-
-    this.storage.get<RouteData[]>(storageRecordName).
-      then((routeDataListStored: RouteData[]): void => {
-        if (routeDataListStored !== null) {
-          this.routeDataList.setValue(routeDataListStored);
-        } else {
-          this.httpClient.
-            get<RouteData[]>(this.routeDataListUrl).
-            toPromise<RouteData[]>().
-            then((routeDataList: RouteData[]) => {
-              this.routeDataList.setValue(routeDataList);
-            }).
-            catch(() => {
-              this.routeDataList.setValue(defaultValue);
-            });
-        }
+  private loadRouteDataList(): Promise<RouteData[]> {
+    return this.httpClient.
+      get<RouteData[]>(this.routeDataListUrl).
+      toPromise<RouteData[]>().
+      then((routeDataList: RouteData[]) => {
+        return routeDataList;
       }).
       catch(() => {
-        this.routeDataList.setValue(defaultValue);
+        return [];
       });
   }
 
-  private registerUserNameObservers() {
-    const storageRecordName = 'userName';
-    const defaultValue = '';
-
-    this.userName.valueChanges.subscribe(
-      (userName: string): void => {
-        this.storage.set<string>(storageRecordName, userName);
+  private registerFieldObservers<T>(
+    fieldName: string,
+    getValueDefaultFunc: () => Promise<T>,
+  ): void {
+    this[fieldName].valueChanges.subscribe(
+      (value: T) => {
+        this.storage.set<T>(fieldName, value);
       },
     );
 
-    this.storage.get<string>(storageRecordName).
-      then((userName: string): void => {
-        if (userName !== null) {
-          this.userName.setValue(userName);
+    this.storage.get<T>(fieldName).
+      then((valueStored: T) => {
+        if (valueStored !== null) {
+          this[fieldName].setValue(valueStored);
         } else {
-          this.userName.setValue(defaultValue);
+          getValueDefaultFunc().then(
+            (value: T) => {
+              this[fieldName].setValue(value);
+            },
+          );
         }
       }).
       catch(() => {
-        this.userName.setValue(defaultValue);
+        this[fieldName].setValue(getValueDefaultFunc());
       });
   }
 
