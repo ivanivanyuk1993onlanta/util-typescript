@@ -31,7 +31,7 @@ export class AuthService {
     this.registerUserNameObservers();
   }
 
-  registerRouteListObservers() {
+  private registerRouteListObservers() {
     const storageRecordName = 'routeDataList';
     const defaultValue = [];
 
