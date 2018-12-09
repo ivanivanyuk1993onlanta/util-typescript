@@ -1,7 +1,7 @@
 import {FormControl} from '@angular/forms';
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-import {map} from 'rxjs/operators';
+import {map, startWith} from 'rxjs/operators';
 import {Observable} from 'rxjs';
 import {RouteData} from '../route/route-data';
 import {StorageWrap} from '../storage/storage';
@@ -59,6 +59,7 @@ export class AuthService {
     const fieldNameObservable = `${fieldName}$`;
 
     this[fieldNameObservable] = this[fieldNameFormControl].valueChanges.pipe(
+      startWith(this[fieldNameFormControl].value),
       map((value) => {
         return value;
       }),
