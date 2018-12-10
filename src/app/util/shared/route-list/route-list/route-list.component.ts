@@ -1,4 +1,4 @@
-import {Component, Input, OnChanges} from '@angular/core';
+import {Component, Input, OnChanges, OnInit} from '@angular/core';
 import {escapeRegExp} from 'tslint/lib/utils';
 import {FormControl} from '@angular/forms';
 import {map, startWith} from 'rxjs/operators';
@@ -14,7 +14,7 @@ import {Router} from '@angular/router';
   styleUrls: ['./route-list.component.scss'],
 })
 
-export class RouteListComponent implements OnChanges {
+export class RouteListComponent implements OnChanges, OnInit {
   @Input() routeDataList: RouteData[];
   routeDataListFlat: RouteData[];
   searchRegExp$: Observable<RegExp>;
@@ -26,7 +26,7 @@ export class RouteListComponent implements OnChanges {
   ) {
   }
 
-  static appendRouteDataToRouteDataListFlat(
+  private static appendRouteDataToRouteDataListFlat(
     routeData: RouteData,
     routeDataListFlat: RouteData[],
   ): void {
@@ -42,10 +42,12 @@ export class RouteListComponent implements OnChanges {
     }
   }
 
-  assembleRouteDataListFlat(): RouteData[] {
+  private static assembleRouteDataListFlat(
+    routeDataList: RouteData[],
+  ): RouteData[] {
     const routeDataListFlat: RouteData[] = [];
 
-    for (const routeData of this.routeDataList) {
+    for (const routeData of routeDataList) {
       RouteListComponent.appendRouteDataToRouteDataListFlat(
         routeData,
         routeDataListFlat,
@@ -56,14 +58,18 @@ export class RouteListComponent implements OnChanges {
   }
 
   ngOnChanges() {
+    this.routeDataListFlat = RouteListComponent.assembleRouteDataListFlat(
+      this.routeDataList,
+    );
+  }
+
+  ngOnInit() {
     this.searchRegExp$ = this.searchString.valueChanges.pipe(
-      startWith(''),
+      startWith(this.searchString.value),
       map((searchString: string): RegExp => {
         return new RegExp(escapeRegExp(searchString), 'i');
       }),
     );
-
-    this.routeDataListFlat = this.assembleRouteDataListFlat();
   }
 
   selectOption(
