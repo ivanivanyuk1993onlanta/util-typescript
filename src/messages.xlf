@@ -57,7 +57,7 @@
         <note priority="1" from="meaning">site header</note>
       </trans-unit>
       <trans-unit id="routeText" datatype="html">
-        <source>{VAR_SELECT, select, home-1 {Home 1} home-1-1 {Home 1-1} home-1-2 {Home 1-2} home-2 {Home 2} home-2-1 {Home 2-1} home-2-2 {Home 2-2} home-root {Home root} lazyPage {Lazy page} notFound {404} other {Other} }</source>
+        <source>{VAR_SELECT, select, aboutUs {About us} contacts {Contacts} home {Home} notFound {404} other {Other} }</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/util/shared/route-list/route-translation/route-translation.component.html</context>
           <context context-type="linenumber">4</context>
