@@ -13,24 +13,26 @@
 
   <mat-menu
     #profileMenuSigned="matMenu"
-    [overlapTrigger]="false"
     [hasBackdrop]="true"
+    [overlapTrigger]="false"
   >
-    <button
-      mat-menu-item
-      (click)="router.navigateByUrl('/some-url')"
-    >
-      <mat-icon>settings</mat-icon>
-      <span i18n="profile link text|Profile menu profile link text@@profileLink">Profile</span>
-    </button>
+    <ng-template matMenuContent>
+      <button
+        mat-menu-item
+        (click)="router.navigateByUrl('/some-url')"
+      >
+        <mat-icon>settings</mat-icon>
+        <span i18n="profile link text|Profile menu profile link text@@profileLink">Profile</span>
+      </button>
 
-    <button
-      (click)="authService.signOut()"
-      mat-menu-item
-    >
-      <mat-icon>exit_to_app</mat-icon>
-      <span i18n="sign out action|Profile menu sign out action@@signOutAction">Sign out</span>
-    </button>
+      <button
+        (click)="authService.signOut()"
+        mat-menu-item
+      >
+        <mat-icon>exit_to_app</mat-icon>
+        <span i18n="sign out action|Profile menu sign out action@@signOutAction">Sign out</span>
+      </button>
+    </ng-template>
   </mat-menu>
 </div>
 
@@ -48,23 +50,25 @@
 
   <mat-menu
     #profileMenu="matMenu"
-    [overlapTrigger]="false"
     [hasBackdrop]="true"
+    [overlapTrigger]="false"
   >
-    <button
-      mat-menu-item
-      (click)="router.navigateByUrl('/register')"
-    >
-      <mat-icon>person_add</mat-icon>
-      <span i18n="register link text|Profile menu register link text@@registerLink">Register</span>
-    </button>
+    <ng-template matMenuContent>
+      <button
+        mat-menu-item
+        (click)="router.navigateByUrl('/register')"
+      >
+        <mat-icon>person_add</mat-icon>
+        <span i18n="register link text|Profile menu register link text@@registerLink">Register</span>
+      </button>
 
-    <button
-      (click)="authService.signIn()"
-      mat-menu-item
-    >
-      <mat-icon>vpn_key</mat-icon>
-      <span i18n="sign in action|Profile menu sign in action@@signInAction">Sign in</span>
-    </button>
+      <button
+        (click)="authService.signIn()"
+        mat-menu-item
+      >
+        <mat-icon>vpn_key</mat-icon>
+        <span i18n="sign in action|Profile menu sign in action@@signInAction">Sign in</span>
+      </button>
+    </ng-template>
   </mat-menu>
 </div>
