@@ -7,7 +7,7 @@
         <target>Профиль</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/util/shared/profile-menu/profile-menu/profile-menu.component.html</context>
-          <context context-type="linenumber">24</context>
+          <context context-type="linenumber">25</context>
         </context-group>
         <note priority="1" from="description">Profile menu profile link text</note>
         <note priority="1" from="meaning">profile link text</note>
@@ -17,7 +17,7 @@
         <target>Выйти</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/util/shared/profile-menu/profile-menu/profile-menu.component.html</context>
-          <context context-type="linenumber">32</context>
+          <context context-type="linenumber">33</context>
         </context-group>
         <note priority="1" from="description">Profile menu sign out action</note>
         <note priority="1" from="meaning">sign out action</note>
@@ -27,7 +27,7 @@
         <target>Регистрация</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/util/shared/profile-menu/profile-menu/profile-menu.component.html</context>
-          <context context-type="linenumber">59</context>
+          <context context-type="linenumber">62</context>
         </context-group>
         <note priority="1" from="description">Profile menu register link text</note>
         <note priority="1" from="meaning">register link text</note>
@@ -37,7 +37,7 @@
         <target>Войти</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/util/shared/profile-menu/profile-menu/profile-menu.component.html</context>
-          <context context-type="linenumber">67</context>
+          <context context-type="linenumber">70</context>
         </context-group>
         <note priority="1" from="description">Profile menu sign in action</note>
         <note priority="1" from="meaning">sign in action</note>
@@ -52,16 +52,6 @@
         <note priority="1" from="description">Route list search placeholder</note>
         <note priority="1" from="meaning">route list search placeholder</note>
       </trans-unit>
-      <trans-unit id="introductionHeader" datatype="html">
-        <source>Hello i18n!</source>
-        <target>Привет i18n!</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/pages/home/home.component.html</context>
-          <context context-type="linenumber">2</context>
-        </context-group>
-        <note priority="1" from="description">An introduction header for this sample</note>
-        <note priority="1" from="meaning">site header</note>
-      </trans-unit>
       <trans-unit id="routeText" datatype="html">
         <source>{VAR_SELECT, select, aboutUs {About us} contacts {Contacts} home {Home} notFound {404} other {Other} }</source>
         <target>{VAR_SELECT, select, aboutUs {О компании} contacts {Контакты} home {Домашняя} notFound {404} other {Другое} }</target>
@@ -71,16 +61,6 @@
         </context-group>
         <note priority="1" from="description">Navigation text for route</note>
         <note priority="1" from="meaning">route text</note>
-      </trans-unit>
-      <trans-unit id="test" datatype="html">
-        <source>test</source>
-        <target>тест</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/pages/lazy-page/index/index.component.html</context>
-          <context context-type="linenumber">2</context>
-        </context-group>
-        <note priority="1" from="description">test</note>
-        <note priority="1" from="meaning">test</note>
       </trans-unit>
     </body>
   </file>
