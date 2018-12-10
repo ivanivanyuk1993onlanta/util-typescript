@@ -102,7 +102,7 @@ export class AuthService {
   signOut() {
     this._isSignedInFormControl.setValue(false);
     this.loadRouteDataList().then((routeDataList: RouteData[]) => {
-      this._routeDataListFormControl.setValue([routeDataList[0]]);
+      this._routeDataListFormControl.setValue(routeDataList);
     });
     this._userNameFormControl.setValue('');
   }
