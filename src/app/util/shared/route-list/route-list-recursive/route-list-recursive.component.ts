@@ -40,11 +40,11 @@ export class RouteListRecursiveComponent implements OnChanges {
         routeData.matchesSearchRegExp$.pipe(
           distinctUntilChanged(),
         ).subscribe((matchesSearchRegExp: boolean) => {
-          const countOfParenReference = this.parentRouteData.countOfFilteredChildRouteList;
+          const countOfParentReference = this.parentRouteData.countOfFilteredChildRouteList;
           if (matchesSearchRegExp) {
-            countOfParenReference.setValue(countOfParenReference.value + 1);
+            countOfParentReference.setValue(countOfParentReference.value + 1);
           } else {
-            countOfParenReference.setValue(countOfParenReference.value - 1);
+            countOfParentReference.setValue(countOfParentReference.value - 1);
           }
         });
 
@@ -52,11 +52,11 @@ export class RouteListRecursiveComponent implements OnChanges {
           routeData.hasFilteredChildRouteList$.pipe(
             distinctUntilChanged(),
           ).subscribe((hasFilteredChildRouteList: boolean) => {
-            const countOfParenReference = this.parentRouteData.countOfFilteredChildRouteList;
+            const countOfParentReference = this.parentRouteData.countOfFilteredChildRouteList;
             if (hasFilteredChildRouteList) {
-              countOfParenReference.setValue(countOfParenReference.value + 1);
+              countOfParentReference.setValue(countOfParentReference.value + 1);
             } else {
-              countOfParenReference.setValue(countOfParenReference.value - 1);
+              countOfParentReference.setValue(countOfParentReference.value - 1);
             }
           });
         }
