@@ -1,7 +1,5 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
-import {HomeComponent} from './pages/home/home.component';
-import {PageNotFoundComponent} from './pages/page-not-found/page-not-found.component';
 
 const routes: Routes = [
   {
@@ -9,18 +7,23 @@ const routes: Routes = [
     pathMatch: 'full',
     redirectTo: '/home',
   },
+
   {
-    component: HomeComponent,
-    path: 'home',
+    path: 'about-us',
+    loadChildren: './pages/about-us/about-us.module#AboutUsModule',
   },
   {
-    path: 'lazy-page',
-    loadChildren: './pages/lazy-page/lazy-page.module#LazyPageModule',
+    path: 'contacts',
+    loadChildren: './pages/contacts/contacts.module#ContactsModule',
+  },
+  {
+    path: 'home',
+    loadChildren: './pages/home/home.module#HomeModule',
   },
 
   {
-    component: PageNotFoundComponent,
     path: '**',
+    loadChildren: './pages/page-404/page-404.module#Page404Module',
   },
 ];
 
