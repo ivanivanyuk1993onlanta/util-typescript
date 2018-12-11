@@ -21,7 +21,7 @@ export class AuthService {
   readonly userName$: Observable<string>;
 
   constructor(
-    private httpClient: HttpClient,
+    private _httpClient: HttpClient,
   ) {
     this._storage = new StorageWrap('auth');
 
@@ -40,7 +40,7 @@ export class AuthService {
   }
 
   private loadRouteDataList(): Promise<RouteData[]> {
-    return this.httpClient.
+    return this._httpClient.
       get<RouteData[]>(this._routeDataListUrl).
       toPromise<RouteData[]>().
       then((routeDataList: RouteData[]) => {
