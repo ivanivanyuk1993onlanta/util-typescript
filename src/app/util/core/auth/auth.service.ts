@@ -1,3 +1,4 @@
+import {environment} from '../../../../environments/environment';
 import {FormControl} from '@angular/forms';
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
@@ -12,7 +13,7 @@ import {StorageWrap} from '../storage/storage';
 export class AuthService {
   private _isSignedInFormControl = new FormControl(false);
   private _routeDataListFormControl = new FormControl(new Array<RouteData>());
-  private _routeDataListUrl = 'http://localhost:8080/route';
+  private _routeDataListUrl = `${environment.apiUrl}route`;
   private _storage: StorageWrap;
   private _userNameFormControl = new FormControl('');
 
