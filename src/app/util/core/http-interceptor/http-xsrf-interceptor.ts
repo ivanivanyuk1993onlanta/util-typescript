@@ -37,6 +37,7 @@ export class HttpXsrfInterceptor implements HttpInterceptor {
     if (
       req.method === 'GET' ||
       req.method === 'HEAD' ||
+      req.method === 'OPTIONS' ||
       !lcUrl.startsWith(environment.apiUrl)
     ) {
       return next.handle(req);
