@@ -25,10 +25,6 @@ export class HttpXsrfInterceptor implements HttpInterceptor {
     req: HttpRequest<any>,
     next: HttpHandler,
   ): Observable<HttpEvent<any>> {
-    console.log(this.headerName);
-    console.log(this.tokenService.getToken());
-    console.log(123);
-
     const lcUrl = req.url.toLowerCase();
     // Skip both non-mutating requests and absolute URLs.
     // Non-mutating requests don't require a token, and absolute URLs require special handling
