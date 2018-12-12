@@ -48,7 +48,7 @@ export class AuthService {
         return routeDataList;
       }).
       catch(() => {
-        return [];
+        return this._routeDataListFormControl.value;
       });
   }
 
