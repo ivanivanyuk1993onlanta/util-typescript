@@ -42,7 +42,7 @@ export class AuthService {
 
   private loadRouteDataList(): Promise<RouteData[]> {
     return this._httpClient.
-      get<RouteData[]>(this._routeDataListUrl).
+      get<RouteData[]>(this._routeDataListUrl, {withCredentials: true}).
       toPromise<RouteData[]>().
       then((routeDataList: RouteData[]) => {
         return routeDataList;
