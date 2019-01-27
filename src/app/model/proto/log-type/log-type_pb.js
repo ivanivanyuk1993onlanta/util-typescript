@@ -1,6 +1,8 @@
 /**
  * @fileoverview
  * @enhanceable
+ * @suppress {messageConventions} JS Compiler reports an error if a variable or
+ *     field starts with 'MSG_' and isn't a translatable message.
  * @public
  */
 // GENERATED CODE -- DO NOT EDIT!
@@ -53,6 +55,7 @@ proto.log_type.LogType.prototype.toObject = function(opt_includeInstance) {
  *     http://goto/soy-param-migration
  * @param {!proto.log_type.LogType} msg The msg instance to transform.
  * @return {!Object}
+ * @suppress {unusedLocalVariables} f is only used for nested messages
  */
 proto.log_type.LogType.toObject = function(includeInstance, msg) {
   var f, obj = {
@@ -127,6 +130,7 @@ proto.log_type.LogType.prototype.serializeBinary = function() {
  * format), writing to the given BinaryWriter.
  * @param {!proto.log_type.LogType} message
  * @param {!jspb.BinaryWriter} writer
+ * @suppress {unusedLocalVariables} f is only used for nested messages
  */
 proto.log_type.LogType.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
@@ -158,7 +162,7 @@ proto.log_type.LogType.prototype.getId = function() {
 
 /** @param {number} value */
 proto.log_type.LogType.prototype.setId = function(value) {
-  jspb.Message.setField(this, 1, value);
+  jspb.Message.setProto3IntField(this, 1, value);
 };
 
 
@@ -173,7 +177,7 @@ proto.log_type.LogType.prototype.getSystemName = function() {
 
 /** @param {string} value */
 proto.log_type.LogType.prototype.setSystemName = function(value) {
-  jspb.Message.setField(this, 2, value);
+  jspb.Message.setProto3StringField(this, 2, value);
 };
 
 

@@ -1,4 +1,4 @@
-import * as logTypeProto from './log-type_pb.js';
+import * as logTypeWithUiPermissionDataProto from './model/proto/log-type/log-type-with-ui-permission-data_pb.js';
 import {AuthService} from './util/core/auth/auth.service';
 import {Component} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
@@ -18,7 +18,7 @@ export class AppComponent {
       toPromise().
       then((data) => {
         console.log(data);
-        console.log(logTypeProto.LogType.deserializeBinary(data).toObject());
+        console.log(logTypeWithUiPermissionDataProto.LogTypeWithUiPermissionData.deserializeBinary(data).toObject());
       });
   }
 }
