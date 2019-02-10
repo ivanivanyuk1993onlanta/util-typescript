@@ -1,10 +1,10 @@
 import * as localForage from 'localforage';
 
 export class StorageWrap {
-  storage: LocalForage;
+  private _storage: LocalForage;
 
   constructor(name: string) {
-    this.storage = localForage.createInstance({
+    this._storage = localForage.createInstance({
       name: name,
     });
 
@@ -12,18 +12,18 @@ export class StorageWrap {
   }
 
   clear(): Promise<void> {
-    return this.storage.clear();
+    return this._storage.clear();
   }
 
   get<T>(key: string): Promise<T> {
-    return this.storage.getItem(key);
+    return this._storage.getItem(key);
   }
 
   remove(key: string): Promise<void> {
-    return this.storage.removeItem(key);
+    return this._storage.removeItem(key);
   }
 
   set<T>(key: string, value: T): Promise<T> {
-    return this.storage.setItem<T>(key, value);
+    return this._storage.setItem<T>(key, value);
   }
 }

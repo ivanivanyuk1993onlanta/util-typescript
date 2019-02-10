@@ -11,7 +11,7 @@ import {NgModule} from '@angular/core';
 import {RouterModule} from '@angular/router';
 import {ScrollDispatchModule} from '@angular/cdk/scrolling';
 import {SharedModule} from '../shared/shared.module';
-import {httpInterceptorProvider} from './http-interceptor/http-interceptor-provider';
+import {httpInterceptorProvider} from '../../http-interceptor/http-interceptor-provider';
 
 @NgModule({
   declarations: [

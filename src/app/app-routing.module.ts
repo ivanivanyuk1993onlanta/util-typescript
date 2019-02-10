@@ -10,20 +10,20 @@ const routes: Routes = [
 
   {
     path: 'about-us',
-    loadChildren: './pages/about-us/about-us.module#AboutUsModule',
+    loadChildren: './page/about-us/about-us.module#AboutUsModule',
   },
   {
     path: 'contacts',
-    loadChildren: './pages/contacts/contacts.module#ContactsModule',
+    loadChildren: './page/contacts/contacts.module#ContactsModule',
   },
   {
     path: 'home',
-    loadChildren: './pages/home/home.module#HomeModule',
+    loadChildren: './page/home/home.module#HomeModule',
   },
 
   {
     path: '**',
-    loadChildren: './pages/page-404/page-404.module#Page404Module',
+    loadChildren: './page/page-404/page-404.module#Page404Module',
   },
 ];
 

@@ -11,6 +11,11 @@
     ></app-route-list>
   </div>
   <div class="layout_content">
+    <app-crud-form
+      [protoMessage]="protoMessage"
+      dataUrl="http://localhost:8080/log-type"
+      tableName="log_type"
+    ></app-crud-form>
     <router-outlet></router-outlet>
   </div>
 </app-layout>

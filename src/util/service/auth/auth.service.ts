@@ -1,16 +1,18 @@
-import {environment} from '../../../../environments/environment';
+import {applyMixins} from 'rxjs/internal-compatibility';
+import {environment} from '../../../environments/environment';
 import {FormControl} from '@angular/forms';
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-import {map, startWith} from 'rxjs/operators';
 import {Observable} from 'rxjs';
-import {RouteData} from '../route/route-data';
-import {StorageWrap} from '../storage/storage';
+import {RegisterFieldObserversMixin} from '../../class/storage/register-field-observers-mixin';
+import {RouteData} from '../../class/route/route-data';
+import {StorageWrap} from '../../class/storage/storage';
 
 @Injectable({
   providedIn: 'root',
 })
-export class AuthService {
+// @ts-ignore
+export class AuthService implements RegisterFieldObserversMixin {
   private _isSignedInFormControl = new FormControl(false);
   private _routeDataListFormControl = new FormControl(new Array<RouteData>());
   private _routeDataListUrl = `${environment.apiUrl}/route`;
@@ -26,15 +28,15 @@ export class AuthService {
   ) {
     this._storage = new StorageWrap('auth');
 
-    this.registerFieldObservers<boolean>(
+    this._registerFieldObservers<boolean>(
       'isSignedIn',
       () => Promise.resolve(false),
     );
-    this.registerFieldObservers<RouteData[]>(
+    this._registerFieldObservers<RouteData[]>(
       'routeDataList',
       this.loadRouteDataList.bind(this),
     );
-    this.registerFieldObservers<string>(
+    this._registerFieldObservers<string>(
       'userName',
       () => Promise.resolve(''),
     );
@@ -49,46 +51,6 @@ export class AuthService {
       }).
       catch(() => {
         return this._routeDataListFormControl.value;
-      });
-  }
-
-  private registerFieldObservers<T>(
-    fieldName: string,
-    getValueDefaultFunc: () => Promise<T>,
-  ): void {
-    const fieldNameFormControl = `_${fieldName}FormControl`;
-    const fieldNameObservable = `${fieldName}$`;
-
-    this[fieldNameObservable] = this[fieldNameFormControl].valueChanges.pipe(
-      startWith(this[fieldNameFormControl].value),
-      map((value) => {
-        return value;
-      }),
-    );
-
-    this[fieldNameFormControl].valueChanges.subscribe(
-      (value: T) => {
-        this._storage.set<T>(fieldName, value);
-      },
-    );
-
-    this._storage.get<T>(fieldName).
-      then((valueStored: T) => {
-        if (valueStored !== null) {
-          this[fieldNameFormControl].setValue(valueStored);
-        } else {
-          getValueDefaultFunc().then(
-            (value: T) => {
-              this[fieldNameFormControl].setValue(value);
-            },
-          );
-        }
-      }).
-      catch(() => {
-        getValueDefaultFunc().
-          then((value: T) => {
-            this[fieldNameFormControl].setValue(value);
-          });
       });
   }
 
@@ -107,4 +69,12 @@ export class AuthService {
     });
     this._userNameFormControl.setValue('');
   }
+
+  private _registerFieldObservers<T>(
+    fieldName: string,
+    getValueDefaultFunc: () => Promise<T>,
+  ): void {
+  }
 }
+
+applyMixins(AuthService, [RegisterFieldObserversMixin]);
