@@ -1,7 +1,7 @@
 export class ResolvablePromise<T> {
   promise: Promise<T>;
-  reject: (value?: T | PromiseLike<T>) => void;
-  resolve: (reason?: any) => void;
+  reject: (reason?: any) => void;
+  resolve: (value?: T | PromiseLike<T>) => void;
 
   constructor() {
     this.promise = new Promise<T>((resolve, reject) => {
