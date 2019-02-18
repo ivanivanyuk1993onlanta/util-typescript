@@ -27,7 +27,6 @@ export class ProtoDescriptorService {
         if (descriptorProtoArray != null) {
           resolvablePromise.resolve(new DescriptorProto(descriptorProtoArray));
         } else {
-          console.log('here');
           this._httpClient.
             get(`${url}/descriptor-proto`, {responseType: 'arraybuffer'}).
             toPromise().
