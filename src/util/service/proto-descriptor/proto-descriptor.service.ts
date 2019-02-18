@@ -20,12 +20,12 @@ export class ProtoDescriptorService {
     tableName: string,
     url: string,
   ): Promise<any> {
-    const resolvablePromise = new ResolvablePromise<any>();
+    const descriptorProtoPromise = new ResolvablePromise<any>();
 
     this._descriptorProtoStorage.get(tableName).
       then((descriptorProtoArray) => {
-        if (descriptorProtoArray != null) {
-          resolvablePromise.resolve(new DescriptorProto(descriptorProtoArray));
+        if (descriptorProtoArray !== null) {
+          descriptorProtoPromise.resolve(new DescriptorProto(descriptorProtoArray));
         } else {
           this._httpClient.
             get(`${url}/descriptor-proto`, {responseType: 'arraybuffer'}).
@@ -39,12 +39,12 @@ export class ProtoDescriptorService {
                 tableName,
                 descriptorProto.toArray(),
               ).then(() => {
-                resolvablePromise.resolve(descriptorProto);
+                descriptorProtoPromise.resolve(descriptorProto);
               });
             });
         }
       });
 
-    return resolvablePromise.promise;
+    return descriptorProtoPromise.promise;
   }
 }
