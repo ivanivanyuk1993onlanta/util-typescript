@@ -3,6 +3,7 @@ import {StorageWrap} from '../../class/storage/storage';
 import {DescriptorProto} from 'google-protobuf/google/protobuf/descriptor_pb';
 import {HttpClient} from '@angular/common/http';
 import {ResolvablePromise} from '../../class/resolvable-promise/resolvable-promise';
+import {TableUrlService} from '../table-url/table-url.service';
 
 @Injectable({
   providedIn: 'root',
@@ -16,19 +17,28 @@ export class ProtoDescriptorService {
     this._descriptorProtoStorage = new StorageWrap('descriptor-proto');
   }
 
+  public static getTableDescriptorProtoUrl(
+    tableName: string,
+  ): string {
+    return `${TableUrlService.getTableUrl(tableName)}/descriptor-proto`;
+  }
+
   getDescriptorProto(
     tableName: string,
-    url: string,
   ): Promise<any> {
     const descriptorProtoPromise = new ResolvablePromise<any>();
 
     this._descriptorProtoStorage.get(tableName).
       then((descriptorProtoArray) => {
         if (descriptorProtoArray !== null) {
-          descriptorProtoPromise.resolve(new DescriptorProto(descriptorProtoArray));
+          descriptorProtoPromise.resolve(
+            new DescriptorProto(descriptorProtoArray));
         } else {
           this._httpClient.
-            get(`${url}/descriptor-proto`, {responseType: 'arraybuffer'}).
+            get(
+              ProtoDescriptorService.getTableDescriptorProtoUrl(tableName),
+              {responseType: 'arraybuffer'},
+            ).
             toPromise().
             then((descriptorProtoBytes) => {
               const descriptorProto = DescriptorProto.deserializeBinary(
