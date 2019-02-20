@@ -1,11 +1,10 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {FormBuilder} from '@angular/forms';
+import {FormBuilder, FormGroup} from '@angular/forms';
 import {HttpClient} from '@angular/common/http';
-import {
-  DescriptorProto,
-  FileDescriptorProto,
-} from 'google-protobuf/google/protobuf/descriptor_pb.js';
-import {ProtoDescriptorService} from '../../../../service/proto-descriptor/proto-descriptor.service';
+import {combineLatest, Observable} from 'rxjs';
+import {map, startWith} from 'rxjs/operators';
+import {FormService} from '../../../../service/form/form.service';
+import {TableUrlService} from '../../../../service/table-url/table-url.service';
 
 @Component({
   selector: 'app-crud-form',
@@ -13,46 +12,47 @@ import {ProtoDescriptorService} from '../../../../service/proto-descriptor/proto
   styleUrls: ['./crud-form.component.scss'],
 })
 export class CrudFormComponent implements OnInit {
-  @Input() dataUrl: string;
   @Input() protoMessage: any;
   @Input() tableName: string;
 
+  formGroup$: Observable<FormGroup>;
+
   constructor(
     private _formBuilder: FormBuilder,
+    private _formService: FormService,
     private _httpClient: HttpClient,
-    private _protoDescriptorService: ProtoDescriptorService,
   ) {
   }
 
   ngOnInit(): void {
-    const promise = this._protoDescriptorService.getDescriptorProto(
-      this.tableName,
-      this.dataUrl,
+    this.formGroup$ = combineLatest(
+      this._formService.getFieldNumberToFieldDescriptorProtoObjectMapPromise(
+        this.tableName,
+      ),
+      this._httpClient.get(
+        `${TableUrlService.getTableUrl(this.tableName)}?id=1`,
+        {responseType: 'arraybuffer'},
+      ).pipe(
+        map((dataBytes) => {
+          return this.protoMessage.deserializeBinary(dataBytes);
+        }),
+      ),
+    ).pipe(
+      map(
+        ([fieldNumberToFieldDescriptorProtoObjectMap, messageWithUiPermissionDataProto]): FormGroup => {
+          console.log(FormService.getFormFieldList(
+            messageWithUiPermissionDataProto,
+            fieldNumberToFieldDescriptorProtoObjectMap,
+          ));
+          console.log(messageWithUiPermissionDataProto.getUiPermissionData().
+            getPermittedToReadFieldNumberListList());
+          console.log(messageWithUiPermissionDataProto);
+          return this._formBuilder.group({
+            asd: [''],
+          });
+        }),
+      startWith(new FormGroup({})),
     );
-    console.log(promise);
-    promise.then(result => {
-      console.log(result);
-    });
-    // this._httpClient.
-    //   get('http://localhost:8080/ui-permission-data/descriptor-proto', {responseType: 'arraybuffer'}).
-    //   toPromise().
-    //   then((data) => {
-    //     console.log('-');
-    //     console.log('-');
-    //     console.log(DescriptorProto.deserializeBinary(data));
-    //     console.log(DescriptorProto.deserializeBinary(data).getFieldList());
-    //     console.log(DescriptorProto.deserializeBinary(data).getFieldList().map((item) => item.toObject()));
-    //   });
-
-    // this._httpClient.
-    //   get(`${this.dataUrl}?id=1`, {responseType: 'arraybuffer'}).
-    //   toPromise().
-    //   then((data) => {
-    //     console.log('-');
-    //     console.log('-');
-    //     console.log(this.protoMessage.deserializeBinary(data));
-    //     console.log(this.protoMessage.deserializeBinary(data).toObject());
-    //   });
   }
 
 }

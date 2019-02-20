@@ -1,10 +1,17 @@
-<!--<form [formGroup]="profileForm">-->
-  <!--<mat-form-field style="width: 100%">-->
-    <!--<input-->
-      <!--formControlName="street"-->
-      <!--matInput-->
-      <!--placeholder="Street"-->
-    <!--&gt;-->
-  <!--</mat-form-field>-->
-<!--</form>-->
-works
+<form
+  [formGroup]="formGroup$ | async"
+>
+  <!--<div-->
+    <!--*ngFor="asd of formGroup$ | async"-->
+  <!--&gt;-->
+    <mat-form-field
+      style="width: 100%"
+    >
+      <input
+        formControlName="asd"
+        matInput
+        placeholder="Asd"
+      >
+    </mat-form-field>
+  <!--</div>-->
+</form>

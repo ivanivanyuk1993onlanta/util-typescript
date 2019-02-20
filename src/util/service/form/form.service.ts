@@ -2,6 +2,8 @@ import {Injectable} from '@angular/core';
 import {ProtoDescriptorService} from '../proto-descriptor/proto-descriptor.service';
 import {StorageWrap} from '../../class/storage/storage';
 import {ResolvablePromise} from '../../class/resolvable-promise/resolvable-promise';
+import {FormFieldBase} from './form-field-base';
+import {ucfirst} from '../../method/ucfirst';
 
 @Injectable({
   providedIn: 'root',
@@ -17,7 +19,30 @@ export class FormService {
     );
   }
 
-  getFieldNumberToFieldDescriptorProtoObjectMap(
+  public static getFormFieldList(
+    messageWithUiPermissionDataProto,
+    fieldNumberToFieldDescriptorProtoObjectMap,
+  ): FormFieldBase<any>[] {
+    const formFieldList = new Array<FormFieldBase<any>>();
+    for (const fieldNumber of messageWithUiPermissionDataProto.getUiPermissionData().
+      getPermittedToReadFieldNumberListList()) {
+
+      const getterName = `get${ucfirst(
+        fieldNumberToFieldDescriptorProtoObjectMap[fieldNumber].jsonName,
+      )}`;
+
+      formFieldList.push(
+        new FormFieldBase({
+          key: fieldNumber,
+          order: fieldNumber,
+          value: messageWithUiPermissionDataProto.getData()[getterName](),
+        }),
+      );
+    }
+    return formFieldList.sort((left, right) => left.order - right.order);
+  }
+
+  getFieldNumberToFieldDescriptorProtoObjectMapPromise(
     tableName: string,
   ): Promise<any> {
     const fieldNumberToFieldDescriptorProtoObjectMapPromise = new ResolvablePromise<any>();
