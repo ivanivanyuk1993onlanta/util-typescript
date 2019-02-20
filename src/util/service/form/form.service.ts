@@ -13,12 +13,12 @@ export class FormService {
     private _protoDescriptorService: ProtoDescriptorService,
   ) {
     this._fieldNumberToFieldDescriptorProtoObjectMapStorage = new StorageWrap(
-      'field-number-to-field-descriptor-proto-object-map');
+      'field-number-to-field-descriptor-proto-object-map',
+    );
   }
 
   getFieldNumberToFieldDescriptorProtoObjectMap(
     tableName: string,
-    url: string,
   ): Promise<any> {
     const fieldNumberToFieldDescriptorProtoObjectMapPromise = new ResolvablePromise<any>();
 
@@ -29,26 +29,24 @@ export class FormService {
             fieldNumberToFieldDescriptorProtoObjectMap,
           );
         } else {
-          this._protoDescriptorService.getDescriptorProto(
-            tableName,
-            url,
-          ).then((descriptorProto) => {
-            const fieldNumberToFieldDescriptorProtoObjectMapLocal = descriptorProto.getFieldList().
-              reduce((acc, item) => {
-                const object = item.toObject();
-                acc[object.number] = object;
-                return acc;
-              }, {});
+          this._protoDescriptorService.getDescriptorProto(tableName).
+            then((descriptorProto) => {
+              const fieldNumberToFieldDescriptorProtoObjectMapLocal = descriptorProto.getFieldList().
+                reduce((acc, item) => {
+                  const object = item.toObject();
+                  acc[object.number] = object;
+                  return acc;
+                }, {});
 
-            this._fieldNumberToFieldDescriptorProtoObjectMapStorage.set(
-              tableName,
-              fieldNumberToFieldDescriptorProtoObjectMapLocal,
-            ).then(() => {
-              fieldNumberToFieldDescriptorProtoObjectMapPromise.resolve(
+              this._fieldNumberToFieldDescriptorProtoObjectMapStorage.set(
+                tableName,
                 fieldNumberToFieldDescriptorProtoObjectMapLocal,
-              );
+              ).then(() => {
+                fieldNumberToFieldDescriptorProtoObjectMapPromise.resolve(
+                  fieldNumberToFieldDescriptorProtoObjectMapLocal,
+                );
+              });
             });
-          });
         }
       });
 
