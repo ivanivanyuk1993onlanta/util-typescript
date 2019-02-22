@@ -1,10 +1,11 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup} from '@angular/forms';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {HttpClient} from '@angular/common/http';
 import {combineLatest, Observable} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
 import {FormService} from '../../../../service/form/form.service';
 import {TableUrlService} from '../../../../service/table-url/table-url.service';
+import {FormFieldBase} from '../../../../service/form/form-field-base';
 
 @Component({
   selector: 'app-crud-form',
@@ -15,17 +16,19 @@ export class CrudFormComponent implements OnInit {
   @Input() protoMessage: any;
   @Input() tableName: string;
 
-  formGroup$: Observable<FormGroup>;
+  form$: Observable<{
+    formFieldList: FormFieldBase<any>[],
+    formGroup: FormGroup,
+  }>;
 
   constructor(
-    private _formBuilder: FormBuilder,
     private _formService: FormService,
     private _httpClient: HttpClient,
   ) {
   }
 
   ngOnInit(): void {
-    this.formGroup$ = combineLatest(
+    this.form$ = combineLatest(
       this._formService.getFieldNumberToFieldDescriptorProtoObjectMapPromise(
         this.tableName,
       ),
@@ -39,19 +42,26 @@ export class CrudFormComponent implements OnInit {
       ),
     ).pipe(
       map(
-        ([fieldNumberToFieldDescriptorProtoObjectMap, messageWithUiPermissionDataProto]): FormGroup => {
-          console.log(FormService.getFormFieldList(
+        ([fieldNumberToFieldDescriptorProtoObjectMap, messageWithUiPermissionDataProto]): any => {
+          const formFieldList = FormService.getFormFieldList(
+            this.tableName,
             messageWithUiPermissionDataProto,
             fieldNumberToFieldDescriptorProtoObjectMap,
-          ));
-          console.log(messageWithUiPermissionDataProto.getUiPermissionData().
-            getPermittedToReadFieldNumberListList());
-          console.log(messageWithUiPermissionDataProto);
-          return this._formBuilder.group({
-            asd: [''],
-          });
+          );
+          const formGroup = new FormGroup(formFieldList.reduce((acc, item) => {
+            acc[item.fieldNumber] = new FormControl(item.value, Validators.required);
+            return acc;
+          }, {}));
+
+          return {
+            formFieldList,
+            formGroup,
+          };
         }),
-      startWith(new FormGroup({})),
+      startWith({
+        formFieldList: [],
+        formGroup: new FormGroup({}),
+      }),
     );
   }
 

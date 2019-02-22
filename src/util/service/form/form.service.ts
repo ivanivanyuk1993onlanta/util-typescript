@@ -20,6 +20,7 @@ export class FormService {
   }
 
   public static getFormFieldList(
+    tableName: string,
     messageWithUiPermissionDataProto,
     fieldNumberToFieldDescriptorProtoObjectMap,
   ): FormFieldBase<any>[] {
@@ -31,9 +32,13 @@ export class FormService {
         fieldNumberToFieldDescriptorProtoObjectMap[fieldNumber].jsonName,
       )}`;
 
+      const fieldName = fieldNumberToFieldDescriptorProtoObjectMap[fieldNumber].name;
+
       formFieldList.push(
         new FormFieldBase({
-          key: fieldNumber,
+          fieldName: fieldName,
+          fieldNumber: fieldNumber,
+          langKey: `${tableName}.${fieldName}`,
           order: fieldNumber,
           value: messageWithUiPermissionDataProto.getData()[getterName](),
         }),

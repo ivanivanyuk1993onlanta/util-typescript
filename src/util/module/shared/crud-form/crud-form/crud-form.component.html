@@ -1,17 +1,22 @@
 <form
-  [formGroup]="formGroup$ | async"
+  [formGroup]="(form$ | async).formGroup"
 >
-  <!--<div-->
-    <!--*ngFor="asd of formGroup$ | async"-->
-  <!--&gt;-->
+  <ng-container
+    *ngFor="let formField of (form$ | async).formFieldList"
+  >
     <mat-form-field
       style="width: 100%"
     >
+      <mat-label>
+        <app-form-field-label-translation
+          [langKey]="formField.langKey"
+        ></app-form-field-label-translation>
+      </mat-label>
       <input
-        formControlName="asd"
+        [formControlName]="formField.fieldNumber"
         matInput
-        placeholder="Asd"
       >
+      <mat-error>{{1}}</mat-error>
     </mat-form-field>
-  <!--</div>-->
+  </ng-container>
 </form>
