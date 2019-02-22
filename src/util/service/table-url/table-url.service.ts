@@ -8,6 +8,6 @@ export class TableUrlService {
   public static getTableUrl(
     tableName: string,
   ): string {
-    return `${environment.apiUrl}/${environment.tableNameToTableUrlMap[tableName]}`;
+    return `${environment.apiUrl}/${environment.tableNameToTableUrlMap[tableName]}`; // todo move data from client environment to server api
   }
 }

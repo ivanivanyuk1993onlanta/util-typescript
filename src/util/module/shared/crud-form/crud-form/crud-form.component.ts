@@ -49,7 +49,7 @@ export class CrudFormComponent implements OnInit {
             fieldNumberToFieldDescriptorProtoObjectMap,
           );
           const formGroup = new FormGroup(formFieldList.reduce((acc, item) => {
-            acc[item.fieldNumber] = new FormControl(item.value, Validators.required);
+            acc[item.fieldNumber] = new FormControl(item.value, Validators.required); // todo load validator data from server api
             return acc;
           }, {}));
 
