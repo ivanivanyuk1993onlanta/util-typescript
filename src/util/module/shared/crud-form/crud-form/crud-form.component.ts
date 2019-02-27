@@ -36,7 +36,6 @@ export class CrudFormComponent implements OnInit {
         {responseType: 'arraybuffer'},
       ).pipe(
         map((dataBytes) => {
-          console.log(1);
           return TableService.getTableProto(this.tableName).deserializeBinary(dataBytes);
         }),
       ),
