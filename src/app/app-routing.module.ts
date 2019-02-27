@@ -20,6 +20,10 @@ const routes: Routes = [
     path: 'home',
     loadChildren: './page/home/home.module#HomeModule',
   },
+  {
+    path: 'form-example',
+    loadChildren: './page/form-example/form-example.module#FormExampleModule',
+  },
 
   {
     path: '**',
