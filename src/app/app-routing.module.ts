@@ -10,12 +10,12 @@ const routes: Routes = [
 
   {
     path: 'home',
-    loadChildren: './page/home/home.module#HomeModule',
+    loadChildren: './page-folder/home/home.module#HomeModule',
   },
 
   {
     path: '**',
-    loadChildren: './page/page-404/page-404.module#Page404Module',
+    loadChildren: './page-folder/page-404/page-folder-404.module#Page404Module',
   },
 ];
 

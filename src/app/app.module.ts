@@ -1,4 +1,4 @@
-import {AppComponent} from './app.component';
+import {AppComponent} from './app/app.component';
 import {AppRoutingModule} from './app-routing.module';
 import {CoreModule} from '../util/module/core/core.module';
 import {environment} from '../environments/environment';
