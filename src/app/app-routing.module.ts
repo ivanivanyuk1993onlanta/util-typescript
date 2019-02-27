@@ -9,20 +9,8 @@ const routes: Routes = [
   },
 
   {
-    path: 'about-us',
-    loadChildren: './page/about-us/about-us.module#AboutUsModule',
-  },
-  {
-    path: 'contacts',
-    loadChildren: './page/contacts/contacts.module#ContactsModule',
-  },
-  {
     path: 'home',
     loadChildren: './page/home/home.module#HomeModule',
-  },
-  {
-    path: 'form-example',
-    loadChildren: './page/form-example/form-example.module#FormExampleModule',
   },
 
   {
