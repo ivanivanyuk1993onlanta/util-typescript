@@ -4,7 +4,7 @@ import {HttpClient} from '@angular/common/http';
 import {combineLatest, Observable} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
 import {FormService} from '../../../../service/form/form.service';
-import {TableUrlService} from '../../../../service/table-url/table-url.service';
+import {TableService} from '../../../../service/table/table.service';
 import {FormFieldBase} from '../../../../service/form/form-field-base';
 
 @Component({
@@ -13,7 +13,6 @@ import {FormFieldBase} from '../../../../service/form/form-field-base';
   styleUrls: ['./crud-form.component.scss'],
 })
 export class CrudFormComponent implements OnInit {
-  @Input() protoMessage: any;
   @Input() tableName: string;
 
   form$: Observable<{
@@ -33,11 +32,12 @@ export class CrudFormComponent implements OnInit {
         this.tableName,
       ),
       this._httpClient.get(
-        `${TableUrlService.getTableUrl(this.tableName)}?id=1`,
+        `${TableService.getTableUrl(this.tableName)}?id=1`,
         {responseType: 'arraybuffer'},
       ).pipe(
         map((dataBytes) => {
-          return this.protoMessage.deserializeBinary(dataBytes);
+          console.log(1);
+          return TableService.getTableProto(this.tableName).deserializeBinary(dataBytes);
         }),
       ),
     ).pipe(

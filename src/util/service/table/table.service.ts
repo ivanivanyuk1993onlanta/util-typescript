@@ -4,7 +4,13 @@ import {environment} from '../../../environments/environment';
 @Injectable({
   providedIn: 'root',
 })
-export class TableUrlService {
+export class TableService {
+  public static getTableProto(
+    tableName: string,
+  ): any {
+    return environment.tableNameToTableProtoMap[tableName];
+  }
+
   public static getTableUrl(
     tableName: string,
   ): string {

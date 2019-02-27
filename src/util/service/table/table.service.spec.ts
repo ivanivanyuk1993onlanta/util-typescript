@@ -1,12 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 
-import { TableUrlService } from './table-url.service';
+import { TableService } from './table.service';
 
-describe('TableUrlService', () => {
+describe('TableService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: TableUrlService = TestBed.get(TableUrlService);
+    const service: TableService = TestBed.get(TableService);
     expect(service).toBeTruthy();
   });
 });

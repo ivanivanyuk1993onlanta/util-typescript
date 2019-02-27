@@ -3,7 +3,7 @@ import {StorageWrap} from '../../class/storage/storage';
 import {DescriptorProto} from 'google-protobuf/google/protobuf/descriptor_pb';
 import {HttpClient} from '@angular/common/http';
 import {ResolvablePromise} from '../../class/resolvable-promise/resolvable-promise';
-import {TableUrlService} from '../table-url/table-url.service';
+import {TableService} from '../table/table.service';
 
 @Injectable({
   providedIn: 'root',
@@ -20,7 +20,7 @@ export class ProtoDescriptorService {
   public static getTableDescriptorProtoUrl(
     tableName: string,
   ): string {
-    return `${TableUrlService.getTableUrl(tableName)}/descriptor-proto`;
+    return `${TableService.getTableUrl(tableName)}/descriptor-proto`;
   }
 
   getDescriptorProto(
