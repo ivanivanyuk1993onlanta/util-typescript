@@ -15,7 +15,7 @@ const routes: Routes = [
 
   {
     path: '**',
-    loadChildren: './page-folder/page-404/page-folder-404.module#Page404Module',
+    loadChildren: './page-folder/page-404/page-404.module#Page404Module',
   },
 ];
 
