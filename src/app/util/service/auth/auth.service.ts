@@ -1,5 +1,5 @@
 import {applyMixins} from 'rxjs/internal-compatibility';
-import {environment} from '../../../environments/environment';
+import {environment} from '../../../../environments/environment';
 import {FormControl} from '@angular/forms';
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';

@@ -7,7 +7,7 @@ import {
   HttpXsrfTokenExtractor,
 } from '@angular/common/http';
 import {Observable} from 'rxjs';
-import {environment} from '../../environments/environment';
+import {environment} from '../../../environments/environment';
 
 /**
  * `HttpInterceptor` which adds an XSRF token to eligible outgoing requests.
