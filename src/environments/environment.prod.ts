@@ -1,4 +1,4 @@
-import * as logTypeWithUiPermissionDataProto from '../app/model/proto/log-type/log-type-with-ui-permission-data_pb.js';
+import * as logTypeWithUiPermissionDataProto from '../app/model-folder/proto/log-type/log-type-with-ui-permission-data_pb.js';
 
 export const environment = {
   apiUrl: 'http://localhost:8080',
