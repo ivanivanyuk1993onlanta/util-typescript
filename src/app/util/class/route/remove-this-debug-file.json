@@ -1,0 +1,64 @@
+[
+  {
+    "childRouteList": [
+      {
+        "iconKey": "home",
+        "langKey": "home",
+        "route": "home"
+      },
+      {
+        "iconKey": "person",
+        "langKey": "other",
+        "route": "other"
+      },
+      {
+        "iconKey": "home",
+        "langKey": "home",
+        "route": "home"
+      },
+      {
+        "iconKey": "person",
+        "langKey": "other",
+        "route": "other"
+      },
+      {
+        "iconKey": "home",
+        "langKey": "home",
+        "route": "home"
+      },
+      {
+        "iconKey": "person",
+        "langKey": "other",
+        "route": "other"
+      }
+    ],
+    "iconKey": "home",
+    "langKey": "home",
+    "route": "home"
+  },
+  {
+    "iconKey": "person",
+    "langKey": "other",
+    "route": "other"
+  },
+  {
+    "iconKey": "home",
+    "langKey": "home",
+    "route": "home"
+  },
+  {
+    "iconKey": "person",
+    "langKey": "other",
+    "route": "other"
+  },
+  {
+    "iconKey": "home",
+    "langKey": "home",
+    "route": "home"
+  },
+  {
+    "iconKey": "person",
+    "langKey": "other",
+    "route": "other"
+  }
+]

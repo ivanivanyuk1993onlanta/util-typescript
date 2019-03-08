@@ -1,8 +1,7 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {ProfileMenuComponent} from './profile-menu/profile-menu.component';
-import {MaterialUsedModule} from '../material-used/material-used.module';
-import {MatDialogModule} from '@angular/material';
+import {MatButtonModule, MatDialogModule, MatIconModule, MatMenuModule} from '@angular/material';
 import {RegisterFormComponent} from '../register-form/register-form.component';
 
 @NgModule({
@@ -12,8 +11,10 @@ import {RegisterFormComponent} from '../register-form/register-form.component';
   ],
   imports: [
     CommonModule,
+    MatButtonModule,
     MatDialogModule,
-    MaterialUsedModule,
+    MatIconModule,
+    MatMenuModule,
   ],
   declarations: [
     ProfileMenuComponent,

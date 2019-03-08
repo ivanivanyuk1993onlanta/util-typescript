@@ -3,9 +3,9 @@ import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {HttpClient} from '@angular/common/http';
 import {combineLatest, Observable} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
-import {FormService} from '../../../../service/form/form.service';
-import {TableService} from '../../../../service/table/table.service';
-import {FormFieldBase} from '../../../../service/form/form-field-base';
+import {FormService} from '../../../service/form/form.service';
+import {TableService} from '../../../service/table/table.service';
+import {FormFieldBase} from '../../../service/form/form-field-base';
 
 @Component({
   selector: 'app-crud-form',

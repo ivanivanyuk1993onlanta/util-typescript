@@ -15,7 +15,8 @@ import {StorageWrap} from '../../class/storage/storage';
 export class AuthService implements RegisterFieldObserversMixin {
   private _isSignedInFormControl = new FormControl(false);
   private _routeDataListFormControl = new FormControl(new Array<RouteData>());
-  private _routeDataListUrl = `${environment.apiUrl}/route`;
+  // private _routeDataListUrl = `${environment.apiUrl}/route`;
+  private _routeDataListUrl = 'https://api.myjson.com/bins/iu6sa'; // todo: remove debug code
   private _storage: StorageWrap;
   private _userNameFormControl = new FormControl('');
 
@@ -44,7 +45,8 @@ export class AuthService implements RegisterFieldObserversMixin {
 
   private loadRouteDataList(): Promise<RouteData[]> {
     return this._httpClient.
-      get<RouteData[]>(this._routeDataListUrl, {withCredentials: true}).
+      // get<RouteData[]>(this._routeDataListUrl, {withCredentials: true}).
+      get<RouteData[]>(this._routeDataListUrl). // todo: remove debug code
       toPromise<RouteData[]>().
       then((routeDataList: RouteData[]) => {
         return routeDataList;
