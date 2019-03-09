@@ -21,6 +21,7 @@ export class RouteListRecursiveComponent implements OnChanges, OnDestroy {
   }
 
   public ngOnChanges() {
+    // todo refactor this thing!
     console.log(`ngOnChanges: ${ (new Date()).toLocaleTimeString() }`); // todo remove debug code, make routeDataList correctly show when it is changed when search string is filled
     for (const routeData of this.routeDataList) {
       routeData.matchesSearchRegExpSubject$ = new BehaviorSubject<boolean>(true);
