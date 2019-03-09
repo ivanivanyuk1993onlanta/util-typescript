@@ -84,6 +84,8 @@ export class RouteListRecursiveComponent implements OnChanges, OnDestroy {
   ) {
     // todo make routeData.textTranslated some observable/subject (it is undefined on component creation, hence when searchRegExp is not empty, it does not match it)
     // todo check if the problem of empty filtered list when route data is changed when search string is not empty is solved
+    // todo have in mind this: (new RegExp('', 'i')).test(undefined) true
+    // todo have in mind this: (new RegExp('a', 'i')).test(undefined) false
     routeData.matchesSearchRegExpSubject$ = new BehaviorSubject<boolean>(true);
     this.searchRegExpSubject$.pipe(
       takeUntil(this._isComponentDestroyedSubject$),
