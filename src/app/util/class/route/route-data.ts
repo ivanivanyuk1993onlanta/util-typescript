@@ -1,13 +1,12 @@
-import {FormControl} from '@angular/forms';
-import {Observable} from 'rxjs';
+import {BehaviorSubject} from 'rxjs';
 
 export class RouteData {
   childRouteList?: RouteData[];
-  countOfFilteredChildRouteList?: FormControl;
-  hasFilteredChildRouteList$?: Observable<boolean>;
+  countOfFilteredChildRouteListSubject$?: BehaviorSubject<number>;
+  hasFilteredChildRouteListSubject$?: BehaviorSubject<boolean>;
   iconKey?: string;
   langKey: string;
-  matchesSearchRegExp$?: Observable<boolean>;
+  matchesSearchRegExpSubject$?: BehaviorSubject<boolean>;
   route: string;
   textTranslated?: string;
 }

@@ -1,3 +1,4 @@
+{{ searchRegExpSubject$ | async }}
 <mat-nav-list>
   <div
     *ngFor="let routeData of routeDataList"
@@ -5,7 +6,7 @@
   >
     <a
       #routerLink="routerLinkActive"
-      [ngClass]="{hidden: !(routeData.matchesSearchRegExp$ | async)}"
+      [ngClass]="{hidden: !(routeData.matchesSearchRegExpSubject$ | async)}"
       [routerLink]="routeData.route"
       mat-list-item
       routerLinkActive="active"
@@ -25,13 +26,13 @@
 
     <div
       *ngIf="routeData.childRouteList"
-      [ngClass]="{hidden: !(routeData.hasFilteredChildRouteList$ | async)}"
+      [ngClass]="{hidden: !(routeData.hasFilteredChildRouteListSubject$ | async)}"
       class="route-list"
     >
       <app-route-list-recursive
         [parentRouteData]="routeData"
         [routeDataList]="routeData.childRouteList"
-        [searchRegExp$]="searchRegExp$"
+        [searchRegExpSubject$]="searchRegExpSubject$"
       ></app-route-list-recursive>
     </div>
   </div>

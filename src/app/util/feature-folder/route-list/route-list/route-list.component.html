@@ -8,7 +8,7 @@
     i18n="route list search placeholder|Route list search placeholder@@routeListSearchPlaceholder"
   >Search</mat-label>
   <input
-    [formControl]="searchString"
+    [formControl]="searchStringFormControl"
     [matAutocomplete]="matAutocomplete"
     matInput
     type="search"
@@ -40,5 +40,5 @@
 
 <app-route-list-recursive
   [routeDataList]="routeDataList"
-  [searchRegExp$]="searchRegExp$"
+  [searchRegExpSubject$]="searchRegExpSubject$"
 ></app-route-list-recursive>

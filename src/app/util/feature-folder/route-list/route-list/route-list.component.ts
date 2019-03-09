@@ -1,12 +1,12 @@
-import {Component, Input, OnChanges, OnInit} from '@angular/core';
+import {BehaviorSubject, Subject} from 'rxjs';
+import {Component, Input, OnChanges, OnDestroy} from '@angular/core';
 import {escapeRegExp} from 'tslint/lib/utils';
 import {FormControl} from '@angular/forms';
-import {map, startWith} from 'rxjs/operators';
 import {MatOptionSelectionChange} from '@angular/material';
 import {MediaQueryObserverService} from '../../../service/media-query-observer/media-query-observer.service';
-import {Observable} from 'rxjs';
 import {RouteData} from '../../../class/route/route-data';
 import {Router} from '@angular/router';
+import {takeUntil} from 'rxjs/operators';
 
 @Component({
   selector: 'app-route-list',
@@ -14,19 +14,33 @@ import {Router} from '@angular/router';
   styleUrls: ['./route-list.component.scss'],
 })
 
-export class RouteListComponent implements OnChanges, OnInit {
+export class RouteListComponent implements OnChanges, OnDestroy {
   @Input() routeDataList: RouteData[];
-  routeDataListFlat: RouteData[];
-  searchRegExp$: Observable<RegExp>;
-  searchString = new FormControl('');
+
+  public routeDataListFlat: RouteData[];
+  public searchRegExpSubject$: BehaviorSubject<RegExp>;
+  public searchStringFormControl = new FormControl('');
+
+  private _isComponentDestroyedSubject$ = new Subject();
 
   constructor(
     private router: Router,
     public mediaQueryObserverService: MediaQueryObserverService,
   ) {
+    this.searchRegExpSubject$ = new BehaviorSubject<RegExp>(
+      RouteListComponent._getEscapedSearchRegExp(this.searchStringFormControl.value),
+    );
+
+    this.searchStringFormControl.valueChanges.pipe(
+      takeUntil(this._isComponentDestroyedSubject$),
+    ).subscribe((searchString: string) => {
+      this.searchRegExpSubject$.next(
+        RouteListComponent._getEscapedSearchRegExp(searchString),
+      );
+    });
   }
 
-  private static appendRouteDataToRouteDataListFlat(
+  private static _appendRouteDataToRouteDataListFlat(
     routeData: RouteData,
     routeDataListFlat: RouteData[],
   ): void {
@@ -34,7 +48,7 @@ export class RouteListComponent implements OnChanges, OnInit {
 
     if (routeData.childRouteList) {
       for (const routeDataChild of routeData.childRouteList) {
-        RouteListComponent.appendRouteDataToRouteDataListFlat(
+        RouteListComponent._appendRouteDataToRouteDataListFlat(
           routeDataChild,
           routeDataListFlat,
         );
@@ -42,13 +56,13 @@ export class RouteListComponent implements OnChanges, OnInit {
     }
   }
 
-  private static assembleRouteDataListFlat(
+  private static _assembleRouteDataListFlat(
     routeDataList: RouteData[],
   ): RouteData[] {
     const routeDataListFlat: RouteData[] = [];
 
     for (const routeData of routeDataList) {
-      RouteListComponent.appendRouteDataToRouteDataListFlat(
+      RouteListComponent._appendRouteDataToRouteDataListFlat(
         routeData,
         routeDataListFlat,
       );
@@ -57,32 +71,33 @@ export class RouteListComponent implements OnChanges, OnInit {
     return routeDataListFlat;
   }
 
-  ngOnChanges() {
-    this.routeDataListFlat = RouteListComponent.assembleRouteDataListFlat(
+  private static _getEscapedSearchRegExp(
+    searchString: string,
+  ): RegExp {
+    return new RegExp(escapeRegExp(searchString), 'i');
+  }
+
+  public ngOnChanges() {
+    this.routeDataListFlat = RouteListComponent._assembleRouteDataListFlat(
       this.routeDataList,
     );
   }
 
-  ngOnInit() {
-    this.searchRegExp$ = this.searchString.valueChanges.pipe(
-      startWith(this.searchString.value),
-      map((searchString: string): RegExp => {
-        return new RegExp(escapeRegExp(searchString), 'i');
-      }),
-    );
+  public ngOnDestroy(): void {
+    this._isComponentDestroyedSubject$.next();
+    this._isComponentDestroyedSubject$.complete();
   }
 
-  selectOption(
+  public selectOption(
     event: MatOptionSelectionChange,
     routeData: RouteData,
   ): void {
     if (event.source.selected) {
       this.router.navigateByUrl(routeData.route).then(
         () => {
-          this.searchString.setValue('');
+          this.searchStringFormControl.setValue('');
         },
       );
     }
   }
-
 }
