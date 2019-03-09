@@ -38,8 +38,6 @@ export class AuthService implements RegisterFieldObserversMixin {
       this._loadRouteDataList();
     });
 
-    this._loadRouteDataList();
-
     registerStorageObserver(
       this._storage,
       this.userNameSubject$,

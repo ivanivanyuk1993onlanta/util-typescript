@@ -23,8 +23,8 @@
   >
     <mat-sidenav
       #drawer
-      [mode]="(mediaQueryObserverService.matchesMediumQuery$ | async) ? 'side' : 'over'"
-      [opened]="mediaQueryObserverService.matchesMediumQuery$ | async"
+      [mode]="(mediaQueryObserverService.matchesMediumQuerySubject$ | async) ? 'side' : 'over'"
+      [opened]="mediaQueryObserverService.matchesMediumQuerySubject$ | async"
       cdkScrollable
       role="navigation"
     >

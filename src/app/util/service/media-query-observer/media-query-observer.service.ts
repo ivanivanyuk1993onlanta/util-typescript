@@ -1,31 +1,22 @@
+import {BehaviorSubject} from 'rxjs';
+import {BreakpointObserver, Breakpoints, BreakpointState} from '@angular/cdk/layout';
 import {Injectable} from '@angular/core';
-import {
-  BreakpointObserver,
-  Breakpoints,
-  BreakpointState,
-} from '@angular/cdk/layout';
-import {Observable} from 'rxjs';
-import {map} from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
 })
 export class MediaQueryObserverService {
-  matchesMediumQuery$: Observable<boolean>; // todo replace with subject
+  matchesMediumQuerySubject$ = new BehaviorSubject<boolean>(false);
 
   constructor(
-    breakpointObserver: BreakpointObserver,
+    private _breakpointObserver: BreakpointObserver,
   ) {
-    this.matchesMediumQuery$ = breakpointObserver.observe([
+    _breakpointObserver.observe([
       Breakpoints.Large,
       Breakpoints.Medium,
       Breakpoints.XLarge,
-    ]).pipe(
-      map(
-        (breakpointState: BreakpointState): boolean => {
-          return breakpointState.matches;
-        },
-      ),
-    );
+    ]).subscribe((breakpointState: BreakpointState) => {
+      this.matchesMediumQuerySubject$.next(breakpointState.matches);
+    });
   }
 }
