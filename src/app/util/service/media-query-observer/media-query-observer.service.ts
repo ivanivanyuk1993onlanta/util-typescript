@@ -11,7 +11,7 @@ import {map} from 'rxjs/operators';
   providedIn: 'root',
 })
 export class MediaQueryObserverService {
-  matchesMediumQuery$: Observable<boolean>;
+  matchesMediumQuery$: Observable<boolean>; // todo replace with subject
 
   constructor(
     breakpointObserver: BreakpointObserver,

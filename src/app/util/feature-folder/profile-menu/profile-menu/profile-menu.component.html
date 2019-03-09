@@ -1,5 +1,5 @@
 <div
-  [ngClass]="{hidden: !(authService.isSignedIn$ | async)}"
+  [ngClass]="{hidden: !(authService.isSignedInSubject$ | async)}"
 >
   <button
     [matMenuTriggerFor]="profileMenuSigned"
@@ -8,7 +8,7 @@
     type="button"
   >
     <mat-icon>person</mat-icon>
-    <span>{{ authService.userName$ | async }}</span>
+    <span>{{ authService.userNameSubject$ | async }}</span>
   </button>
 
   <mat-menu
@@ -37,7 +37,7 @@
 </div>
 
 <div
-  [ngClass]="{hidden: authService.isSignedIn$ | async}"
+  [ngClass]="{hidden: authService.isSignedInSubject$ | async}"
 >
   <button
     [matMenuTriggerFor]="profileMenu"
