@@ -15,6 +15,7 @@ import {takeUntil} from 'rxjs/operators';
 })
 
 export class RouteListComponent implements OnChanges, OnDestroy {
+  @Input() isRouteDataListLoadingSubject$: BehaviorSubject<boolean>;
   @Input() routeDataList: RouteData[];
 
   public routeDataListFlat: RouteData[];

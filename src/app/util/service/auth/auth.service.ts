@@ -1,18 +1,16 @@
-import {applyMixins} from 'rxjs/internal-compatibility';
-import {environment} from '../../../../environments/environment';
-import {FormControl} from '@angular/forms';
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-import {Observable, BehaviorSubject} from 'rxjs';
+import {BehaviorSubject} from 'rxjs';
 import {RouteData} from '../../class/route/route-data';
 import {StorageWrap} from '../../class/storage/storage';
-import { registerStorageObserver } from '../../class/storage/register-storage-observer';
+import {registerStorageObserver} from '../../class/storage/register-storage-observer';
 
 @Injectable({
   providedIn: 'root',
 })
 // @ts-ignore
 export class AuthService implements RegisterFieldObserversMixin {
+  public isRouteDataListLoadingSubject$ = new BehaviorSubject<boolean>(false);
   public isSignedInSubject$ = new BehaviorSubject<boolean>(false);
   public routeDataListSubject$ = new BehaviorSubject<Array<RouteData>>([]);
   public userNameSubject$ = new BehaviorSubject<string>('');
@@ -54,16 +52,26 @@ export class AuthService implements RegisterFieldObserversMixin {
   public signOut() {
     this.isSignedInSubject$.next(false);
     // this._loadRouteDataList();
-    this.routeDataListSubject$.next([]);
+    this._simulateLoadEmptyPermittedRouteDataList();
     this.userNameSubject$.next('');
   }
 
   private _loadRouteDataList(): void {
+    this.isRouteDataListLoadingSubject$.next(true);
     this._httpClient.
       // get<RouteData[]>(this._routeDataListUrl, {withCredentials: true}).
       get<RouteData[]>(this._routeDataListUrl). // todo: remove debug code
       subscribe((routeDataList: RouteData[]) => {
         this.routeDataListSubject$.next(routeDataList);
+        this.isRouteDataListLoadingSubject$.next(false);
       });
+  }
+
+  private _simulateLoadEmptyPermittedRouteDataList() {
+    this.isRouteDataListLoadingSubject$.next(true);
+    setTimeout(() => {
+      this.routeDataListSubject$.next([]);
+      this.isRouteDataListLoadingSubject$.next(false);
+    }, 500);
   }
 }
