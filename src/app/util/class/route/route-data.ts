@@ -8,5 +8,5 @@ export class RouteData {
   langKey: string;
   matchesSearchRegExpSubject$?: BehaviorSubject<boolean>;
   route: string;
-  textTranslated?: string;
+  textTranslatedSubject$?: BehaviorSubject<string>;
 }

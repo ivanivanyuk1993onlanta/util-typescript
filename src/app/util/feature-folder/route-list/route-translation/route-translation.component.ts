@@ -20,11 +20,10 @@ export class RouteTranslationComponent implements AfterViewInit {
     {read: ElementRef},
   ) translationElement: ElementRef;
 
-  constructor() {
-  }
-
   ngAfterViewInit(): void {
-    this.routeData.textTranslated = this.translationElement.nativeElement.textContent;
+    this.routeData.textTranslatedSubject$.next(
+      this.translationElement.nativeElement.textContent,
+    );
   }
 
 }

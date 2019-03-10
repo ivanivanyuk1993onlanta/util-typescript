@@ -1,6 +1,6 @@
-import {Component, Input, OnChanges, OnDestroy} from '@angular/core';
-import {distinctUntilChanged, takeUntil} from 'rxjs/operators';
-import {BehaviorSubject, Subject} from 'rxjs';
+import {Component, Input, OnChanges, OnDestroy, OnInit, ChangeDetectorRef} from '@angular/core';
+import {distinctUntilChanged, startWith, takeUntil} from 'rxjs/operators';
+import {BehaviorSubject, Subject, combineLatest} from 'rxjs';
 import {RouteData} from '../../../class/route/route-data';
 
 @Component({
@@ -15,6 +15,11 @@ export class RouteListRecursiveComponent implements OnChanges, OnDestroy {
 
   private _isComponentDestroyedSubject$ = new Subject();
 
+  constructor(
+    private _changeDetectorRef: ChangeDetectorRef,
+  ) {    
+  }
+
   public ngOnChanges() {
     if (this.parentRouteData) {
       for (const routeData of this.routeDataList) {
@@ -28,6 +33,8 @@ export class RouteListRecursiveComponent implements OnChanges, OnDestroy {
         this._addHasFilteredChildRouteListSubjectToRouteData(routeData);
       }
     }
+
+    this._changeDetectorRef.detectChanges();
   }
 
   public ngOnDestroy(): void {
@@ -39,6 +46,7 @@ export class RouteListRecursiveComponent implements OnChanges, OnDestroy {
     routeData: RouteData,
   ) {
     routeData.matchesSearchRegExpSubject$.pipe(
+      startWith(true), // this code is necessary for countOfFilteredChildRouteList to take correct initial value when search string is not empty when changes are emitted
       distinctUntilChanged(),
       takeUntil(this._isComponentDestroyedSubject$),
     ).subscribe((matchesSearchRegExp: boolean) => {
@@ -82,17 +90,23 @@ export class RouteListRecursiveComponent implements OnChanges, OnDestroy {
   private _addMatchesSearchRegExpSubjectToRouteData(
     routeData: RouteData,
   ) {
-    // todo make routeData.textTranslated some observable/subject (it is undefined on component creation, hence when searchRegExp is not empty, it does not match it)
-    // todo check if the problem of empty filtered list when route data is changed when search string is not empty is solved
-    // todo have in mind this: (new RegExp('', 'i')).test(undefined) true
-    // todo have in mind this: (new RegExp('a', 'i')).test(undefined) false
+    routeData.textTranslatedSubject$ = new BehaviorSubject<string>(routeData.langKey);
     routeData.matchesSearchRegExpSubject$ = new BehaviorSubject<boolean>(true);
-    this.searchRegExpSubject$.pipe(
+
+    combineLatest(
+      this.searchRegExpSubject$,
+      routeData.textTranslatedSubject$,
+    ).pipe(
       takeUntil(this._isComponentDestroyedSubject$),
-    ).subscribe((searchRegExp: RegExp) => {
-      routeData.matchesSearchRegExpSubject$.next(
-        searchRegExp.test(routeData.textTranslated),
-      );
-    });
+    ).subscribe(
+      ([
+        searchRegExp,
+        textTranslated,
+      ]) => {
+        routeData.matchesSearchRegExpSubject$.next(
+          searchRegExp.test(textTranslated),
+        );
+      },
+    );
   }
 }

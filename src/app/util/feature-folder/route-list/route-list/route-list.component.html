@@ -23,7 +23,7 @@
       <mat-option
         (onSelectionChange)="selectOption($event, routeData)"
         *ngIf="routeData.matchesSearchRegExp$ | async"
-        [value]="routeData.textTranslated"
+        [value]="routeData.textTranslatedSubject$ | async"
       >
         <mat-icon
           *ngIf="routeData.iconKey"
@@ -32,7 +32,7 @@
           {{ routeData.iconKey }}
         </mat-icon>
 
-        {{ routeData.textTranslated }}
+        {{ routeData.textTranslatedSubject$ | async }}
       </mat-option>
     </ng-container>
   </mat-autocomplete>
