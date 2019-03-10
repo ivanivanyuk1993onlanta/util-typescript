@@ -42,3 +42,6 @@ import {RouteListModule} from './util/feature-folder/route-list/route-list.modul
 })
 export class AppModule {
 }
+
+// todo think about moving translate logic to server for correct permission check
+// todo obfuscate protobuf/load from server/do something to hide field names, field counts
