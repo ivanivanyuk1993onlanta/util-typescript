@@ -18,7 +18,7 @@ export class AuthService implements RegisterFieldObserversMixin {
   public userNameSubject$ = new BehaviorSubject<string>('');
 
   // private _routeDataListUrl = `${environment.apiUrl}/route`;
-  private _routeDataListUrl = 'https://api.myjson.com/bins/iu6sa'; // todo: remove debug code
+  private _routeDataListUrl = 'https://api.myjson.com/bins/iyjf6'; // todo: remove debug code
   private _storage = new StorageWrap('auth');
 
   constructor(
