@@ -5,11 +5,19 @@ import {ILoadResult} from './i-load-result';
 import {ILoadingCacheLoader} from './i-loading-cache-loader';
 import {TestBed} from '@angular/core/testing';
 
-const allowedInstantTimeDifference = 10;
+const allowedApproximateTimeDifference = 5;
 const loadTime = 50;
 const refreshTime = 100;
 const spoilTime = 1000;
 const timeout = 200;
+
+function isCurrentTimestampApproximatelyEqualTo(
+  timestamp: number,
+): boolean {
+  const currentTimestamp = Date.now();
+  return timestamp - allowedApproximateTimeDifference <= currentTimestamp
+    && currentTimestamp <= timestamp + allowedApproximateTimeDifference;
+}
 
 interface TestKey {
   key: string;
@@ -96,8 +104,7 @@ describe('LoadingCache', () => {
     };
 
     loadingCache.get$(key).subscribe(() => {
-      const timestamp = Date.now();
-      const expectedLoadFinishTimestamp = timestamp + allowedInstantTimeDifference;
+      const expectedLoadFinishTimestamp = Date.now();
 
       forkJoin(
         Array.from(new Array(10)).map(() => {
@@ -105,7 +112,7 @@ describe('LoadingCache', () => {
             tap(recordLocal => {
               expect(recordLocal.key).toBe(key.key);
               expect(recordLocal.loadCount).toBe(1);
-              expect(Date.now()).toBeLessThanOrEqual(expectedLoadFinishTimestamp);
+              expect(isCurrentTimestampApproximatelyEqualTo(expectedLoadFinishTimestamp)).toBeTruthy();
             }),
           );
         }),
@@ -120,8 +127,7 @@ describe('LoadingCache', () => {
       key: Math.random().toString(),
     };
 
-    const timestamp = Date.now();
-    const expectedLoadFinishTimestamp = timestamp + loadTime + allowedInstantTimeDifference;
+    const expectedLoadFinishTimestamp = Date.now() + loadTime;
 
     forkJoin(
       Array.from(new Array(10)).map(() => {
@@ -129,7 +135,7 @@ describe('LoadingCache', () => {
           tap(record => {
             expect(record.key).toBe(key.key);
             expect(record.loadCount).toBe(1);
-            expect(Date.now()).toBeLessThanOrEqual(expectedLoadFinishTimestamp);
+            expect(isCurrentTimestampApproximatelyEqualTo(expectedLoadFinishTimestamp)).toBeTruthy();
           }),
         );
       }),
@@ -168,14 +174,13 @@ describe('LoadingCache', () => {
       shouldThrowError: true,
     };
 
-    const timestamp = Date.now();
-    const expectedLoadFinishTimestamp = timestamp + allowedInstantTimeDifference;
+    const expectedLoadFinishTimestamp = Date.now();
 
     forkJoin(
       Array.from(new Array(10)).map(() => {
         return loadingCache.get$(key).pipe(
           catchError(err => {
-            expect(Date.now()).toBeLessThanOrEqual(expectedLoadFinishTimestamp);
+            expect(isCurrentTimestampApproximatelyEqualTo(expectedLoadFinishTimestamp)).toBeTruthy();
             return of(err);
           }),
         );
@@ -219,16 +224,13 @@ describe('LoadingCache', () => {
       loadTime: timeout,
     };
 
-    const timestamp = Date.now();
-    const lowerExpectedLoadFinishTimestamp = timestamp + timeout - allowedInstantTimeDifference;
-    const higherExpectedLoadFinishTimestamp = timestamp + timeout + allowedInstantTimeDifference;
+    const expectedLoadFinishTimestamp = Date.now() + timeout;
 
     forkJoin(
       Array.from(new Array(10)).map(() => {
         return loadingCache.get$(key).pipe(
           catchError(err => {
-            expect(Date.now()).toBeLessThanOrEqual(higherExpectedLoadFinishTimestamp);
-            expect(Date.now()).toBeGreaterThanOrEqual(lowerExpectedLoadFinishTimestamp);
+            expect(isCurrentTimestampApproximatelyEqualTo(expectedLoadFinishTimestamp)).toBeTruthy();
             return of(err);
           }),
         );
