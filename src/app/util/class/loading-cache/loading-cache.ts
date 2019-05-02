@@ -3,6 +3,7 @@ import {ILoadingCacheRecord} from './i-loading-cache-record';
 import {filter, first, map, mapTo, skip, timeout} from 'rxjs/operators';
 import {ILoadingCacheLoader} from './i-loading-cache-loader';
 import {StoreResultNotActualError} from './store-result-not-actual-error';
+import {ILoadingCacheConfig} from './i-loading-cache-config';
 
 export class LoadingCache<K, V> {
   private readonly _cacheLoader: ILoadingCacheLoader<K, V>;
@@ -10,6 +11,13 @@ export class LoadingCache<K, V> {
   private readonly _refreshTime: number;
   private readonly _spoilTime: number;
   private readonly _timeout: number;
+
+  constructor(config: ILoadingCacheConfig<K, V>) {
+    this._cacheLoader = config.cacheLoader;
+    this._refreshTime = config.refreshTime;
+    this._spoilTime = config.spoilTime;
+    this._timeout = config.timeout;
+  }
 
   public get$(
     key: K,
