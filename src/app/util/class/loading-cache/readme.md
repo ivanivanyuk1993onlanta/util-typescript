@@ -26,7 +26,7 @@
 1. getShouldHandleError
 1. getCallsDuringLoadWithErrorShouldCompleteImmediatelyAfterLoad
 1. getShouldThrowTimeoutError
-1. getCallsShouldThrowTimeoutErrorSimultaneously
+1. getCallsShouldThrowTimeoutErrorImmediatelyAfterTimeout
 1. getShouldIgnoreLoadWhenRecordIsUpdatedFromStore
 1. spoiledRecordsShouldWaitForLoad
 1. notSpoiledRecordsShouldReturnImmediately
