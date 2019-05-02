@@ -1,11 +1,11 @@
 import {LoadingCache} from './loading-cache';
 import {forkJoin, Observable, of, throwError, timer} from 'rxjs';
-import {first, map, tap} from 'rxjs/operators';
+import {catchError, first, map, tap} from 'rxjs/operators';
 import {ILoadResult} from './i-load-result';
 import {ILoadingCacheLoader} from './i-loading-cache-loader';
 import {TestBed} from '@angular/core/testing';
 
-const allowedInstantTimeDifference = 1;
+const allowedInstantTimeDifference = 5;
 const loadTime = 50;
 const refreshTime = 100;
 const spoilTime = 1000;
@@ -124,23 +124,16 @@ describe('LoadingCache', () => {
     forkJoin(
       Array.from(new Array(10)).map(() => {
         return loadingCache.get$(key).pipe(
-          tap(
-            () => {
-            },
-            error => {
-              timestampList.push(Date.now());
-              expect(error.message).toBe(key.key);
-            },
-          ),
+          catchError(err => {
+            timestampList.push(Date.now());
+            expect(err.message).toBe(key.key);
+            return of(err);
+          }),
         );
       }),
-    ).subscribe(
-      () => {
-      },
-      () => {
-        expect(Math.max(...timestampList) - Math.min(...timestampList)).toBeLessThanOrEqual(allowedInstantTimeDifference);
-        done();
-      },
-    );
+    ).subscribe(() => {
+      expect(Math.max(...timestampList) - Math.min(...timestampList)).toBeLessThanOrEqual(allowedInstantTimeDifference);
+      done();
+    });
   });
 });
