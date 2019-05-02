@@ -27,6 +27,7 @@ export class LoadingCache<K, V> {
 
     if (this._shouldRefreshRecord(record) && !record.isLoading) {
       record.isLoading = true;
+      record.error = null;
 
       race(
         this._cacheLoader.load$(key),
@@ -52,8 +53,6 @@ export class LoadingCache<K, V> {
 
           record.isLoading = false;
           recordBS$.next(record);
-
-          record.error = null;
         },
       );
     }

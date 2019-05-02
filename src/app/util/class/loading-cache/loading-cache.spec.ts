@@ -29,29 +29,29 @@ class TestCacheLoader implements ILoadingCacheLoader<TestKey, TestRecord> {
     key: TestKey,
   ): Observable<ILoadResult<TestRecord>> {
     if (key.shouldThrowError) {
-      return throwError(new Error());
+      return throwError(new Error(key.key));
+    } else {
+      return timer(loadTime).pipe(
+        map(() => {
+          if (!this._keyToLoadCountMap.has(key.key)) {
+            this._keyToLoadCountMap.set(key.key, 0);
+          }
+          this._keyToLoadCountMap.set(
+            key.key,
+            this._keyToLoadCountMap.get(key.key) + 1,
+          );
+
+          return {
+            timestamp: Date.now(),
+            value: {
+              key: key.key,
+              loadCount: this._keyToLoadCountMap.get(key.key),
+            },
+          };
+        }),
+        first(),
+      );
     }
-
-    return timer(loadTime).pipe(
-      map(() => {
-        if (!this._keyToLoadCountMap.has(key.key)) {
-          this._keyToLoadCountMap.set(key.key, 0);
-        }
-        this._keyToLoadCountMap.set(
-          key.key,
-          this._keyToLoadCountMap.get(key.key) + 1,
-        );
-
-        return {
-          timestamp: Date.now(),
-          value: {
-            key: key.key,
-            loadCount: this._keyToLoadCountMap.get(key.key),
-          },
-        };
-      }),
-      first(),
-    );
   }
 
   store$(key: TestKey, value: TestRecord): Observable<ILoadResult<TestRecord>> {
@@ -111,5 +111,36 @@ describe('LoadingCache', () => {
       expect(Math.max(...timestampList) - Math.min(...timestampList)).toBeLessThanOrEqual(allowedInstantTimeDifference);
       done();
     });
+  });
+
+  it('getCallsDuringLoadWithErrorShouldCompleteSimultaneously', (done: DoneFn) => {
+    const key: TestKey = {
+      key: Math.random().toString(),
+      shouldThrowError: true,
+    };
+
+    const timestampList: Array<number> = [];
+
+    forkJoin(
+      Array.from(new Array(10)).map(() => {
+        return loadingCache.get$(key).pipe(
+          tap(
+            () => {
+            },
+            error => {
+              timestampList.push(Date.now());
+              expect(error.message).toBe(key.key);
+            },
+          ),
+        );
+      }),
+    ).subscribe(
+      () => {
+      },
+      () => {
+        expect(Math.max(...timestampList) - Math.min(...timestampList)).toBeLessThanOrEqual(allowedInstantTimeDifference);
+        done();
+      },
+    );
   });
 });

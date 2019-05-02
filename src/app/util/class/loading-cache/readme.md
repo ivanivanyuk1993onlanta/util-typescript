@@ -22,6 +22,7 @@
 # TDD test list
 1. getShouldHaveOnlyOneSimultaneousLoad
 1. getCallsDuringLoadShouldCompleteSimultaneously
+1. getShouldHandleError
 1. getCallsDuringLoadWithErrorShouldCompleteSimultaneously
 1. getShouldThrowTimeoutError
 1. getShouldIgnoreLoadWhenRecordIsUpdatedFromStore
@@ -32,6 +33,7 @@
 1. actualLoadResultShouldUpdateRecord
 1. notActualLoadResultShouldNotUpdateRecord
 1. eachStoreShouldGetOnlyItsResult
+1. setShouldHandleError
 1. actualStoreResultShouldUpdateRecord
 1. notActualStoreResultShouldThrowError
 1. setShouldThrowTimeoutError
