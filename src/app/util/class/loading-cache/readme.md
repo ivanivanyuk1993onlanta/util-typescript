@@ -5,7 +5,7 @@
 1. Cache should have get$ method
    1. get$ should return load$ value, or load$ Error, or TimeoutError
    1. get$ should have only one simultaneously active load$ at a time
-   1. get$ calls during waiting load$ should subscribe to existing load$
+   1. get$ calls during waiting load$ should subscribe to existing load$ and complete simultaneously
    1. get$ calls with error result should immediately broadcast to all active subscribers (without waiting for timeout)
    1. get$ should have timeout and throw TimeoutError
    1. get$ should init load$, even when active store$ calls exist (why - because they may finish with errors, but get$ is not interested in store$ errors), but should stop waiting, if one of store$ results updates record
@@ -19,3 +19,17 @@
    1. set$ calls should subscribe only to their result, ignoring others's results and errors
    1. On set$ result, if it is more actual, record should be updated and pushed to subscribers, otherwise Error should be thrown
 # TDD test list
+1. getShouldHaveOnlyOneSimultaneousLoad
+1. getCallsDuringLoadShouldCompleteSimultaneously
+1. getCallsDuringLoadWithErrorShouldCompleteSimultaneously
+1. getShouldThrowTimeoutError
+1. getShouldIgnoreLoadWhenRecordIsUpdatedFromStore
+1. spoiledRecordsShouldWaitForLoad
+1. notSpoiledRecordsShouldReturnImmediately
+1. afterRefreshTimeLoadShouldBeInitiated
+1. beforeRefreshTimeLoadShouldNotBeInitiated
+1. actualLoadResultShouldUpdateRecord
+1. notActualLoadResultShouldNotUpdateRecord
+1. eachStoreShouldGetOnlyItsResult
+1. actualStoreResultShouldUpdateRecord
+1. notActualStoreResultShouldThrowError
