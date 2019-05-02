@@ -8,6 +8,7 @@
    1. get$ calls during waiting load$ should subscribe to existing load$
    1. get$ calls with error result should immediately broadcast to all active subscribers (without waiting for timeout)
    1. get$ should have timeout and throw TimeoutError
+   1. get$ should init load$, even when active store$ calls exist (why - because they may finish with errors), but should stop waiting, if one of store$ results updates record
 1. Cache should have spoil time
    1. When spoil time has come, get$ subscribers should wait for load$ to complete, otherwise latest value should be returned immediately
 1. Cache should have refresh time
