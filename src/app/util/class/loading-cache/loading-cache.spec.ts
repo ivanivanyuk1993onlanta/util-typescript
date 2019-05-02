@@ -113,6 +113,30 @@ describe('LoadingCache', () => {
     });
   });
 
+  it('getShouldHandleError', (done: DoneFn) => {
+    const key: TestKey = {
+      key: Math.random().toString(),
+      shouldThrowError: true,
+    };
+
+    forkJoin(
+      Array.from(new Array(10)).map(() => {
+        return loadingCache.get$(key).pipe(
+          catchError(error => {
+            return of(error);
+          }),
+        );
+      }),
+    ).subscribe((errorList) => {
+      expect(Array.isArray(errorList)).toBe(true);
+      for (const error of errorList) {
+        expect(error instanceof Error).toBe(true);
+        expect(error.message).toBe(key.key);
+      }
+      done();
+    });
+  });
+
   it('getCallsDuringLoadWithErrorShouldCompleteSimultaneously', (done: DoneFn) => {
     const key: TestKey = {
       key: Math.random().toString(),
