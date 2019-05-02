@@ -18,6 +18,7 @@
    1. Any quantity of simultaneous set$ requests may be active at a time
    1. set$ calls should subscribe only to their result, ignoring others's results and errors
    1. On set$ result, if it is more actual, record should be updated and pushed to subscribers, otherwise Error should be thrown
+   1. set$ should throw TimeoutError
 # TDD test list
 1. getShouldHaveOnlyOneSimultaneousLoad
 1. getCallsDuringLoadShouldCompleteSimultaneously
@@ -33,3 +34,4 @@
 1. eachStoreShouldGetOnlyItsResult
 1. actualStoreResultShouldUpdateRecord
 1. notActualStoreResultShouldThrowError
+1. setShouldThrowTimeoutError
