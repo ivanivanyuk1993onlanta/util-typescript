@@ -27,3 +27,4 @@
 1. setShouldResultInErrorWhenResultIsNotActual
 1. setShouldHaveTimeoutWithError
 1. setShouldHandleError
+1. getLoadShouldFinishOnUpdateFromSet
