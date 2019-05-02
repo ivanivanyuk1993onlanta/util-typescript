@@ -1,5 +1,5 @@
 import {LoadingCache} from './loading-cache';
-import {forkJoin, Observable, of, throwError, timer} from 'rxjs';
+import {forkJoin, Observable, of, throwError, TimeoutError, timer} from 'rxjs';
 import {catchError, first, map, tap} from 'rxjs/operators';
 import {ILoadResult} from './i-load-result';
 import {ILoadingCacheLoader} from './i-loading-cache-loader';
@@ -31,7 +31,7 @@ class TestCacheLoader implements ILoadingCacheLoader<TestKey, TestRecord> {
     if (key.shouldThrowError) {
       return throwError(new Error(key.key));
     } else {
-      return timer(loadTime).pipe(
+      return timer(key.loadTime || loadTime).pipe(
         map(() => {
           if (!this._keyToLoadCountMap.has(key.key)) {
             this._keyToLoadCountMap.set(key.key, 0);
@@ -161,6 +161,29 @@ describe('LoadingCache', () => {
         expect(error.message).toBe(key.key);
       }
       expect(Math.max(...timestampList) - Math.min(...timestampList)).toBeLessThanOrEqual(allowedInstantTimeDifference);
+      done();
+    });
+  });
+
+  it('getShouldThrowTimeoutError', (done: DoneFn) => {
+    const key: TestKey = {
+      key: Math.random().toString(),
+      loadTime: timeout,
+    };
+
+    forkJoin(
+      Array.from(new Array(10)).map(() => {
+        return loadingCache.get$(key).pipe(
+          catchError(error => {
+            return of(error);
+          }),
+        );
+      }),
+    ).subscribe((errorList) => {
+      expect(Array.isArray(errorList)).toBe(true);
+      for (const error of errorList) {
+        expect(error instanceof TimeoutError).toBe(true);
+      }
       done();
     });
   });
