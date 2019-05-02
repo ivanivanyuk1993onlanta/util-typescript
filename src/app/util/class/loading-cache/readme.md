@@ -1,30 +1,20 @@
 # Loading cache requirements
-1. Cache should have only 1 active load$, initialised by get$ at a time
-1. Cache should have spoil time. When spoil time is passed, get$ subscribers should wait for load$ to complete. If load$ is in progress and not timed out, new get$ subscribers should not init new load$, but wait for existing one
-1. Cache should have refresh time. When it is time to refresh, load$ should be initiated, on load$ complete record should be updated. Refresh time should not be considered when deciding to wait or return record, it is the function of spoil time
-1. Cache should handle get$ errors, all subscribers should receive error immediately, without waiting for timeout.
-1. Cache should have timeout with error
-1. Cache should have method set$, which should be used for all modifying requests (create, delete, update).
-1. Any amount of simultaneous set$ requests may be active at a time.
-1. All set$ calls should subscribe only to their own result. On result receive, they should update record, if result is more actual
-1. set$ should return set$ result, if it is more actual than current record, otherwise error should be returned
-1. Timestamp actuality should be returned from load$, set$ functions, as only DB can know for sure what timestamp record has when it is sent from DB
-1. Errors should not update record timestamp
+1. Cache should have CacheLoader<K, V>
+   1. Loader should have load$ method, which should return value and actuality timestamp, or throw Error (why - because only DB knows when it sent record, response transfer time is dynamic)
+   1. Loader should have store$ method, which should return changed value and actuality timestamp, or throw Error
+1. Cache should have get$ method
+   1. get$ should return load$ value, or load$ Error, or TimeoutError
+   1. get$ should have only one simultaneously active load$ at a time
+   1. get$ calls during waiting load$ should subscribe to existing load$
+   1. get$ calls with error result should immediately broadcast to all active subscribers (without waiting for timeout)
+   1. get$ should have timeout and throw TimeoutError
+1. Cache should have spoil time
+   1. When spoil time has come, get$ subscribers should wait for load$ to complete, otherwise latest value should be returned immediately
+1. Cache should have refresh time
+   1. When it is time to refresh, load$ should be initiated(if it has not already), otherwise refresh part should be skipped
+   1. When load$ completes, if load result is actual, record should be updated and pushed to subscribers
+1. Cache should have method set$, which should be used for all modifying requests (create, delete, update)
+   1. Any quantity of simultaneous set$ requests may be active at a time
+   1. set$ calls should subscribe only to their result, ignoring others's results and errors
+   1. On set$ result, if it is more actual, record should be updated and pushed to subscribers, otherwise Error should be thrown
 # TDD test list
-1. getShouldHaveOnlyOneSimultaneousLoad
-1. getShouldWaitForLoadCompletionWhenSpoiled
-1. getShouldReturnLastActualRecordImmediatelyWhenNotSpoiled
-1. getShouldInitLoadWhenRefreshTimeHasCome
-1. getShouldNotInitLoadWhenRefreshTimeHasNotCome
-1. getShouldHandleError
-1. getShouldHandleErrorNotWaitingForTimeout
-1. getShouldHandleTimeoutError
-1. setShouldHaveAnyAmountOfSimultaneousCalls
-1. getResultsShouldNotAffectSetSubscribers
-1. setResultsShouldNotAffectOtherSetSubscribers
-1. setResultShouldUpdateRecordIfResultIsActual
-1. setResultShouldNotUpdateRecordIfResultIsNotActual
-1. setShouldResultInErrorWhenResultIsNotActual
-1. setShouldHaveTimeoutWithError
-1. setShouldHandleError
-1. getLoadShouldFinishOnUpdateFromSet
