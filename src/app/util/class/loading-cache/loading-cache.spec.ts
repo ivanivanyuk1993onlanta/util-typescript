@@ -212,4 +212,33 @@ describe('LoadingCache', () => {
       done();
     });
   });
+
+  it('getCallsShouldThrowTimeoutErrorImmediatelyAfterTimeout', (done: DoneFn) => {
+    const key: TestKey = {
+      key: Math.random().toString(),
+      loadTime: timeout,
+    };
+
+    const timestamp = Date.now();
+    const lowerExpectedLoadFinishTimestamp = timestamp + timeout - allowedInstantTimeDifference;
+    const higherExpectedLoadFinishTimestamp = timestamp + timeout + allowedInstantTimeDifference;
+
+    forkJoin(
+      Array.from(new Array(10)).map(() => {
+        return loadingCache.get$(key).pipe(
+          catchError(err => {
+            expect(Date.now()).toBeLessThanOrEqual(higherExpectedLoadFinishTimestamp);
+            expect(Date.now()).toBeGreaterThanOrEqual(lowerExpectedLoadFinishTimestamp);
+            return of(err);
+          }),
+        );
+      }),
+    ).subscribe((errorList) => {
+      expect(Array.isArray(errorList)).toBe(true);
+      for (const error of errorList) {
+        expect(error instanceof TimeoutError).toBe(true);
+      }
+      done();
+    });
+  });
 });
