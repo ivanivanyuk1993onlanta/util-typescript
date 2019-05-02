@@ -25,39 +25,37 @@ export class LoadingCache<K, V> {
     const recordBS$ = this._getOrRegisterRecordBS$(key);
     const record = recordBS$.getValue();
 
-    if (this._shouldRefreshRecord(record)) {
-      if (!record.isLoading) {
-        record.isLoading = true;
+    if (this._shouldRefreshRecord(record) && !record.isLoading) {
+      record.isLoading = true;
 
-        race(
-          this._cacheLoader.load$(key),
-          recordBS$.pipe( // set$ can update record during load
-            skip(1),
-            mapTo(null),
-          ),
-        ).pipe(
-          timeout(this._timeout),
-          first(),
-        ).subscribe(
-          loadResultOrNull => {
-            if (loadResultOrNull) {
-              record.value = loadResultOrNull.value;
-              record.valueTimestamp = loadResultOrNull.timestamp;
-
-              record.isLoading = false;
-              recordBS$.next(record);
-            }
-          },
-          error => {
-            record.error = error;
+      race(
+        this._cacheLoader.load$(key),
+        recordBS$.pipe( // set$ can update record during load
+          skip(1),
+          mapTo(null),
+        ),
+      ).pipe(
+        timeout(this._timeout),
+        first(),
+      ).subscribe(
+        loadResultOrNull => {
+          if (loadResultOrNull) {
+            record.value = loadResultOrNull.value;
+            record.valueTimestamp = loadResultOrNull.timestamp;
 
             record.isLoading = false;
             recordBS$.next(record);
+          }
+        },
+        error => {
+          record.error = error;
 
-            record.error = null;
-          },
-        );
-      }
+          record.isLoading = false;
+          recordBS$.next(record);
+
+          record.error = null;
+        },
+      );
     }
 
     return recordBS$.pipe(
