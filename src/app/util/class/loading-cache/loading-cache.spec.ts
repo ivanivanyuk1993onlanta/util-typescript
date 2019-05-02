@@ -83,7 +83,7 @@ describe('LoadingCache', () => {
           tap(record => {
             expect(record.key).toBe(key.key);
             expect(record.loadCount).toBe(1);
-          }, error => console.error(error)),
+          }),
         );
       }),
     ).subscribe(done);
