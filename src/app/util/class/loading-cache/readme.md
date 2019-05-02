@@ -12,7 +12,7 @@
 1. Cache should have spoil time
    1. When spoil time has come, get$ subscribers should wait for load$ to complete, otherwise latest value should be returned immediately
 1. Cache should have refresh time
-   1. When it is time to refresh, load$ should be initiated(if it has not already), otherwise refresh part should be skipped
+   1. When it is time to refresh, load$ should be initiated(if it has not already), otherwise refresh part should be skipped (record should be returned immediately or on subscription)
    1. When load$ completes, if load result is actual, record should be updated and pushed to subscribers
 1. Cache should have method set$, which should be used for all modifying requests (create, delete, update)
    1. Any quantity of simultaneous set$ requests may be active at a time
@@ -21,9 +21,10 @@
    1. set$ should throw TimeoutError
 # TDD test list
 1. getShouldHaveOnlyOneSimultaneousLoad
-1. getCallsDuringLoadShouldCompleteSimultaneously
+1. getCallsDuringLoadShouldCompleteImmediatelyAfterLoad
+1. getCallsShouldReturnFreshRecordsImmediately
 1. getShouldHandleError
-1. getCallsDuringLoadWithErrorShouldCompleteSimultaneously
+1. getCallsDuringLoadWithErrorShouldCompleteImmediatelyAfterLoad
 1. getShouldThrowTimeoutError
 1. getCallsShouldThrowTimeoutErrorSimultaneously
 1. getShouldIgnoreLoadWhenRecordIsUpdatedFromStore

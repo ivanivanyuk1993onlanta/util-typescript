@@ -5,7 +5,7 @@ import {ILoadResult} from './i-load-result';
 import {ILoadingCacheLoader} from './i-loading-cache-loader';
 import {TestBed} from '@angular/core/testing';
 
-const allowedInstantTimeDifference = 5;
+const allowedInstantTimeDifference = 10;
 const loadTime = 50;
 const refreshTime = 100;
 const spoilTime = 1000;
@@ -90,25 +90,25 @@ describe('LoadingCache', () => {
     ).subscribe(done);
   });
 
-  it('getCallsDuringLoadShouldCompleteSimultaneously', (done: DoneFn) => {
+  it('getCallsDuringLoadShouldCompleteImmediatelyAfterLoad', (done: DoneFn) => {
     const key: TestKey = {
       key: Math.random().toString(),
     };
 
-    const timestampList: Array<number> = [];
+    const timestamp = Date.now();
+    const expectedLoadFinishTimestamp = timestamp + loadTime + allowedInstantTimeDifference;
 
     forkJoin(
       Array.from(new Array(10)).map(() => {
         return loadingCache.get$(key).pipe(
           tap(record => {
-            timestampList.push(Date.now());
             expect(record.key).toBe(key.key);
             expect(record.loadCount).toBe(1);
+            expect(Date.now()).toBeLessThanOrEqual(expectedLoadFinishTimestamp);
           }),
         );
       }),
     ).subscribe(() => {
-      expect(Math.max(...timestampList) - Math.min(...timestampList)).toBeLessThanOrEqual(allowedInstantTimeDifference);
       done();
     });
   });
