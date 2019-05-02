@@ -137,19 +137,20 @@ describe('LoadingCache', () => {
     });
   });
 
-  it('getCallsDuringLoadWithErrorShouldCompleteSimultaneously', (done: DoneFn) => {
+  it('getCallsDuringLoadWithErrorShouldCompleteImmediatelyAfterLoad', (done: DoneFn) => {
     const key: TestKey = {
       key: Math.random().toString(),
       shouldThrowError: true,
     };
 
-    const timestampList: Array<number> = [];
+    const timestamp = Date.now();
+    const expectedLoadFinishTimestamp = timestamp + allowedInstantTimeDifference;
 
     forkJoin(
       Array.from(new Array(10)).map(() => {
         return loadingCache.get$(key).pipe(
           catchError(err => {
-            timestampList.push(Date.now());
+            expect(Date.now()).toBeLessThanOrEqual(expectedLoadFinishTimestamp);
             return of(err);
           }),
         );
@@ -160,7 +161,6 @@ describe('LoadingCache', () => {
         expect(error instanceof Error).toBe(true);
         expect(error.message).toBe(key.key);
       }
-      expect(Math.max(...timestampList) - Math.min(...timestampList)).toBeLessThanOrEqual(allowedInstantTimeDifference);
       done();
     });
   });
