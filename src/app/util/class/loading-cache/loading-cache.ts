@@ -68,6 +68,7 @@ export class LoadingCache<K, V> {
         }
         return recordLocal.value;
       }),
+      first(),
     );
   }
 
