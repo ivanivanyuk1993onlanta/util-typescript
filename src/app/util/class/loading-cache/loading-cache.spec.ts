@@ -90,6 +90,31 @@ describe('LoadingCache', () => {
     ).subscribe(done);
   });
 
+  it('getCallsShouldReturnNotSpoiledRecordsImmediately', (done: DoneFn) => {
+    const key: TestKey = {
+      key: Math.random().toString(),
+    };
+
+    loadingCache.get$(key).subscribe(() => {
+      const timestamp = Date.now();
+      const expectedLoadFinishTimestamp = timestamp + allowedInstantTimeDifference;
+
+      forkJoin(
+        Array.from(new Array(10)).map(() => {
+          return loadingCache.get$(key).pipe(
+            tap(recordLocal => {
+              expect(recordLocal.key).toBe(key.key);
+              expect(recordLocal.loadCount).toBe(1);
+              expect(Date.now()).toBeLessThanOrEqual(expectedLoadFinishTimestamp);
+            }),
+          );
+        }),
+      ).subscribe(() => {
+        done();
+      });
+    });
+  });
+
   it('getCallsDuringLoadShouldCompleteImmediatelyAfterLoad', (done: DoneFn) => {
     const key: TestKey = {
       key: Math.random().toString(),

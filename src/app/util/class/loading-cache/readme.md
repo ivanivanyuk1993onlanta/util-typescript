@@ -22,7 +22,7 @@
 # TDD test list
 1. getShouldHaveOnlyOneSimultaneousLoad
 1. getCallsDuringLoadShouldCompleteImmediatelyAfterLoad
-1. getCallsShouldReturnFreshRecordsImmediately
+1. getCallsShouldReturnNotSpoiledRecordsImmediately
 1. getShouldHandleError
 1. getCallsDuringLoadWithErrorShouldCompleteImmediatelyAfterLoad
 1. getShouldThrowTimeoutError
