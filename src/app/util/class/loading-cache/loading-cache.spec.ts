@@ -150,12 +150,16 @@ describe('LoadingCache', () => {
         return loadingCache.get$(key).pipe(
           catchError(err => {
             timestampList.push(Date.now());
-            expect(err.message).toBe(key.key);
             return of(err);
           }),
         );
       }),
-    ).subscribe(() => {
+    ).subscribe((errorList) => {
+      expect(Array.isArray(errorList)).toBe(true);
+      for (const error of errorList) {
+        expect(error instanceof Error).toBe(true);
+        expect(error.message).toBe(key.key);
+      }
       expect(Math.max(...timestampList) - Math.min(...timestampList)).toBeLessThanOrEqual(allowedInstantTimeDifference);
       done();
     });
