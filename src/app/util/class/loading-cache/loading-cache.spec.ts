@@ -1,6 +1,6 @@
 import {LoadingCache} from './loading-cache';
 import {forkJoin, Observable, of, throwError, TimeoutError, timer} from 'rxjs';
-import {catchError, first, map, tap} from 'rxjs/operators';
+import {catchError, first, map, mergeMap, tap} from 'rxjs/operators';
 import {ILoadResult} from './i-load-result';
 import {ILoadingCacheLoader} from './i-loading-cache-loader';
 import {TestBed} from '@angular/core/testing';
@@ -21,6 +21,7 @@ function isCurrentTimestampApproximatelyEqualTo(
 
 interface TestKey {
   key: string;
+  loadErrorTime?: number;
   loadTime?: number;
   shouldLoadThrowError?: boolean;
   shouldStoreThrowError?: boolean;
@@ -39,7 +40,11 @@ class TestCacheLoader implements ILoadingCacheLoader<TestKey, TestRecord> {
     key: TestKey,
   ): Observable<ILoadResult<TestRecord>> {
     if (key.shouldLoadThrowError) {
-      return throwError(new Error(key.key));
+      return timer(key.loadErrorTime || 0).pipe(
+        mergeMap(() => {
+          return throwError(new Error(key.key));
+        }),
+      );
     } else {
       return timer(key.loadTime || loadTime).pipe(
         map(() => {
@@ -65,7 +70,7 @@ class TestCacheLoader implements ILoadingCacheLoader<TestKey, TestRecord> {
   }
 
   store$(key: TestKey, value: TestRecord): Observable<ILoadResult<TestRecord>> {
-    if (key.shouldLoadThrowError) {
+    if (key.shouldStoreThrowError) {
       return throwError(new Error(key.key));
     } else {
       return timer(key.storeTime || loadTime).pipe(
@@ -270,6 +275,40 @@ describe('LoadingCache', () => {
     const storeTime = 1; // not 0 because key.storeTime || loadTime === loadTime
     const key: TestKey = {
       key: Math.random().toString(),
+      storeTime,
+    };
+
+    const storeRecord = {
+      key: `storeResult:${key.key}`,
+      loadCount: 100,
+    };
+
+    const expectedLoadFinishTimestamp = Date.now() + storeTime;
+
+    forkJoin(
+      ...Array.from(new Array(10)).map(() => {
+        return loadingCache.get$(key).pipe(
+          tap(() => {
+            expect(isCurrentTimestampApproximatelyEqualTo(expectedLoadFinishTimestamp)).toBeTruthy();
+          }),
+        );
+      }),
+      loadingCache.set$(key, storeRecord),
+    ).subscribe((resultList) => {
+      for (const result of resultList) {
+        expect(result.key).toBe(`storeResult:${key.key}`);
+        expect(result.loadCount).toBe(100);
+      }
+      done();
+    });
+  });
+
+  it('getShouldNotHandleLoadErrorWhenRecordIsUpdatedFromStore', (done: DoneFn) => {
+    const storeTime = 1; // not 0 because key.storeTime || loadTime === loadTime
+    const key: TestKey = {
+      key: Math.random().toString(),
+      loadErrorTime: loadTime,
+      shouldLoadThrowError: true,
       storeTime,
     };
 
