@@ -267,7 +267,7 @@ describe('LoadingCache', () => {
   });
 
   it('getShouldNotHandleLoadResultWhenRecordIsUpdatedFromStore', (done: DoneFn) => {
-    const storeTime = 1;
+    const storeTime = 1; // not 0 because key.storeTime || loadTime === loadTime
     const key: TestKey = {
       key: Math.random().toString(),
       storeTime,
