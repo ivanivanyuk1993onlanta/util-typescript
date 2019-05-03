@@ -82,6 +82,7 @@ export class LoadingCache<K, V> {
           record.value = loadResult.value;
           record.valueTimestamp = loadResult.timestamp;
 
+          record.isLoading = false;
           recordBS$.next(record); // broadcast updated value
           return record.value;
         } else {
