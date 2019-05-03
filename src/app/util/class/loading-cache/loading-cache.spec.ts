@@ -22,7 +22,9 @@ function isCurrentTimestampApproximatelyEqualTo(
 interface TestKey {
   key: string;
   loadTime?: number;
-  shouldThrowError?: boolean;
+  shouldLoadThrowError?: boolean;
+  shouldStoreThrowError?: boolean;
+  storeTime?: number;
 }
 
 interface TestRecord {
@@ -36,7 +38,7 @@ class TestCacheLoader implements ILoadingCacheLoader<TestKey, TestRecord> {
   load$(
     key: TestKey,
   ): Observable<ILoadResult<TestRecord>> {
-    if (key.shouldThrowError) {
+    if (key.shouldLoadThrowError) {
       return throwError(new Error(key.key));
     } else {
       return timer(key.loadTime || loadTime).pipe(
@@ -63,7 +65,27 @@ class TestCacheLoader implements ILoadingCacheLoader<TestKey, TestRecord> {
   }
 
   store$(key: TestKey, value: TestRecord): Observable<ILoadResult<TestRecord>> {
-    return of(null);
+    if (key.shouldLoadThrowError) {
+      return throwError(new Error(key.key));
+    } else {
+      return timer(key.storeTime || loadTime).pipe(
+        map(() => {
+          if (!this._keyToLoadCountMap.has(key.key)) {
+            this._keyToLoadCountMap.set(key.key, 0);
+          }
+          this._keyToLoadCountMap.set(
+            key.key,
+            this._keyToLoadCountMap.get(key.key) + 1,
+          );
+
+          return {
+            timestamp: Date.now(),
+            value: value,
+          };
+        }),
+        first(),
+      );
+    }
   }
 }
 
@@ -147,7 +169,7 @@ describe('LoadingCache', () => {
   it('getShouldHandleError', (done: DoneFn) => {
     const key: TestKey = {
       key: Math.random().toString(),
-      shouldThrowError: true,
+      shouldLoadThrowError: true,
     };
 
     forkJoin(
@@ -171,7 +193,7 @@ describe('LoadingCache', () => {
   it('getCallsDuringLoadWithErrorShouldCompleteImmediatelyAfterLoad', (done: DoneFn) => {
     const key: TestKey = {
       key: Math.random().toString(),
-      shouldThrowError: true,
+      shouldLoadThrowError: true,
     };
 
     const expectedLoadFinishTimestamp = Date.now();
@@ -239,6 +261,38 @@ describe('LoadingCache', () => {
       expect(Array.isArray(errorList)).toBe(true);
       for (const error of errorList) {
         expect(error instanceof TimeoutError).toBe(true);
+      }
+      done();
+    });
+  });
+
+  it('getShouldNotHandleLoadResultWhenRecordIsUpdatedFromStore', (done: DoneFn) => {
+    const storeTime = 1;
+    const key: TestKey = {
+      key: Math.random().toString(),
+      storeTime,
+    };
+
+    const storeRecord = {
+      key: `storeResult:${key.key}`,
+      loadCount: 100,
+    };
+
+    const expectedLoadFinishTimestamp = Date.now() + storeTime;
+
+    forkJoin(
+      ...Array.from(new Array(10)).map(() => {
+        return loadingCache.get$(key).pipe(
+          tap(() => {
+            expect(isCurrentTimestampApproximatelyEqualTo(expectedLoadFinishTimestamp)).toBeTruthy();
+          }),
+        );
+      }),
+      loadingCache.set$(key, storeRecord),
+    ).subscribe((resultList) => {
+      for (const result of resultList) {
+        expect(result.key).toBe(`storeResult:${key.key}`);
+        expect(result.loadCount).toBe(100);
       }
       done();
     });
