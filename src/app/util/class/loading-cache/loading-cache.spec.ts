@@ -98,8 +98,6 @@ describe('LoadingCache', () => {
   let loadingCache: LoadingCache<TestKey, TestRecord>;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
-
     loadingCache = new LoadingCache({
       cacheLoader: new TestCacheLoader,
       refreshTime,
