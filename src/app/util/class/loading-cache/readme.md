@@ -42,3 +42,17 @@
 1. actualStoreResultShouldUpdateRecord
 1. notActualStoreResultShouldThrowError
 1. setShouldThrowTimeoutError
+
+# Test scenario info
+1. Record state properties that may affect result/time
+    1. CompletedLoad/CompletedLoadWithError/CompletedLoadWithTimeoutError
+    1. CompletedStore/CompletedStoreWithError/CompletedStoreWithTimeoutError/CompletedStoreWithNotActualError
+    1. ForegoingLoad/NotForegoingLoad
+    1. ForegoingStore/NotForegoingStore
+    1. LoadResult: result/error/timeoutError
+    1. LoadTime
+    1. NeedingRefresh/NotNeedingRefresh
+    1. Spoiled/Unspoiled
+    1. StoreResult: result/error/timeoutError/notActualError
+    1. StoreTime
+    1. Touched/Untouched
