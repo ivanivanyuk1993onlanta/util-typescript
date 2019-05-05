@@ -31,6 +31,7 @@ interface TestKey {
 interface TestRecord {
   key: string;
   loadCount: number;
+  storeCount: number;
 }
 
 class TestCacheLoader implements ILoadingCacheLoader<TestKey, TestRecord> {
