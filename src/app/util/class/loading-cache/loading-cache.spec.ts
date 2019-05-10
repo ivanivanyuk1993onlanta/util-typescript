@@ -1,10 +1,10 @@
 import {LoadingCache} from './loading-cache';
 import {forkJoin, Observable, of, throwError, TimeoutError, timer} from 'rxjs';
-import {catchError, first, map, mergeMap, tap} from 'rxjs/operators';
+import {catchError, first, flatMap, map, mergeMap, tap} from 'rxjs/operators';
 import {ILoadResult} from './i-load-result';
 import {ILoadingCacheLoader} from './i-loading-cache-loader';
 
-const allowedApproximateTimeDifference = 5;
+const allowedApproximateTimeDifference = 10;
 const loadTime = 50;
 const refreshTime = 100;
 const spoilTime = 1000;
@@ -20,10 +20,12 @@ function isCurrentTimestampApproximatelyEqualTo(
 
 interface TestKey {
   key: string;
+  loadActualTimestamp?: number;
   loadErrorTime?: number;
   loadTime?: number;
   shouldLoadThrowError?: boolean;
   shouldStoreThrowError?: boolean;
+  storeActualTimestamp?: number;
   storeTime?: number;
 }
 
@@ -62,7 +64,7 @@ class TestCacheLoader implements ILoadingCacheLoader<TestKey, TestRecord> {
           );
 
           return {
-            timestamp: Date.now(),
+            timestamp: key.loadActualTimestamp || Date.now(),
             value: {
               key: key.key,
               lastStoredValue: this._keyToLastStoredValueMap.get(key.key),
@@ -97,7 +99,7 @@ class TestCacheLoader implements ILoadingCacheLoader<TestKey, TestRecord> {
           );
 
           return {
-            timestamp: Date.now(),
+            timestamp: key.storeActualTimestamp || Date.now(),
             value: {
               key: key.key,
               lastStoredValue: this._keyToLastStoredValueMap.get(key.key),
@@ -474,5 +476,335 @@ describe('LoadingCache', () => {
       }
       done();
     });
+  });
+
+  it('spoiledRecordsShouldWaitForLoad', (done: DoneFn) => {
+    const key: TestKey = {
+      key: Math.random().toString(),
+    };
+
+    const expectedLoadFinishTimestampList = [Date.now() + loadTime];
+
+    loadingCache.get$(key).subscribe((record) => {
+      expect(isCurrentTimestampApproximatelyEqualTo(expectedLoadFinishTimestampList[0])).toBeTruthy();
+
+      expect(record.key).toBe(key.key);
+      expect(record.lastStoredValue).toBe(null);
+      expect(record.loadCount).toBe(1);
+      expect(record.storeCount).toBe(0);
+
+      timer(spoilTime).pipe(
+        first(),
+      ).subscribe(() => {
+        expectedLoadFinishTimestampList.push(Date.now() + loadTime);
+        forkJoin(
+          Array.from(new Array(10)).map(() => {
+            return loadingCache.get$(key).pipe(
+              tap(recordLocal => {
+                expect(isCurrentTimestampApproximatelyEqualTo(expectedLoadFinishTimestampList[1])).toBeTruthy();
+
+                expect(recordLocal.key).toBe(key.key);
+                expect(recordLocal.lastStoredValue).toBe(null);
+                expect(recordLocal.loadCount).toBe(2);
+                expect(recordLocal.storeCount).toBe(0);
+              }),
+            );
+          }),
+        ).subscribe(() => {
+          done();
+        });
+      });
+    });
+  });
+
+  it('notSpoiledRecordsShouldReturnImmediately', (done: DoneFn) => {
+    const key: TestKey = {
+      key: Math.random().toString(),
+    };
+
+    const expectedLoadFinishTimestampList = [Date.now() + loadTime];
+
+    loadingCache.get$(key).subscribe((record) => {
+      expect(isCurrentTimestampApproximatelyEqualTo(expectedLoadFinishTimestampList[0])).toBeTruthy();
+
+      expect(record.key).toBe(key.key);
+      expect(record.lastStoredValue).toBe(null);
+      expect(record.loadCount).toBe(1);
+      expect(record.storeCount).toBe(0);
+
+      expectedLoadFinishTimestampList.push(Date.now());
+      forkJoin(
+        Array.from(new Array(10)).map(() => {
+          return loadingCache.get$(key).pipe(
+            tap(recordLocal => {
+              expect(isCurrentTimestampApproximatelyEqualTo(expectedLoadFinishTimestampList[1])).toBeTruthy();
+
+              expect(recordLocal.key).toBe(key.key);
+              expect(recordLocal.lastStoredValue).toBe(null);
+              expect(recordLocal.loadCount).toBe(1);
+              expect(recordLocal.storeCount).toBe(0);
+            }),
+          );
+        }),
+      ).subscribe(() => {
+        done();
+      });
+    });
+  });
+
+  it('afterRefreshTimeLoadShouldBeInitiated', (done: DoneFn) => {
+    const key: TestKey = {
+      key: Math.random().toString(),
+    };
+
+    const expectedLoadFinishTimestampList = [Date.now() + loadTime];
+
+    loadingCache.get$(key).subscribe((record) => {
+      expect(isCurrentTimestampApproximatelyEqualTo(expectedLoadFinishTimestampList[0])).toBeTruthy();
+
+      expect(record.key).toBe(key.key);
+      expect(record.lastStoredValue).toBe(null);
+      expect(record.loadCount).toBe(1);
+      expect(record.storeCount).toBe(0);
+
+      timer(refreshTime + allowedApproximateTimeDifference).pipe(
+        first(),
+      ).subscribe(() => {
+        expectedLoadFinishTimestampList.push(Date.now());
+        forkJoin(
+          Array.from(new Array(10)).map(() => {
+            return loadingCache.get$(key).pipe(
+              tap(recordLocal => {
+                expect(isCurrentTimestampApproximatelyEqualTo(expectedLoadFinishTimestampList[1])).toBeTruthy();
+
+                expect(recordLocal.key).toBe(key.key);
+                expect(recordLocal.lastStoredValue).toBe(null);
+                expect(recordLocal.loadCount).toBe(1);
+                expect(recordLocal.storeCount).toBe(0);
+              }),
+            );
+          }),
+        ).subscribe();
+
+        timer(loadTime).pipe(
+          first(),
+        ).subscribe(() => {
+          expectedLoadFinishTimestampList.push(Date.now());
+          forkJoin(
+            Array.from(new Array(10)).map(() => {
+              return loadingCache.get$(key).pipe(
+                tap(recordLocal => {
+                  expect(isCurrentTimestampApproximatelyEqualTo(expectedLoadFinishTimestampList[2])).toBeTruthy();
+
+                  expect(recordLocal.key).toBe(key.key);
+                  expect(recordLocal.lastStoredValue).toBe(null);
+                  expect(recordLocal.loadCount).toBe(2);
+                  expect(recordLocal.storeCount).toBe(0);
+                }),
+              );
+            }),
+          ).subscribe(done);
+        });
+      });
+    });
+  });
+
+  it('beforeRefreshTimeLoadShouldNotBeInitiated', (done: DoneFn) => {
+    const key: TestKey = {
+      key: Math.random().toString(),
+    };
+
+    const expectedLoadFinishTimestampList = [Date.now() + loadTime];
+
+    loadingCache.get$(key).subscribe((record) => {
+      expect(isCurrentTimestampApproximatelyEqualTo(expectedLoadFinishTimestampList[0])).toBeTruthy();
+
+      expect(record.key).toBe(key.key);
+      expect(record.lastStoredValue).toBe(null);
+      expect(record.loadCount).toBe(1);
+      expect(record.storeCount).toBe(0);
+
+      timer(refreshTime - allowedApproximateTimeDifference).pipe(
+        first(),
+      ).subscribe(() => {
+        expectedLoadFinishTimestampList.push(Date.now());
+        forkJoin(
+          Array.from(new Array(10)).map(() => {
+            return loadingCache.get$(key).pipe(
+              tap(recordLocal => {
+                expect(isCurrentTimestampApproximatelyEqualTo(expectedLoadFinishTimestampList[1])).toBeTruthy();
+
+                expect(recordLocal.key).toBe(key.key);
+                expect(recordLocal.lastStoredValue).toBe(null);
+                expect(recordLocal.loadCount).toBe(1);
+                expect(recordLocal.storeCount).toBe(0);
+              }),
+            );
+          }),
+        ).subscribe();
+
+        timer(loadTime).pipe(
+          first(),
+        ).subscribe(() => {
+          expectedLoadFinishTimestampList.push(Date.now());
+          forkJoin(
+            Array.from(new Array(10)).map(() => {
+              return loadingCache.get$(key).pipe(
+                tap(recordLocal => {
+                  expect(isCurrentTimestampApproximatelyEqualTo(expectedLoadFinishTimestampList[2])).toBeTruthy();
+
+                  expect(recordLocal.key).toBe(key.key);
+                  expect(recordLocal.lastStoredValue).toBe(null);
+                  expect(recordLocal.loadCount).toBe(1);
+                  expect(recordLocal.storeCount).toBe(0);
+                }),
+              );
+            }),
+          ).subscribe(done);
+        });
+      });
+    });
+  });
+
+  it('actualLoadResultShouldUpdateRecord', (done: DoneFn) => {
+    const key: TestKey = {
+      key: Math.random().toString(),
+    };
+
+    const expectedLoadFinishTimestampList = [Date.now() + loadTime];
+
+    loadingCache.get$(key).subscribe(recordLocal => {
+      expect(isCurrentTimestampApproximatelyEqualTo(expectedLoadFinishTimestampList[0])).toBeTruthy();
+
+      expect(recordLocal.key).toBe(key.key);
+      expect(recordLocal.lastStoredValue).toBe(null);
+      expect(recordLocal.loadCount).toBe(1);
+      expect(recordLocal.storeCount).toBe(0);
+
+      timer(refreshTime).pipe(
+        first(),
+      ).subscribe(() => {
+        expectedLoadFinishTimestampList.push(Date.now());
+        loadingCache.get$(key).pipe(
+          tap(recordLocal2 => {
+            expect(isCurrentTimestampApproximatelyEqualTo(expectedLoadFinishTimestampList[1])).toBeTruthy();
+
+            expect(recordLocal2.key).toBe(key.key);
+            expect(recordLocal2.lastStoredValue).toBe(null);
+            expect(recordLocal2.loadCount).toBe(1);
+            expect(recordLocal2.storeCount).toBe(0);
+          }),
+        ).subscribe(() => {
+          timer(loadTime + allowedApproximateTimeDifference).pipe(
+            first(),
+          ).subscribe(() => {
+            expectedLoadFinishTimestampList.push(Date.now());
+            loadingCache.get$(key).pipe(
+              tap(recordLocal2 => {
+                expect(isCurrentTimestampApproximatelyEqualTo(expectedLoadFinishTimestampList[2])).toBeTruthy();
+
+                expect(recordLocal2.key).toBe(key.key);
+                expect(recordLocal2.lastStoredValue).toBe(null);
+                expect(recordLocal2.loadCount).toBe(2);
+                expect(recordLocal2.storeCount).toBe(0);
+              }),
+            ).subscribe(done);
+          });
+        });
+      });
+    });
+  });
+
+  it('notActualLoadResultShouldNotUpdateRecord', (done: DoneFn) => {
+    const key: TestKey = {
+      key: Math.random().toString(),
+    };
+
+    const expectedLoadFinishTimestampList = [Date.now() + loadTime];
+
+    loadingCache.get$(key).subscribe(recordLocal => {
+      expect(isCurrentTimestampApproximatelyEqualTo(expectedLoadFinishTimestampList[0])).toBeTruthy();
+
+      expect(recordLocal.key).toBe(key.key);
+      expect(recordLocal.lastStoredValue).toBe(null);
+      expect(recordLocal.loadCount).toBe(1);
+      expect(recordLocal.storeCount).toBe(0);
+
+      timer(refreshTime).pipe(
+        first(),
+      ).subscribe(() => {
+        expectedLoadFinishTimestampList.push(Date.now());
+        key.loadActualTimestamp = 1;
+        loadingCache.get$(key).pipe(
+          tap(recordLocal2 => {
+            expect(isCurrentTimestampApproximatelyEqualTo(expectedLoadFinishTimestampList[1])).toBeTruthy();
+
+            expect(recordLocal2.key).toBe(key.key);
+            expect(recordLocal2.lastStoredValue).toBe(null);
+            expect(recordLocal2.loadCount).toBe(1);
+            expect(recordLocal2.storeCount).toBe(0);
+          }),
+        ).subscribe(() => {
+          timer(loadTime + allowedApproximateTimeDifference).pipe(
+            first(),
+          ).subscribe(() => {
+            expectedLoadFinishTimestampList.push(Date.now());
+            delete key.loadActualTimestamp;
+            loadingCache.get$(key).pipe(
+              tap(recordLocal2 => {
+                expect(isCurrentTimestampApproximatelyEqualTo(expectedLoadFinishTimestampList[2])).toBeTruthy();
+
+                expect(recordLocal2.key).toBe(key.key);
+                expect(recordLocal2.lastStoredValue).toBe(null);
+                expect(recordLocal2.loadCount).toBe(1);
+                expect(recordLocal2.storeCount).toBe(0);
+              }),
+            ).subscribe(done);
+          });
+        });
+      });
+    });
+  });
+
+  it('eachStoreShouldGetOnlyItsResult', (done: DoneFn) => {
+    const key: TestKey = {
+      key: Math.random().toString(),
+      loadTime: loadTime / 2,
+      storeTime: loadTime,
+    };
+
+    const expectedLoadFinishTimestamp = Date.now() + key.loadTime;
+    const expectedStoreFinishTimestampList = [];
+
+    forkJoin(
+      loadingCache.get$(key).pipe(
+        tap(record => {
+          expect(isCurrentTimestampApproximatelyEqualTo(expectedLoadFinishTimestamp)).toBeTruthy();
+
+          expect(record.key).toBe(key.key);
+          expect(record.lastStoredValue).toBe(null);
+          expect(record.loadCount).toBe(1);
+          expect(record.storeCount).toBe(0);
+        }),
+      ),
+      ...Array.from((new Array(10)).keys()).map((index) => {
+        return timer(index * allowedApproximateTimeDifference).pipe(
+          first(),
+          flatMap(() => {
+            expectedStoreFinishTimestampList.push(Date.now() + key.storeTime);
+            return loadingCache.set$(key, null).pipe(
+              tap(record => {
+                expect(isCurrentTimestampApproximatelyEqualTo(expectedStoreFinishTimestampList[index])).toBeTruthy();
+
+                expect(record.key).toBe(key.key);
+                expect(record.lastStoredValue).toBe(null);
+                expect(record.loadCount).toBe(1);
+                expect(record.storeCount).toBe(index + 1);
+              }),
+            );
+          }),
+        );
+      })
+    ).subscribe(done);
   });
 });
