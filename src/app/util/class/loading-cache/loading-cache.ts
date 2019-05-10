@@ -4,6 +4,7 @@ import {filter, first, map, mapTo, skip, timeout} from 'rxjs/operators';
 import {ILoadingCacheLoader} from './i-loading-cache-loader';
 import {StoreResultNotActualError} from './store-result-not-actual-error';
 import {ILoadingCacheConfig} from './i-loading-cache-config';
+import {ILoadResult} from './i-load-result';
 
 export class LoadingCache<K, V> {
   private readonly _cacheLoader: ILoadingCacheLoader<K, V>;
@@ -29,7 +30,7 @@ export class LoadingCache<K, V> {
       record.isLoading = true;
       record.error = null;
 
-      race(
+      race<ILoadResult<V>>(
         this._cacheLoader.load$(key),
         recordBS$.pipe( // set$ can update record during load
           skip(1),
