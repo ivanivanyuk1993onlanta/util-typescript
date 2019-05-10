@@ -20,7 +20,7 @@
    1. On set$ result, if it is more actual, record should be updated and pushed to subscribers, otherwise Error should be thrown
    1. set$ should throw TimeoutError
 
-# TDD test list
+# Required test list
 1. getShouldHaveOnlyOneSimultaneousLoad
 1. getCallsDuringLoadShouldCompleteImmediatelyAfterLoad
 1. getCallsShouldReturnNotSpoiledRecordsImmediately
