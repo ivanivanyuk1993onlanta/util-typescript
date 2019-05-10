@@ -622,7 +622,7 @@ describe('LoadingCache', () => {
       expect(record.loadCount).toBe(1);
       expect(record.storeCount).toBe(0);
 
-      timer(refreshTime - 1).pipe(
+      timer(refreshTime - allowedApproximateTimeDifference).pipe(
         first(),
       ).subscribe(() => {
         expectedLoadFinishTimestampList.push(Date.now());
