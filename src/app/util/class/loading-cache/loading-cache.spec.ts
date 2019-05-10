@@ -606,4 +606,61 @@ describe('LoadingCache', () => {
       });
     });
   });
+
+  it('beforeRefreshTimeLoadShouldNotBeInitiated', (done: DoneFn) => {
+    const key: TestKey = {
+      key: Math.random().toString(),
+    };
+
+    const expectedLoadFinishTimestampList = [Date.now() + loadTime];
+
+    loadingCache.get$(key).subscribe((record) => {
+      expect(isCurrentTimestampApproximatelyEqualTo(expectedLoadFinishTimestampList[0]));
+
+      expect(record.key).toBe(key.key);
+      expect(record.lastStoredValue).toBe(null);
+      expect(record.loadCount).toBe(1);
+      expect(record.storeCount).toBe(0);
+
+      timer(refreshTime - 1).pipe(
+        first(),
+      ).subscribe(() => {
+        expectedLoadFinishTimestampList.push(Date.now());
+        forkJoin(
+          Array.from(new Array(10)).map(() => {
+            return loadingCache.get$(key).pipe(
+              tap(recordLocal => {
+                expect(isCurrentTimestampApproximatelyEqualTo(expectedLoadFinishTimestampList[1])).toBeTruthy();
+
+                expect(recordLocal.key).toBe(key.key);
+                expect(recordLocal.lastStoredValue).toBe(null);
+                expect(recordLocal.loadCount).toBe(1);
+                expect(recordLocal.storeCount).toBe(0);
+              }),
+            );
+          }),
+        ).subscribe();
+
+        timer(loadTime).pipe(
+          first(),
+        ).subscribe(() => {
+          expectedLoadFinishTimestampList.push(Date.now());
+          forkJoin(
+            Array.from(new Array(10)).map(() => {
+              return loadingCache.get$(key).pipe(
+                tap(recordLocal => {
+                  expect(isCurrentTimestampApproximatelyEqualTo(expectedLoadFinishTimestampList[2])).toBeTruthy();
+
+                  expect(recordLocal.key).toBe(key.key);
+                  expect(recordLocal.lastStoredValue).toBe(null);
+                  expect(recordLocal.loadCount).toBe(1);
+                  expect(recordLocal.storeCount).toBe(0);
+                }),
+              );
+            }),
+          ).subscribe(done);
+        });
+      });
+    });
+  });
 });
