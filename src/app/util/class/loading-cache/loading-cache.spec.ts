@@ -3,7 +3,6 @@ import {forkJoin, Observable, of, throwError, TimeoutError, timer} from 'rxjs';
 import {catchError, first, map, mergeMap, tap} from 'rxjs/operators';
 import {ILoadResult} from './i-load-result';
 import {ILoadingCacheLoader} from './i-loading-cache-loader';
-import {TestBed} from '@angular/core/testing';
 
 const allowedApproximateTimeDifference = 5;
 const loadTime = 50;
@@ -30,12 +29,15 @@ interface TestKey {
 
 interface TestRecord {
   key: string;
+  lastStoredValue: TestRecord;
   loadCount: number;
   storeCount: number;
 }
 
 class TestCacheLoader implements ILoadingCacheLoader<TestKey, TestRecord> {
+  private _keyToLastStoredValueMap = new Map<string, TestRecord>();
   private _keyToLoadCountMap = new Map<string, number>();
+  private _keyToStoreCountMap = new Map<string, number>();
 
   load$(
     key: TestKey,
@@ -50,7 +52,9 @@ class TestCacheLoader implements ILoadingCacheLoader<TestKey, TestRecord> {
       return timer(key.loadTime || loadTime).pipe(
         map(() => {
           if (!this._keyToLoadCountMap.has(key.key)) {
+            this._keyToLastStoredValueMap.set(key.key, null);
             this._keyToLoadCountMap.set(key.key, 0);
+            this._keyToStoreCountMap.set(key.key, 0);
           }
           this._keyToLoadCountMap.set(
             key.key,
@@ -61,7 +65,9 @@ class TestCacheLoader implements ILoadingCacheLoader<TestKey, TestRecord> {
             timestamp: Date.now(),
             value: {
               key: key.key,
+              lastStoredValue: this._keyToLastStoredValueMap.get(key.key),
               loadCount: this._keyToLoadCountMap.get(key.key),
+              storeCount: this._keyToStoreCountMap.get(key.key),
             },
           };
         }),
@@ -77,16 +83,27 @@ class TestCacheLoader implements ILoadingCacheLoader<TestKey, TestRecord> {
       return timer(key.storeTime || loadTime).pipe(
         map(() => {
           if (!this._keyToLoadCountMap.has(key.key)) {
+            this._keyToLastStoredValueMap.set(key.key, null);
             this._keyToLoadCountMap.set(key.key, 0);
+            this._keyToStoreCountMap.set(key.key, 0);
           }
-          this._keyToLoadCountMap.set(
+          this._keyToStoreCountMap.set(
             key.key,
-            this._keyToLoadCountMap.get(key.key) + 1,
+            this._keyToStoreCountMap.get(key.key) + 1,
+          );
+          this._keyToLastStoredValueMap.set(
+            key.key,
+            value,
           );
 
           return {
             timestamp: Date.now(),
-            value: value,
+            value: {
+              key: key.key,
+              lastStoredValue: this._keyToLastStoredValueMap.get(key.key),
+              loadCount: this._keyToLoadCountMap.get(key.key),
+              storeCount: this._keyToStoreCountMap.get(key.key),
+            }
           };
         }),
         first(),
@@ -112,12 +129,18 @@ describe('LoadingCache', () => {
       key: Math.random().toString(),
     };
 
+    const expectedLoadFinishTimestamp = Date.now() + loadTime;
+
     forkJoin(
       Array.from(new Array(10)).map(() => {
         return loadingCache.get$(key).pipe(
           tap(record => {
+            expect(isCurrentTimestampApproximatelyEqualTo(expectedLoadFinishTimestamp)).toBeTruthy();
+
             expect(record.key).toBe(key.key);
+            expect(record.lastStoredValue).toBe(null);
             expect(record.loadCount).toBe(1);
+            expect(record.storeCount).toBe(0);
           }),
         );
       }),
@@ -137,7 +160,10 @@ describe('LoadingCache', () => {
           return loadingCache.get$(key).pipe(
             tap(recordLocal => {
               expect(recordLocal.key).toBe(key.key);
+              expect(recordLocal.lastStoredValue).toBe(null);
               expect(recordLocal.loadCount).toBe(1);
+              expect(recordLocal.storeCount).toBe(0);
+
               expect(isCurrentTimestampApproximatelyEqualTo(expectedLoadFinishTimestamp)).toBeTruthy();
             }),
           );
@@ -160,7 +186,10 @@ describe('LoadingCache', () => {
         return loadingCache.get$(key).pipe(
           tap(record => {
             expect(record.key).toBe(key.key);
+            expect(record.lastStoredValue).toBe(null);
             expect(record.loadCount).toBe(1);
+            expect(record.storeCount).toBe(0);
+
             expect(isCurrentTimestampApproximatelyEqualTo(expectedLoadFinishTimestamp)).toBeTruthy();
           }),
         );
@@ -176,6 +205,8 @@ describe('LoadingCache', () => {
       shouldLoadThrowError: true,
     };
 
+    const expectedLoadFinishTimestamp = Date.now();
+
     forkJoin(
       Array.from(new Array(10)).map(() => {
         return loadingCache.get$(key).pipe(
@@ -187,6 +218,8 @@ describe('LoadingCache', () => {
     ).subscribe((errorList) => {
       expect(Array.isArray(errorList)).toBe(true);
       for (const error of errorList) {
+        expect(isCurrentTimestampApproximatelyEqualTo(expectedLoadFinishTimestamp)).toBeTruthy();
+
         expect(error instanceof Error).toBe(true);
         expect(error.message).toBe(key.key);
       }
@@ -227,10 +260,13 @@ describe('LoadingCache', () => {
       loadTime: timeout,
     };
 
+    const expectedLoadFinishTimestamp = Date.now() + timeout;
+
     forkJoin(
       Array.from(new Array(10)).map(() => {
         return loadingCache.get$(key).pipe(
           catchError(error => {
+            expect(isCurrentTimestampApproximatelyEqualTo(expectedLoadFinishTimestamp)).toBeTruthy();
             return of(error);
           }),
         );
@@ -277,10 +313,13 @@ describe('LoadingCache', () => {
       storeTime,
     };
 
-    const storeRecord = {
+    const storeRecord: TestRecord = {
       key: `storeResult:${key.key}`,
+      lastStoredValue: null,
       loadCount: 100,
+      storeCount: 100,
     };
+    storeRecord.lastStoredValue = storeRecord;
 
     const expectedLoadFinishTimestamp = Date.now() + storeTime;
 
@@ -295,8 +334,10 @@ describe('LoadingCache', () => {
       loadingCache.set$(key, storeRecord),
     ).subscribe((resultList) => {
       for (const result of resultList) {
-        expect(result.key).toBe(`storeResult:${key.key}`);
-        expect(result.loadCount).toBe(100);
+        expect(result.key).toBe(key.key);
+        expect(result.lastStoredValue).toBe(storeRecord);
+        expect(result.loadCount).toBe(0);
+        expect(result.storeCount).toBe(1);
       }
       done();
     });
@@ -313,7 +354,9 @@ describe('LoadingCache', () => {
 
     const storeRecord = {
       key: `storeResult:${key.key}`,
+      lastStoredValue: null,
       loadCount: 100,
+      storeCount: 100,
     };
 
     const expectedLoadFinishTimestamp = Date.now() + storeTime;
@@ -329,8 +372,10 @@ describe('LoadingCache', () => {
       loadingCache.set$(key, storeRecord),
     ).subscribe((resultList) => {
       for (const result of resultList) {
-        expect(result.key).toBe(`storeResult:${key.key}`);
-        expect(result.loadCount).toBe(100);
+        expect(result.key).toBe(key.key);
+        expect(result.lastStoredValue).toBe(storeRecord);
+        expect(result.loadCount).toBe(0);
+        expect(result.storeCount).toBe(1);
       }
       done();
     });
