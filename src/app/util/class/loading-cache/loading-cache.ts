@@ -41,7 +41,7 @@ export class LoadingCache<K, V> {
         first(),
       ).subscribe(
         loadResultOrNull => {
-          if (loadResultOrNull) {
+          if (loadResultOrNull && loadResultOrNull.timestamp > record.valueTimestamp) {
             record.value = loadResultOrNull.value;
             record.valueTimestamp = loadResultOrNull.timestamp;
 

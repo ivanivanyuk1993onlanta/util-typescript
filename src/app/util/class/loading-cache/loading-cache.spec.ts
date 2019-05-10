@@ -4,7 +4,7 @@ import {catchError, first, map, mergeMap, tap} from 'rxjs/operators';
 import {ILoadResult} from './i-load-result';
 import {ILoadingCacheLoader} from './i-loading-cache-loader';
 
-const allowedApproximateTimeDifference = 5;
+const allowedApproximateTimeDifference = 7;
 const loadTime = 50;
 const refreshTime = 100;
 const spoilTime = 1000;
@@ -565,7 +565,7 @@ describe('LoadingCache', () => {
       expect(record.loadCount).toBe(1);
       expect(record.storeCount).toBe(0);
 
-      timer(refreshTime).pipe(
+      timer(refreshTime + allowedApproximateTimeDifference).pipe(
         first(),
       ).subscribe(() => {
         expectedLoadFinishTimestampList.push(Date.now());
