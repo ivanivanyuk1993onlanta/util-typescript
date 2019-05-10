@@ -41,12 +41,16 @@ export class LoadingCache<K, V> {
         first(),
       ).subscribe(
         loadResultOrNull => {
-          if (loadResultOrNull && loadResultOrNull.timestamp > record.valueTimestamp) {
-            record.value = loadResultOrNull.value;
-            record.valueTimestamp = loadResultOrNull.timestamp;
+          if (loadResultOrNull) {
+            if (this._isLoadResultActual(loadResultOrNull, record)) {
+              record.value = loadResultOrNull.value;
+              record.valueTimestamp = loadResultOrNull.timestamp;
 
-            record.isLoading = false;
-            recordBS$.next(record);
+              record.isLoading = false;
+              recordBS$.next(record);
+            } else {
+              recordBS$.next(record);
+            }
           }
         },
         error => {
@@ -79,7 +83,7 @@ export class LoadingCache<K, V> {
 
     return this._cacheLoader.store$(key, value).pipe(
       map(loadResult => {
-        if (loadResult.timestamp > record.valueTimestamp) {
+        if (this._isLoadResultActual(loadResult, record)) {
           record.value = loadResult.value;
           record.valueTimestamp = loadResult.timestamp;
 
@@ -109,6 +113,13 @@ export class LoadingCache<K, V> {
       this._map.set(key, recordBS$);
     }
     return recordBS$;
+  }
+
+  private _isLoadResultActual(
+    loadResult: ILoadResult<V>,
+    record: ILoadingCacheRecord<V>,
+  ): boolean {
+    return loadResult.timestamp > record.valueTimestamp && !(Date.now() - loadResult.timestamp > this._spoilTime);
   }
 
   private _isRecordSpoiled(
