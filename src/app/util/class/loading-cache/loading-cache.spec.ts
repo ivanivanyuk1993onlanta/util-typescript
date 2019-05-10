@@ -380,4 +380,99 @@ describe('LoadingCache', () => {
       done();
     });
   });
+
+  it('getShouldHandleLoadResultWhenRecordIsNotUpdatedFromStore', (done: DoneFn) => {
+    const storeTime = 1; // not 0 because key.storeTime || loadTime === loadTime
+    const key: TestKey = {
+      key: Math.random().toString(),
+      shouldStoreThrowError: true,
+      storeTime,
+    };
+
+    const storeRecord: TestRecord = {
+      key: `storeResult:${key.key}`,
+      lastStoredValue: null,
+      loadCount: 100,
+      storeCount: 100,
+    };
+    storeRecord.lastStoredValue = storeRecord;
+
+    const expectedLoadFinishTimestamp = Date.now() + loadTime;
+    const expectedStoreFinishTimestamp = Date.now() + storeTime;
+
+    forkJoin(
+      ...Array.from(new Array(10)).map(() => {
+        return loadingCache.get$(key).pipe(
+          tap(() => {
+            expect(isCurrentTimestampApproximatelyEqualTo(expectedLoadFinishTimestamp)).toBeTruthy();
+          }),
+        );
+      }),
+      loadingCache.set$(key, storeRecord).pipe(
+        catchError(err => {
+          expect(isCurrentTimestampApproximatelyEqualTo(expectedStoreFinishTimestamp)).toBeTruthy();
+          return of(err);
+        }),
+      ),
+    ).subscribe((resultList) => {
+      const storeResult = resultList.pop();
+      expect(storeResult instanceof Error).toBe(true);
+      expect(storeResult.message).toBe(key.key);
+      for (const result of resultList) {
+        expect(result.key).toBe(key.key);
+        expect(result.lastStoredValue).toBe(null);
+        expect(result.loadCount).toBe(1);
+        expect(result.storeCount).toBe(0);
+      }
+      done();
+    });
+  });
+
+  it('getShouldHandleLoadResultWhenRecordIsNotUpdatedFromStore', (done: DoneFn) => {
+    const storeTime = 1; // not 0 because key.storeTime || loadTime === loadTime
+    const key: TestKey = {
+      key: Math.random().toString(),
+      loadErrorTime: loadTime,
+      shouldLoadThrowError: true,
+      shouldStoreThrowError: true,
+      storeTime,
+    };
+
+    const storeRecord: TestRecord = {
+      key: `storeResult:${key.key}`,
+      lastStoredValue: null,
+      loadCount: 100,
+      storeCount: 100,
+    };
+    storeRecord.lastStoredValue = storeRecord;
+
+    const expectedLoadFinishTimestamp = Date.now() + loadTime;
+    const expectedStoreFinishTimestamp = Date.now() + storeTime;
+
+    forkJoin(
+      ...Array.from(new Array(10)).map(() => {
+        return loadingCache.get$(key).pipe(
+          catchError(err => {
+            expect(isCurrentTimestampApproximatelyEqualTo(expectedLoadFinishTimestamp)).toBeTruthy();
+            return of(err);
+          }),
+        );
+      }),
+      loadingCache.set$(key, storeRecord).pipe(
+        catchError(err => {
+          expect(isCurrentTimestampApproximatelyEqualTo(expectedStoreFinishTimestamp)).toBeTruthy();
+          return of(err);
+        }),
+      ),
+    ).subscribe((resultList) => {
+      const storeResult = resultList.pop();
+      expect(storeResult instanceof Error).toBe(true);
+      expect(storeResult.message).toBe(key.key);
+      for (const result of resultList) {
+        expect(result instanceof Error).toBe(true);
+        expect(result.message).toBe(key.key);
+      }
+      done();
+    });
+  });
 });
