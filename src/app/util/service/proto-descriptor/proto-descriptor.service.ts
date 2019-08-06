@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
-import {StorageWrap} from '../../class/storage/storage';
+import {StorageWrap} from '../../class-folder/storage/storage';
 import {DescriptorProto} from 'google-protobuf/google/protobuf/descriptor_pb';
 import {HttpClient} from '@angular/common/http';
-import {ResolvablePromise} from '../../class/resolvable-promise/resolvable-promise';
+import {ResolvablePromise} from '../../class-folder/resolvable-promise/resolvable-promise';
 import {TableService} from '../table/table.service';
 
 @Injectable({

@@ -1,7 +1,7 @@
 import {Component, Input, OnChanges, OnDestroy, OnInit, ChangeDetectorRef} from '@angular/core';
 import {distinctUntilChanged, startWith, takeUntil} from 'rxjs/operators';
 import {BehaviorSubject, Subject, combineLatest} from 'rxjs';
-import {RouteData} from '../../../class/route/route-data';
+import {RouteData} from '../../../class-folder/route/route-data';
 
 @Component({
   selector: 'app-route-list-recursive',

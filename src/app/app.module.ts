@@ -12,7 +12,7 @@ import {httpInterceptorProvider} from './util/http-interceptor/http-interceptor-
 import {FlexSpacerComponent} from './util/feature-folder/flex-spacer/flex-spacer.component';
 import {ProfileMenuModule} from './util/feature-folder/profile-menu/profile-menu.module';
 import {RegisterFormComponent} from './util/feature-folder/register-form/register-form.component';
-import {RouteListModule} from './util/feature-folder/route-list/route-list.module';
+import {RouteListModule} from './util/feature-folder/route-list_/route-list.module';
 
 @NgModule({
   bootstrap: [AppComponent],
