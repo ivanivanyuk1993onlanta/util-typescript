@@ -2,7 +2,11 @@ import {BehaviorSubject, Observable} from 'rxjs';
 import {DataSource} from '@angular/cdk/table';
 
 export interface RouteListDataSourceInterface<DataObjectType> extends DataSource<DataObjectType> {
-  dataObjectListBS$: BehaviorSubject<DataObjectType>;
+  readonly dataObjectTreeBS$: BehaviorSubject<Array<DataObjectType>>;
+  readonly filteredDataObjectListBS$: BehaviorSubject<Array<DataObjectType>>;
+  readonly filteredDataObjectTreeBS$: BehaviorSubject<Array<DataObjectType>>;
+
+  applySearch(searchString: string): Observable<void>;
 
   getChildren(dataObject: DataObjectType): Observable<Array<DataObjectType>>;
 
