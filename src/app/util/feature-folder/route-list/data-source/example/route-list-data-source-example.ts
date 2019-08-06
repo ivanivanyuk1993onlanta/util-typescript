@@ -2,9 +2,10 @@ import {RouteListDataSourceInterface} from '../route-list-data-source-interface'
 import {RouteExampleInterface} from './route-example-interface';
 import {BehaviorSubject, Observable, of} from 'rxjs';
 import {CollectionViewer} from '@angular/cdk/collections';
+import {tap} from 'rxjs/operators';
 
 export class RouteListDataSourceExample implements RouteListDataSourceInterface<RouteExampleInterface> {
-  readonly dataObjectTreeBS$: BehaviorSubject<Array<RouteExampleInterface>>;
+  readonly dataObjectTreeBS$ = new BehaviorSubject<Array<RouteExampleInterface>>([]);
   readonly filteredDataObjectListBS$: BehaviorSubject<Array<RouteExampleInterface>>;
   readonly filteredDataObjectTreeBS$: BehaviorSubject<Array<RouteExampleInterface>>;
 
@@ -13,18 +14,22 @@ export class RouteListDataSourceExample implements RouteListDataSourceInterface<
   }
 
   connect(collectionViewer: CollectionViewer): Observable<RouteExampleInterface[]> {
-    return of(this._generateList(3, 3));
+    return of(this._generateList(3, 3)).pipe(
+      tap(dataObjectTree => {
+        this.dataObjectTreeBS$.next(dataObjectTree);
+      }),
+    );
   }
 
   disconnect(collectionViewer: CollectionViewer): void {
   }
 
   getChildren(dataObject: RouteExampleInterface): Observable<Array<RouteExampleInterface>> {
-    return undefined;
+    return of(dataObject.children || null);
   }
 
-  getDisplayText(dataObject: RouteExampleInterface): BehaviorSubject<string> {
-    return undefined;
+  getDisplayTextBS$(dataObject: RouteExampleInterface): BehaviorSubject<string> {
+    return new BehaviorSubject<string>(dataObject.localizationCode);
   }
 
   getUrl(dataObject: RouteExampleInterface): Observable<string> {
@@ -34,7 +39,7 @@ export class RouteListDataSourceExample implements RouteListDataSourceInterface<
   private _generateList(
     levelCount: number,
     countPerLevel: number,
-    currentLevelCount = 0,
+    currentLevelCount = 1,
     parent: RouteExampleInterface = null,
   ): Array<RouteExampleInterface> {
     const routeList: Array<RouteExampleInterface> = [];
@@ -48,10 +53,6 @@ export class RouteListDataSourceExample implements RouteListDataSourceInterface<
         route.children = this._generateList(levelCount, countPerLevel, currentLevelCount + 1, route);
       }
       routeList.push(route);
-    }
-
-    if (currentLevelCount === 0) {
-      console.log(routeList);
     }
 
     return routeList;

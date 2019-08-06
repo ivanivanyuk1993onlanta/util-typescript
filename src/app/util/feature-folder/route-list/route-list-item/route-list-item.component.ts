@@ -1,4 +1,5 @@
-import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
+import {RouteListDataSourceInterface} from '../data-source/route-list-data-source-interface';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -6,11 +7,7 @@ import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
   styleUrls: ['./route-list-item.component.scss'],
   templateUrl: './route-list-item.component.html',
 })
-export class RouteListItemComponent implements OnInit {
-
-  constructor() { }
-
-  ngOnInit() {
-  }
-
+export class RouteListItemComponent<DataObjectType> {
+  @Input() dataObject: DataObjectType;
+  @Input() dataSource: RouteListDataSourceInterface<DataObjectType>;
 }

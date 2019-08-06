@@ -1,1 +1,8 @@
-<p>route-list works!</p>
+<ng-container
+  *ngFor="let dataObject of dataSource.dataObjectTreeBS$ | async"
+>
+  <app-route-list-item
+    [dataObject]="dataObject"
+    [dataSource]="dataSource"
+  ></app-route-list-item>
+</ng-container>
