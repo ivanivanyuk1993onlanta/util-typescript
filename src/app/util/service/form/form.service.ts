@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {ProtoDescriptorService} from '../proto-descriptor/proto-descriptor.service';
-import {StorageWrap} from '../../class/storage/storage';
-import {ResolvablePromise} from '../../class/resolvable-promise/resolvable-promise';
+import {StorageWrap} from '../../class-folder/storage/storage';
+import {ResolvablePromise} from '../../class-folder/resolvable-promise/resolvable-promise';
 import {FormFieldBase} from './form-field-base';
 import {ucfirst} from '../../method/ucfirst';
 

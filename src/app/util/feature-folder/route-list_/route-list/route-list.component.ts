@@ -4,7 +4,7 @@ import {escapeRegExp} from 'tslint/lib/utils';
 import {FormControl} from '@angular/forms';
 import {MatOptionSelectionChange} from '@angular/material';
 import {MediaQueryObserverService} from '../../../service/media-query-observer/media-query-observer.service';
-import {RouteData} from '../../../class/route/route-data';
+import {RouteData} from '../../../class-folder/route/route-data';
 import {Router} from '@angular/router';
 import {takeUntil} from 'rxjs/operators';
 

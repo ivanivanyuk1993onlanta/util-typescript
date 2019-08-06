@@ -1,9 +1,9 @@
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
-import {RouteData} from '../../class/route/route-data';
-import {StorageWrap} from '../../class/storage/storage';
-import {registerStorageObserver} from '../../class/storage/register-storage-observer';
+import {RouteData} from '../../class-folder/route/route-data';
+import {StorageWrap} from '../../class-folder/storage/storage';
+import {registerStorageObserver} from '../../class-folder/storage/register-storage-observer';
 
 @Injectable({
   providedIn: 'root',
