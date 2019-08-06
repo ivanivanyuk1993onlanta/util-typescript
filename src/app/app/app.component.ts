@@ -1,5 +1,5 @@
-import {AuthService} from '../util/service/auth/auth.service';
 import {Component} from '@angular/core';
+import {RouteListDataSourceExample} from '../util/feature-folder/route-list/data-source/example/route-list-data-source-example';
 
 @Component({
   selector: 'app-root',
@@ -7,8 +7,5 @@ import {Component} from '@angular/core';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-  constructor(
-    public authService: AuthService,
-  ) {
-  }
+  public dataSource = new RouteListDataSourceExample();
 }

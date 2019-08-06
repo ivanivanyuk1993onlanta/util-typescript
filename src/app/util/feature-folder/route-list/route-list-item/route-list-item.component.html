@@ -1,0 +1,12 @@
+<div>
+  {{ dataSource | getDisplayTextBsPure: dataObject | async }}
+  <ng-container
+    *ngIf="dataSource | getChildrenPure: dataObject | async"
+  >
+    <app-route-list-item
+      *ngFor="let childDataObject of dataSource | getChildrenPure: dataObject | async"
+      [dataObject]="childDataObject"
+      [dataSource]="dataSource"
+    ></app-route-list-item>
+  </ng-container>
+</div>

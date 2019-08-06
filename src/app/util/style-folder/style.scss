@@ -1,3 +1,7 @@
+@import "mixin-folder/active";
+@import "mixin-folder/hidden";
+@import "mixin-folder/w-100";
+
 @import "font-loads";
 @import "theme-constructor";
 
@@ -11,13 +15,13 @@ body {
 }
 
 .active.active.active.active {
-  background: rgba(255, 255, 255, 0.1);
+  @include active();
 }
 
 .hidden.hidden.hidden {
-  display: none;
+  @include hidden();
 }
 
 .w-100 {
-  width: 100%;
+  @include w-100();
 }
