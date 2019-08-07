@@ -17,11 +17,16 @@ export class RouteListItemComponent<DataObjectType> implements OnChanges, OnDest
 
   public childListBS$ = new BehaviorSubject<Array<DataObjectType>>([]);
   public displayTextBS$ = new BehaviorSubject<string>(null);
+  public isExpandedBS$ = new BehaviorSubject(false);
   public matchesUrlBS$ = new BehaviorSubject<boolean>(null);
   public urlBS$ = new BehaviorSubject<string>(null);
 
   private _changeBroadcaster = new ChangeBroadcaster();
   private _componentDestroyedBroadcaster = new ComponentDestroyedBroadcaster();
+
+  public handleExpandedChange(isExpanded: boolean) {
+    this.isExpandedBS$.next(isExpanded);
+  }
 
   public ngOnChanges(): void {
     this._changeBroadcaster.broadcastChange();
