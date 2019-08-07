@@ -1,8 +1,7 @@
-<ng-container
-  *ngFor="let dataObject of dataSource.dataObjectTreeBS$ | async"
->
+<mat-nav-list>
   <app-route-list-item
+    *ngFor="let dataObject of dataSource.dataObjectTreeBS$ | async"
     [dataObject]="dataObject"
-    [dataSource]="dataSource"
+    [routeListComponent]="this"
   ></app-route-list-item>
-</ng-container>
+</mat-nav-list>

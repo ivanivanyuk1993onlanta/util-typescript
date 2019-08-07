@@ -8,10 +8,12 @@ export interface RouteListDataSourceInterface<DataObjectType> extends DataSource
 
   applySearch(searchString: string): Observable<void>;
 
-  getChildren(dataObject: DataObjectType): Observable<Array<DataObjectType>>;
+  getChildList(dataObject: DataObjectType): Observable<Array<DataObjectType>>;
 
   // We return BehaviorSubject<string> instead of string, taking into account that app can have reactive localization
   getDisplayTextBS$(dataObject: DataObjectType): BehaviorSubject<string>;
 
   getUrl(dataObject: DataObjectType): Observable<string>;
+
+  matchesUrl(dataObject: DataObjectType, url: string): Observable<boolean>;
 }
