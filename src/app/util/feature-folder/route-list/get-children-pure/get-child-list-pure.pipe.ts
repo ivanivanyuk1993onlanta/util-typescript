@@ -3,13 +3,13 @@ import {RouteListDataSourceInterface} from '../data-source/route-list-data-sourc
 import {Observable} from 'rxjs';
 
 @Pipe({
-  name: 'getChildrenPure'
+  name: 'getChildListPure'
 })
-export class GetChildrenPurePipe<DataObjectType> implements PipeTransform {
+export class GetChildListPurePipe<DataObjectType> implements PipeTransform {
   transform(
     dataSource: RouteListDataSourceInterface<DataObjectType>,
     dataObject: DataObjectType,
   ): Observable<Array<DataObjectType>> {
-    return dataSource.getChildren(dataObject);
+    return dataSource.getChildList(dataObject);
   }
 }

@@ -1,5 +1,5 @@
 <ng-container
-  *ngFor="let childList of [dataSource | getChildrenPure: dataObject | async]"
+  *ngFor="let childList of [dataSource | getChildListPure: dataObject | async]"
 >
   <ng-container
     *ngFor="let displayText of [dataSource | getDisplayTextBsPure: dataObject | async]"

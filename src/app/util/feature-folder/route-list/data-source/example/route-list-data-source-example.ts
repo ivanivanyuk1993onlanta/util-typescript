@@ -24,7 +24,7 @@ export class RouteListDataSourceExample implements RouteListDataSourceInterface<
   disconnect(collectionViewer: CollectionViewer): void {
   }
 
-  getChildren(dataObject: RouteExampleInterface): Observable<Array<RouteExampleInterface>> {
+  getChildList(dataObject: RouteExampleInterface): Observable<Array<RouteExampleInterface>> {
     return of(dataObject.children || null);
   }
 
