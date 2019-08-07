@@ -1,12 +1,40 @@
-<div>
-  {{ dataSource | getDisplayTextBsPure: dataObject | async }}
+<ng-container
+  *ngFor="let childList of [dataSource | getChildrenPure: dataObject | async]"
+>
   <ng-container
-    *ngIf="dataSource | getChildrenPure: dataObject | async"
+    *ngFor="let displayText of [dataSource | getDisplayTextBsPure: dataObject | async]"
   >
-    <app-route-list-item
-      *ngFor="let childDataObject of dataSource | getChildrenPure: dataObject | async"
-      [dataObject]="childDataObject"
-      [dataSource]="dataSource"
-    ></app-route-list-item>
+    <ng-container
+      *ngFor="let url of [dataSource | getUrlPure: dataObject | async]"
+    >
+      <mat-expansion-panel
+        #matExpansionPanel
+        *ngIf="childList; else linkOrText"
+      >
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <ng-container *ngTemplateOutlet="linkOrText"></ng-container>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <mat-nav-list
+          [class.hidden]="!(matExpansionPanel.expandedChange | async)"
+        >
+          <app-route-list-item
+            *ngFor="let childDataObject of childList"
+            [dataObject]="childDataObject"
+            [dataSource]="dataSource"
+          ></app-route-list-item>
+        </mat-nav-list>
+      </mat-expansion-panel>
+
+      <ng-template #linkOrText>
+        <a
+          (click)="$event.stopPropagation()"
+          [routerLink]="url"
+          mat-list-item
+        >{{ displayText }}</a>
+      </ng-template>
+    </ng-container>
   </ng-container>
-</div>
+</ng-container>

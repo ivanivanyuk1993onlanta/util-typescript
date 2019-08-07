@@ -33,7 +33,7 @@ export class RouteListDataSourceExample implements RouteListDataSourceInterface<
   }
 
   getUrl(dataObject: RouteExampleInterface): Observable<string> {
-    return undefined;
+    return of(dataObject.url || null);
   }
 
   private _generateList(
