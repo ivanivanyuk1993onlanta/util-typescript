@@ -12,6 +12,8 @@ export class RouteListDataSourceExample implements RouteListDataSourceInterface<
   private _currentUrl: string = null;
   private _dataObjectToParentMapBS$ = new BehaviorSubject(new Map<RouteExampleInterface, RouteExampleInterface>());
   private _dataMatchingCurrentUrlSet = new Set<RouteExampleInterface>();
+  !
+  // todo change to BehaviorSubject<Map<string, Set<RouteExampleInterface>>>
   private _urlToDataObjectMapBS$ = new BehaviorSubject(new Map<string, RouteExampleInterface>());
 
   public applySearch(searchString: string): Observable<void> {
