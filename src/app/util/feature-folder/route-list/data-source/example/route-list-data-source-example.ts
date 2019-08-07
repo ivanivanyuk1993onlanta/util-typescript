@@ -44,16 +44,13 @@ export class RouteListDataSourceExample implements RouteListDataSourceInterface<
   ): Array<RouteExampleInterface> {
     const routeList: Array<RouteExampleInterface> = [];
 
-    const shouldGenerateChildren = currentLevelCount < levelCount;
-    const nextLevelCount = currentLevelCount + 1;
-
     for (const index of Array.from(Array(countPerLevel).keys())) {
       const route: RouteExampleInterface = {
         localizationCode: `${parent ? `${parent.localizationCode}-` : ''}${index + 1}`,
         url: `${parent ? `${parent.url}-` : ''}${index + 1}`,
       };
-      if (shouldGenerateChildren) {
-        route.children = this._generateList(levelCount, countPerLevel, nextLevelCount, route);
+      if (currentLevelCount < levelCount) {
+        route.children = this._generateList(levelCount, countPerLevel, currentLevelCount + 1, route);
       }
       routeList.push(route);
     }
