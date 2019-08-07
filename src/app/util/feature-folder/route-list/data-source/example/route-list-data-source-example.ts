@@ -14,7 +14,7 @@ export class RouteListDataSourceExample implements RouteListDataSourceInterface<
   }
 
   public connect(collectionViewer: CollectionViewer): Observable<RouteExampleInterface[]> {
-    return of(this._generateList(3, 3)).pipe(
+    return of(this._generateList(5, 10)).pipe(
       tap(dataObjectTree => {
         this.dataObjectTreeBS$.next(dataObjectTree);
       }),
