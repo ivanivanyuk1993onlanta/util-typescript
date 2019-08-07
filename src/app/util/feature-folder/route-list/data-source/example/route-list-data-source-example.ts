@@ -9,14 +9,31 @@ export class RouteListDataSourceExample implements RouteListDataSourceInterface<
   readonly filteredDataObjectListBS$: BehaviorSubject<Array<RouteExampleInterface>>;
   readonly filteredDataObjectTreeBS$: BehaviorSubject<Array<RouteExampleInterface>>;
 
+  private _currentUrl: string = null;
+  private _dataObjectToParentMapBS$ = new BehaviorSubject(new Map<RouteExampleInterface, RouteExampleInterface>());
+  private _dataMatchingCurrentUrlSet = new Set<RouteExampleInterface>();
+  private _urlToDataObjectMapBS$ = new BehaviorSubject(new Map<string, RouteExampleInterface>());
+
   public applySearch(searchString: string): Observable<void> {
     return undefined;
   }
 
   public connect(collectionViewer: CollectionViewer): Observable<RouteExampleInterface[]> {
-    return of(this._generateList(5, 10)).pipe(
+    return of(this._generateList(4, 10)).pipe(
       tap(dataObjectTree => {
         this.dataObjectTreeBS$.next(dataObjectTree);
+
+        const dataObjectToParentMap = new Map<RouteExampleInterface, RouteExampleInterface>();
+        const urlToDataObjectMap = new Map<string, RouteExampleInterface>();
+        for (const dataObject of dataObjectTree) {
+          this._appendDataObjectToMaps(
+            dataObject,
+            dataObjectToParentMap,
+            urlToDataObjectMap,
+          );
+        }
+        this._dataObjectToParentMapBS$.next(dataObjectToParentMap);
+        this._urlToDataObjectMapBS$.next(urlToDataObjectMap);
       }),
     );
   }
@@ -37,7 +54,41 @@ export class RouteListDataSourceExample implements RouteListDataSourceInterface<
   }
 
   public matchesUrl(dataObject: RouteExampleInterface, url: string): Observable<boolean> {
-    return of(dataObject.url === url);
+    if (url !== this._currentUrl) {
+      this._currentUrl = url;
+      const dataObjectToParentMap = this._dataObjectToParentMapBS$.getValue();
+      this._dataMatchingCurrentUrlSet = new Set<RouteExampleInterface>();
+      let matchingDataObject = this._urlToDataObjectMapBS$.getValue().get(url);
+      while (matchingDataObject) {
+        this._dataMatchingCurrentUrlSet.add(matchingDataObject);
+
+        matchingDataObject = dataObjectToParentMap.get(matchingDataObject);
+      }
+    }
+    return of(this._dataMatchingCurrentUrlSet.has(dataObject));
+  }
+
+  private _appendDataObjectToMaps(
+    dataObject: RouteExampleInterface,
+    dataObjectToParentMap: Map<RouteExampleInterface, RouteExampleInterface>,
+    urlToDataObjectMap: Map<string, RouteExampleInterface>,
+    parent: RouteExampleInterface = null,
+  ) {
+    urlToDataObjectMap.set(dataObject.url, dataObject);
+    if (parent) {
+      dataObjectToParentMap.set(dataObject, parent);
+    }
+    const childList = dataObject.children;
+    if (childList) {
+      for (const child of childList) {
+        this._appendDataObjectToMaps(
+          child,
+          dataObjectToParentMap,
+          urlToDataObjectMap,
+          dataObject,
+        );
+      }
+    }
   }
 
   private _generateList(
