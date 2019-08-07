@@ -14,4 +14,6 @@ export interface RouteListDataSourceInterface<DataObjectType> extends DataSource
   getDisplayTextBS$(dataObject: DataObjectType): BehaviorSubject<string>;
 
   getUrl(dataObject: DataObjectType): Observable<string>;
+
+  matchesUrl(dataObject: DataObjectType, url: string): Observable<boolean>;
 }

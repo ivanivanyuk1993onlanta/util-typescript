@@ -9,11 +9,11 @@ export class RouteListDataSourceExample implements RouteListDataSourceInterface<
   readonly filteredDataObjectListBS$: BehaviorSubject<Array<RouteExampleInterface>>;
   readonly filteredDataObjectTreeBS$: BehaviorSubject<Array<RouteExampleInterface>>;
 
-  applySearch(searchString: string): Observable<void> {
+  public applySearch(searchString: string): Observable<void> {
     return undefined;
   }
 
-  connect(collectionViewer: CollectionViewer): Observable<RouteExampleInterface[]> {
+  public connect(collectionViewer: CollectionViewer): Observable<RouteExampleInterface[]> {
     return of(this._generateList(3, 3)).pipe(
       tap(dataObjectTree => {
         this.dataObjectTreeBS$.next(dataObjectTree);
@@ -21,19 +21,23 @@ export class RouteListDataSourceExample implements RouteListDataSourceInterface<
     );
   }
 
-  disconnect(collectionViewer: CollectionViewer): void {
+  public disconnect(collectionViewer: CollectionViewer): void {
   }
 
-  getChildList(dataObject: RouteExampleInterface): Observable<Array<RouteExampleInterface>> {
+  public getChildList(dataObject: RouteExampleInterface): Observable<Array<RouteExampleInterface>> {
     return of(dataObject.children || null);
   }
 
-  getDisplayTextBS$(dataObject: RouteExampleInterface): BehaviorSubject<string> {
+  public getDisplayTextBS$(dataObject: RouteExampleInterface): BehaviorSubject<string> {
     return new BehaviorSubject<string>(dataObject.localizationCode);
   }
 
-  getUrl(dataObject: RouteExampleInterface): Observable<string> {
+  public getUrl(dataObject: RouteExampleInterface): Observable<string> {
     return of(dataObject.url || null);
+  }
+
+  public matchesUrl(dataObject: RouteExampleInterface, url: string): Observable<boolean> {
+    return of(dataObject.url === url);
   }
 
   private _generateList(
@@ -47,7 +51,7 @@ export class RouteListDataSourceExample implements RouteListDataSourceInterface<
     for (const index of Array.from(Array(countPerLevel).keys())) {
       const route: RouteExampleInterface = {
         localizationCode: `${parent ? `${parent.localizationCode}-` : ''}${index + 1}`,
-        url: `${parent ? `${parent.url}-` : ''}${index + 1}`,
+        url: `${parent ? `${parent.url}-` : '/'}${index + 1}`,
       };
       if (currentLevelCount < levelCount) {
         route.children = this._generateList(levelCount, countPerLevel, currentLevelCount + 1, route);
