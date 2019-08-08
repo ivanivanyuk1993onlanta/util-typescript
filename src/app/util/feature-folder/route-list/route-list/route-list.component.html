@@ -22,6 +22,7 @@
       panelWidth="auto"
     >
       <mat-option
+        (onSelectionChange)="selectOption($event, searchResult)"
         *ngFor="let searchResult of searchResultListBS$ | async"
         [value]="dataSource.getDisplayTextBS$(searchResult) | async"
       >

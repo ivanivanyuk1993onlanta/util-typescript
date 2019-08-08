@@ -92,16 +92,13 @@ export class RouteListDataSourceExample implements RouteListDataSourceInterface<
           return matchIndex;
         }
       });
-
-      return of(flatListCopy);
     } else {
       // Sorting by name
       sortByFuncResult(flatListCopy, (dataObject) => {
         return this.getDisplayTextBS$(dataObject).getValue();
       });
-
-      return of(flatListCopy.slice(0, 20));
     }
+    return of(flatListCopy.slice(0, 50));
   }
 
   public getUrl$(dataObject: RouteExampleInterface): Observable<string> {

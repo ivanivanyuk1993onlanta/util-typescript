@@ -7,6 +7,7 @@ import {BehaviorSubject} from 'rxjs';
 import {NavigationEnd, Router} from '@angular/router';
 import {FormControl} from '@angular/forms';
 import {getControlObservableWithInitialValue$} from '../../../method-folder/form-helper/get-control-observable-with-initial-value';
+import {MatOptionSelectionChange} from '@angular/material';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -47,6 +48,21 @@ export class RouteListComponent<DataObjectType> implements OnChanges, OnDestroy,
 
   public ngOnInit(): void {
     this._subscribeToRouterEvents();
+  }
+
+  public selectOption(
+    event: MatOptionSelectionChange,
+    dataObject: DataObjectType,
+  ): void {
+    if (event.source.selected) {
+      this.dataSource.getUrl$(dataObject).pipe(
+        takeUntil(this._componentDestroyedBroadcaster.componentDestroyedS$),
+      ).subscribe(url => {
+        this._router.navigateByUrl(url).then(() => {
+          this.searchTextFC.setValue('');
+        });
+      });
+    }
   }
 
   private _subscribeToRouterEvents() {
