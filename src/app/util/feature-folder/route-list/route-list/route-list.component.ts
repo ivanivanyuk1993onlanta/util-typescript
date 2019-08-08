@@ -5,6 +5,9 @@ import {ChangeBroadcaster} from '../../../class-folder/change-broadcaster/change
 import {filter, takeUntil} from 'rxjs/operators';
 import {BehaviorSubject} from 'rxjs';
 import {NavigationEnd, Router} from '@angular/router';
+import {FormControl} from '@angular/forms';
+import {getControlObservableWithInitialValue$} from '../../../method-folder/form-helper/get-control-observable-with-initial-value';
+import {MatOptionSelectionChange} from '@angular/material';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -16,6 +19,8 @@ export class RouteListComponent<DataObjectType> implements OnChanges, OnDestroy,
   @Input() dataSource: RouteListDataSourceInterface<DataObjectType>;
 
   public currentUrlBS$ = new BehaviorSubject<string>(null);
+  public searchResultListBS$ = new BehaviorSubject<Array<DataObjectType>>([]);
+  public searchTextFC = new FormControl();
 
   private _changeBroadcaster = new ChangeBroadcaster();
   private _componentDestroyedBroadcaster = new ComponentDestroyedBroadcaster();
@@ -32,6 +37,8 @@ export class RouteListComponent<DataObjectType> implements OnChanges, OnDestroy,
       takeUntil(this._changeBroadcaster.changeS$),
       takeUntil(this._componentDestroyedBroadcaster.componentDestroyedS$),
     ).subscribe();
+
+    this._subscribeToSearchText();
   }
 
   public ngOnDestroy(): void {
@@ -43,6 +50,21 @@ export class RouteListComponent<DataObjectType> implements OnChanges, OnDestroy,
     this._subscribeToRouterEvents();
   }
 
+  public selectOption(
+    event: MatOptionSelectionChange,
+    dataObject: DataObjectType,
+  ): void {
+    if (event.source.selected) {
+      this.dataSource.getUrl$(dataObject).pipe(
+        takeUntil(this._componentDestroyedBroadcaster.componentDestroyedS$),
+      ).subscribe(url => {
+        this._router.navigateByUrl(url).then(() => {
+          this.searchTextFC.setValue('');
+        });
+      });
+    }
+  }
+
   private _subscribeToRouterEvents() {
     this.currentUrlBS$ = new BehaviorSubject<string>(this._router.url);
     this._router.events.pipe(
@@ -50,6 +72,20 @@ export class RouteListComponent<DataObjectType> implements OnChanges, OnDestroy,
       takeUntil(this._componentDestroyedBroadcaster.componentDestroyedS$),
     ).subscribe(() => {
       this.currentUrlBS$.next(this._router.url);
+    });
+  }
+
+  private _subscribeToSearchText() {
+    getControlObservableWithInitialValue$<string>(this.searchTextFC).pipe(
+      takeUntil(this._changeBroadcaster.changeS$),
+      takeUntil(this._componentDestroyedBroadcaster.componentDestroyedS$),
+    ).subscribe(searchText => {
+      this.dataSource.getSearchResultList$(searchText).pipe(
+        takeUntil(this._changeBroadcaster.changeS$),
+        takeUntil(this._componentDestroyedBroadcaster.componentDestroyedS$),
+      ).subscribe(searchResultList => {
+        this.searchResultListBS$.next(searchResultList);
+      });
     });
   }
 }

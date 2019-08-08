@@ -1,6 +1,6 @@
 import {Observable, timer} from 'rxjs';
 import {ILoadResult} from './i-load-result';
-import {getRandomIntFromInterval} from '../../method/get-random-int-from-interval';
+import {getRandomIntFromInterval} from '../../method-folder/get-random-int-from-interval';
 import {first, map} from 'rxjs/operators';
 import {ILoadingCacheLoader} from './i-loading-cache-loader';
 

@@ -1,7 +1,49 @@
-<mat-nav-list>
-  <app-route-list-item
-    *ngFor="let dataObject of dataSource.dataObjectTreeBS$ | async"
-    [dataObject]="dataObject"
-    [routeListComponent]="this"
-  ></app-route-list-item>
-</mat-nav-list>
+<div class="height-filler" style="height:100%">
+  <div class="height-filler__row">
+    <mat-form-field class="w-100">
+      <mat-label>
+        <span matPrefix>&nbsp;</span>
+        <mat-icon matPrefix>search</mat-icon>
+        <!-- todo render with localization pipe -->
+        Поиск
+      </mat-label>
+      <input
+        [formControl]="searchTextFC"
+        [matAutocomplete]="matAutocomplete"
+        matInput
+        type="search"
+      >
+    </mat-form-field>
+
+    <mat-autocomplete
+      #matAutocomplete="matAutocomplete"
+      autoActiveFirstOption
+      class="custom-scrollbar"
+      panelWidth="auto"
+    >
+      <mat-option
+        (onSelectionChange)="selectOption($event, searchResult)"
+        *ngFor="let searchResult of searchResultListBS$ | async"
+        [value]="dataSource | getDisplayTextBS$Pure: searchResult | async"
+      >
+        <mat-nav-list>
+          <a
+            [routerLink]="dataSource | getUrl$Pure: searchResult | async"
+            mat-list-item
+          >
+            {{ dataSource | getDisplayTextBS$Pure: searchResult | async }}
+          </a>
+        </mat-nav-list>
+      </mat-option>
+    </mat-autocomplete>
+  </div>
+  <div class="height-filler__row-rest-height">
+    <mat-nav-list>
+      <app-route-list-item
+        *ngFor="let dataObject of dataSource.dataObjectTreeBS$ | async"
+        [dataObject]="dataObject"
+        [routeListComponent]="this"
+      ></app-route-list-item>
+    </mat-nav-list>
+  </div>
+</div>

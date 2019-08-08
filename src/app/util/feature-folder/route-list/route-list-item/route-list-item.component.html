@@ -1,39 +1,43 @@
-<div
+<mat-expansion-panel
+  (expandedChange)="handleExpandedChange($event)"
+  *ngIf="childListBS$ | async; else noChildList"
   [class.active]="matchesUrlBS$ | async"
 >
-  <mat-expansion-panel
-    (expandedChange)="handleExpandedChange($event)"
-    *ngIf="childListBS$ | async; else linkOrText"
+  <mat-expansion-panel-header
     [class.active]="matchesUrlBS$ | async"
   >
-    <mat-expansion-panel-header
-      [class.active]="matchesUrlBS$ | async"
-    >
-      <mat-panel-title>
-        <ng-container *ngTemplateOutlet="linkOrText"></ng-container>
-      </mat-panel-title>
-    </mat-expansion-panel-header>
+    <mat-panel-title>
+      <ng-container *ngTemplateOutlet="link"></ng-container>
+    </mat-panel-title>
+  </mat-expansion-panel-header>
 
-    <ng-template
-      matExpansionPanelContent
+  <ng-template
+    matExpansionPanelContent
+  >
+    <mat-nav-list
+      [class.hidden]="!(isExpandedBS$ | async)"
     >
-      <mat-nav-list
-        [class.hidden]="!(isExpandedBS$ | async)"
-      >
-        <app-route-list-item
-          *ngFor="let childDataObject of childListBS$ | async"
-          [dataObject]="childDataObject"
-          [routeListComponent]="routeListComponent"
-        ></app-route-list-item>
-      </mat-nav-list>
-    </ng-template>
-  </mat-expansion-panel>
-
-  <ng-template #linkOrText>
-    <a
-      (click)="$event.stopPropagation()"
-      [routerLink]="urlBS$ | async"
-      mat-list-item
-    >{{ displayTextBS$ | async }}</a>
+      <app-route-list-item
+        *ngFor="let childDataObject of childListBS$ | async"
+        [dataObject]="childDataObject"
+        [routeListComponent]="routeListComponent"
+      ></app-route-list-item>
+    </mat-nav-list>
   </ng-template>
-</div>
+</mat-expansion-panel>
+
+<ng-template #noChildList>
+  <div [class.active]="matchesUrlBS$ | async">
+    <div [class.active]="matchesUrlBS$ | async">
+      <ng-container *ngTemplateOutlet="link"></ng-container>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #link>
+  <a
+    (click)="$event.stopPropagation()"
+    [routerLink]="urlBS$ | async"
+    mat-list-item
+  >{{ displayTextBS$ | async }}</a>
+</ng-template>

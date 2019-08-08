@@ -2,7 +2,6 @@
   class="layout"
 >
   <mat-toolbar
-    class="layout_menu"
     color="primary"
   >
     <button
@@ -14,28 +13,27 @@
       <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
     </button>
 
-    <ng-content select=".layout_header"></ng-content>
+    <ng-content select=".layout__header"></ng-content>
   </mat-toolbar>
 
   <mat-sidenav-container
     autosize
-    class="layout_page"
+    class="layout__page"
   >
     <mat-sidenav
       #drawer
       [mode]="(mediaQueryObserverService.matchesMediumQuerySubject$ | async) ? 'side' : 'over'"
       [opened]="mediaQueryObserverService.matchesMediumQuerySubject$ | async"
-      cdkScrollable
       role="navigation"
+      class="layout__sidenav-container"
     >
-      <ng-content select=".layout_sidenav"></ng-content>
+      <ng-content select=".layout__sidenav"></ng-content>
     </mat-sidenav>
 
     <mat-sidenav-content
-      cdkScrollable
-      class="layout_content-container"
+      class="layout__content-container"
     >
-      <ng-content select=".layout_content"></ng-content>
+      <ng-content select=".layout__content"></ng-content>
     </mat-sidenav-content>
   </mat-sidenav-container>
 </div>
