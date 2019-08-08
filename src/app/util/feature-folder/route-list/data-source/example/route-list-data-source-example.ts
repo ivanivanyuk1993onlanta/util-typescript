@@ -14,10 +14,6 @@ export class RouteListDataSourceExample implements RouteListDataSourceInterface<
   private _dataMatchingCurrentUrlSet = new Set<RouteExampleInterface>();
   private _urlToDataObjectSetMapBS$ = new BehaviorSubject(new Map<string, Set<RouteExampleInterface>>());
 
-  public applySearch(searchString: string): Observable<void> {
-    return undefined;
-  }
-
   public connect(collectionViewer: CollectionViewer): Observable<RouteExampleInterface[]> {
     return of(this._generateList(4, 10)).pipe(
       tap(dataObjectTree => {
@@ -41,7 +37,7 @@ export class RouteListDataSourceExample implements RouteListDataSourceInterface<
   public disconnect(collectionViewer: CollectionViewer): void {
   }
 
-  public getChildList(dataObject: RouteExampleInterface): Observable<Array<RouteExampleInterface>> {
+  public getChildList$(dataObject: RouteExampleInterface): Observable<Array<RouteExampleInterface>> {
     return of(dataObject.children || null);
   }
 
@@ -49,11 +45,11 @@ export class RouteListDataSourceExample implements RouteListDataSourceInterface<
     return new BehaviorSubject<string>(dataObject.localizationCode);
   }
 
-  public getUrl(dataObject: RouteExampleInterface): Observable<string> {
+  public getUrl$(dataObject: RouteExampleInterface): Observable<string> {
     return of(dataObject.url || null);
   }
 
-  public matchesUrl(dataObject: RouteExampleInterface, url: string): Observable<boolean> {
+  public matchesUrl$(dataObject: RouteExampleInterface, url: string): Observable<boolean> {
     if (url !== this._currentUrl) {
       this._currentUrl = url;
       const dataObjectToParentMap = this._dataObjectToParentMapBS$.getValue();

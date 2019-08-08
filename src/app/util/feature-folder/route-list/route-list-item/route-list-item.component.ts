@@ -34,7 +34,7 @@ export class RouteListItemComponent<DataObjectType> implements OnChanges, OnDest
     const routeListComponent = this.routeListComponent;
     const dataSource = routeListComponent.dataSource;
 
-    dataSource.getChildList(this.dataObject).pipe(
+    dataSource.getChildList$(this.dataObject).pipe(
       takeUntil(this._changeBroadcaster.changeS$),
       takeUntil(this._componentDestroyedBroadcaster.componentDestroyedS$),
     ).subscribe(childList => {
@@ -50,7 +50,7 @@ export class RouteListItemComponent<DataObjectType> implements OnChanges, OnDest
 
     routeListComponent.currentUrlBS$.pipe(
       mergeMap(url => {
-        return dataSource.matchesUrl(this.dataObject, url);
+        return dataSource.matchesUrl$(this.dataObject, url);
       }),
       takeUntil(this._changeBroadcaster.changeS$),
       takeUntil(this._componentDestroyedBroadcaster.componentDestroyedS$),
@@ -58,7 +58,7 @@ export class RouteListItemComponent<DataObjectType> implements OnChanges, OnDest
       this.matchesUrlBS$.next(matchesUrl);
     });
 
-    dataSource.getUrl(this.dataObject).pipe(
+    dataSource.getUrl$(this.dataObject).pipe(
       takeUntil(this._changeBroadcaster.changeS$),
       takeUntil(this._componentDestroyedBroadcaster.componentDestroyedS$),
     ).subscribe(url => {

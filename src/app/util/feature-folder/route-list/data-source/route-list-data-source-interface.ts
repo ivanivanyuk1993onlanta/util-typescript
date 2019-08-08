@@ -6,14 +6,12 @@ export interface RouteListDataSourceInterface<DataObjectType> extends DataSource
   readonly filteredDataObjectListBS$: BehaviorSubject<Array<DataObjectType>>;
   readonly filteredDataObjectTreeBS$: BehaviorSubject<Array<DataObjectType>>;
 
-  applySearch(searchString: string): Observable<void>;
-
-  getChildList(dataObject: DataObjectType): Observable<Array<DataObjectType>>;
+  getChildList$(dataObject: DataObjectType): Observable<Array<DataObjectType>>;
 
   // We return BehaviorSubject<string> instead of string, taking into account that app can have reactive localization
   getDisplayTextBS$(dataObject: DataObjectType): BehaviorSubject<string>;
 
-  getUrl(dataObject: DataObjectType): Observable<string>;
+  getUrl$(dataObject: DataObjectType): Observable<string>;
 
-  matchesUrl(dataObject: DataObjectType, url: string): Observable<boolean>;
+  matchesUrl$(dataObject: DataObjectType, url: string): Observable<boolean>;
 }
