@@ -1,7 +1,12 @@
-<mat-nav-list>
-  <app-route-list-item
-    *ngFor="let dataObject of dataSource.dataObjectTreeBS$ | async"
-    [dataObject]="dataObject"
-    [routeListComponent]="this"
-  ></app-route-list-item>
-</mat-nav-list>
+<div class="height-filler" style="height:100%">
+  <div class="height-filler__row">123</div>
+  <div class="height-filler__row-rest-height">
+    <mat-nav-list>
+      <app-route-list-item
+        *ngFor="let dataObject of dataSource.dataObjectTreeBS$ | async"
+        [dataObject]="dataObject"
+        [routeListComponent]="this"
+      ></app-route-list-item>
+    </mat-nav-list>
+  </div>
+</div>
