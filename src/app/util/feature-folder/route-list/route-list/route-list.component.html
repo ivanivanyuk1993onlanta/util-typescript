@@ -1,11 +1,29 @@
 <div class="height-filler" style="height:100%">
   <div class="height-filler__row">
     <mat-form-field class="w-100">
-      <input type="text" matInput [matAutocomplete]="auto">
+      <mat-label>
+        <span matPrefix>&nbsp;</span>
+        <mat-icon matPrefix>search</mat-icon>
+        <!-- todo вынести в localizationService -->
+        Поиск
+      </mat-label>
+      <input
+        [formControl]="searchTextFC"
+        [matAutocomplete]="matAutocomplete"
+        matInput
+        type="search"
+      >
     </mat-form-field>
 
-    <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
-      <mat-option *ngFor="let option of [1,2,3]" [value]="option">{{option}}</mat-option>
+    <mat-autocomplete
+      #matAutocomplete="matAutocomplete"
+      autoActiveFirstOption
+      panelWidth="auto"
+    >
+      <mat-option
+        *ngFor="let searchResult of searchResultListBS$ | async"
+        [value]="searchResult"
+      >{{searchResult | json}}</mat-option>
     </mat-autocomplete>
   </div>
   <div class="height-filler__row-rest-height">

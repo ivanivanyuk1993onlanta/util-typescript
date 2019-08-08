@@ -3,7 +3,7 @@ import {ProtoDescriptorService} from '../proto-descriptor/proto-descriptor.servi
 import {StorageWrap} from '../../class-folder/storage/storage';
 import {ResolvablePromise} from '../../class-folder/resolvable-promise/resolvable-promise';
 import {FormFieldBase} from './form-field-base';
-import {ucfirst} from '../../method/ucfirst';
+import {ucfirst} from '../../method-folder/ucfirst';
 
 @Injectable({
   providedIn: 'root',

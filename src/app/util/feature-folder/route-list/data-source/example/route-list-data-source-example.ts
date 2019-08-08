@@ -6,8 +6,6 @@ import {tap} from 'rxjs/operators';
 
 export class RouteListDataSourceExample implements RouteListDataSourceInterface<RouteExampleInterface> {
   readonly dataObjectTreeBS$ = new BehaviorSubject<Array<RouteExampleInterface>>([]);
-  readonly filteredDataObjectListBS$: BehaviorSubject<Array<RouteExampleInterface>>;
-  readonly filteredDataObjectTreeBS$: BehaviorSubject<Array<RouteExampleInterface>>;
 
   private _currentUrl: string = null;
   private _dataObjectToParentMapBS$ = new BehaviorSubject(new Map<RouteExampleInterface, RouteExampleInterface>());
@@ -43,6 +41,10 @@ export class RouteListDataSourceExample implements RouteListDataSourceInterface<
 
   public getDisplayTextBS$(dataObject: RouteExampleInterface): BehaviorSubject<string> {
     return new BehaviorSubject<string>(dataObject.localizationCode);
+  }
+
+  getSearchResultList$(searchText: string): Observable<RouteExampleInterface[]> {
+    return of(this.dataObjectTreeBS$.getValue().slice(0, 2));
   }
 
   public getUrl$(dataObject: RouteExampleInterface): Observable<string> {
