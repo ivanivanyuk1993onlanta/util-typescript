@@ -23,8 +23,17 @@
     >
       <mat-option
         *ngFor="let searchResult of searchResultListBS$ | async"
-        [value]="searchResult"
-      >{{searchResult | json}}</mat-option>
+        [value]="dataSource.getDisplayTextBS$(searchResult) | async"
+      >
+        <mat-nav-list>
+          <a
+            [routerLink]="dataSource.getUrl$(searchResult) | async"
+            mat-list-item
+          >
+            {{ dataSource.getDisplayTextBS$(searchResult) | async }}
+          </a>
+        </mat-nav-list>
+      </mat-option>
     </mat-autocomplete>
   </div>
   <div class="height-filler__row-rest-height">
