@@ -1,5 +1,13 @@
 <div class="height-filler" style="height:100%">
-  <div class="height-filler__row">123</div>
+  <div class="height-filler__row">
+    <mat-form-field class="w-100">
+      <input type="text" matInput [matAutocomplete]="auto">
+    </mat-form-field>
+
+    <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+      <mat-option *ngFor="let option of [1,2,3]" [value]="option">{{option}}</mat-option>
+    </mat-autocomplete>
+  </div>
   <div class="height-filler__row-rest-height">
     <mat-nav-list>
       <app-route-list-item
