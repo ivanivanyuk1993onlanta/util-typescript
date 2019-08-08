@@ -12,9 +12,7 @@ export class RouteListDataSourceExample implements RouteListDataSourceInterface<
   private _currentUrl: string = null;
   private _dataObjectToParentMapBS$ = new BehaviorSubject(new Map<RouteExampleInterface, RouteExampleInterface>());
   private _dataMatchingCurrentUrlSet = new Set<RouteExampleInterface>();
-  !
-  // todo change to BehaviorSubject<Map<string, Set<RouteExampleInterface>>>
-  private _urlToDataObjectMapBS$ = new BehaviorSubject(new Map<string, RouteExampleInterface>());
+  private _urlToDataObjectSetMapBS$ = new BehaviorSubject(new Map<string, Set<RouteExampleInterface>>());
 
   public applySearch(searchString: string): Observable<void> {
     return undefined;
@@ -26,16 +24,16 @@ export class RouteListDataSourceExample implements RouteListDataSourceInterface<
         this.dataObjectTreeBS$.next(dataObjectTree);
 
         const dataObjectToParentMap = new Map<RouteExampleInterface, RouteExampleInterface>();
-        const urlToDataObjectMap = new Map<string, RouteExampleInterface>();
+        const urlToDataObjectSetMap = new Map<string, Set<RouteExampleInterface>>();
         for (const dataObject of dataObjectTree) {
           this._appendDataObjectToMaps(
             dataObject,
             dataObjectToParentMap,
-            urlToDataObjectMap,
+            urlToDataObjectSetMap,
           );
         }
         this._dataObjectToParentMapBS$.next(dataObjectToParentMap);
-        this._urlToDataObjectMapBS$.next(urlToDataObjectMap);
+        this._urlToDataObjectSetMapBS$.next(urlToDataObjectSetMap);
       }),
     );
   }
@@ -60,11 +58,16 @@ export class RouteListDataSourceExample implements RouteListDataSourceInterface<
       this._currentUrl = url;
       const dataObjectToParentMap = this._dataObjectToParentMapBS$.getValue();
       this._dataMatchingCurrentUrlSet = new Set<RouteExampleInterface>();
-      let matchingDataObject = this._urlToDataObjectMapBS$.getValue().get(url);
-      while (matchingDataObject) {
-        this._dataMatchingCurrentUrlSet.add(matchingDataObject);
+      const urlToDataObjectSetMap = this._urlToDataObjectSetMapBS$.getValue();
+      const urlToMatchingDataObjectSet = urlToDataObjectSetMap.get(url);
+      if (urlToMatchingDataObjectSet) {
+        for (let matchingDataObject of Array.from(urlToMatchingDataObjectSet)) {
+          while (matchingDataObject) {
+            this._dataMatchingCurrentUrlSet.add(matchingDataObject);
 
-        matchingDataObject = dataObjectToParentMap.get(matchingDataObject);
+            matchingDataObject = dataObjectToParentMap.get(matchingDataObject);
+          }
+        }
       }
     }
     return of(this._dataMatchingCurrentUrlSet.has(dataObject));
@@ -73,20 +76,28 @@ export class RouteListDataSourceExample implements RouteListDataSourceInterface<
   private _appendDataObjectToMaps(
     dataObject: RouteExampleInterface,
     dataObjectToParentMap: Map<RouteExampleInterface, RouteExampleInterface>,
-    urlToDataObjectMap: Map<string, RouteExampleInterface>,
+    urlToDataObjectSetMap: Map<string, Set<RouteExampleInterface>>,
     parent: RouteExampleInterface = null,
   ) {
-    urlToDataObjectMap.set(dataObject.url, dataObject);
+    let dataObjectSet = urlToDataObjectSetMap.get(dataObject.url);
+    if (dataObjectSet) {
+      dataObjectSet.add(dataObject);
+    } else {
+      dataObjectSet = new Set<RouteExampleInterface>([dataObject]);
+      urlToDataObjectSetMap.set(dataObject.url, dataObjectSet);
+    }
+
     if (parent) {
       dataObjectToParentMap.set(dataObject, parent);
     }
+
     const childList = dataObject.children;
     if (childList) {
       for (const child of childList) {
         this._appendDataObjectToMaps(
           child,
           dataObjectToParentMap,
-          urlToDataObjectMap,
+          urlToDataObjectSetMap,
           dataObject,
         );
       }
