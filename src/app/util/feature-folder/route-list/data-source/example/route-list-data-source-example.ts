@@ -13,7 +13,7 @@ export class RouteListDataSourceExample implements RouteListDataSourceInterface<
   private _urlToDataObjectSetMapBS$ = new BehaviorSubject(new Map<string, Set<RouteExampleInterface>>());
 
   public connect(collectionViewer: CollectionViewer): Observable<RouteExampleInterface[]> {
-    return of(this._generateList(6, 10)).pipe(
+    return of(this._generateList(4, 10)).pipe(
       tap(dataObjectTree => {
         this.dataObjectTreeBS$.next(dataObjectTree);
 
