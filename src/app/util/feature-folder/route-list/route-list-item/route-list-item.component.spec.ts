@@ -3,8 +3,8 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouteListItemComponent } from './route-list-item.component';
 
 describe('RouteListItemComponent', () => {
-  let component: RouteListItemComponent;
-  let fixture: ComponentFixture<RouteListItemComponent>;
+  let component: RouteListItemComponent<any>;
+  let fixture: ComponentFixture<RouteListItemComponent<any>>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
