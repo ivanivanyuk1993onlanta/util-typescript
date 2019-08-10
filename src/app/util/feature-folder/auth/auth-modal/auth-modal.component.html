@@ -1,5 +1,6 @@
-<span class="modal__header">Авторизация</span>
-<div class="modal__body">
+<h2 mat-dialog-title>__Форма аутентификации</h2>
+
+<div mat-dialog-content>
   <form [formGroup]="loginFormGroupBS$ | async">
     <mat-form-field
       *ngFor="let fieldData of loginFormFieldDataListBS$ | async"
@@ -14,9 +15,14 @@
     </mat-form-field>
   </form>
 </div>
-<div class="modal__footer">
+
+<div
+  mat-dialog-actions
+>
   <button
     (click)="loginAndClose()"
     mat-button
-  >Войти</button>
+  >
+    Войти
+  </button>
 </div>

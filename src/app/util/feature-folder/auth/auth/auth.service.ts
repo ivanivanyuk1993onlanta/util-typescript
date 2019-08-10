@@ -61,7 +61,6 @@ export class AuthService implements AuthDataSourceInterface<CredentialsInterface
   }
 
   public closeModal$(): Observable<void> {
-    this._isDialogOpenedBS$.next(false);
     this._matDialogRef.close();
     return of();
   }
@@ -154,6 +153,11 @@ export class AuthService implements AuthDataSourceInterface<CredentialsInterface
     if (!this._isDialogOpenedBS$.getValue()) {
       this._isDialogOpenedBS$.next(true);
       this._matDialogRef = this._matDialog.open(AuthModalComponent);
+      this._matDialogRef.beforeClose().pipe(
+        first(),
+      ).subscribe(() => {
+        this._isDialogOpenedBS$.next(false);
+      });
     }
     return of();
   }

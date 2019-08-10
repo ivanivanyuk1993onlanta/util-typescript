@@ -1,16 +1,26 @@
 <button
-  [attr.mat-button]="authService.authContinuous$ | async"
-  [attr.mat-icon-button]="!(authService.authContinuous$ | async)"
+  *ngIf="authService.authContinuous$ | async; else noAuthButton"
   [matMenuTriggerFor]="matMenu"
+  mat-button
   type="button"
 >
   <mat-icon>person</mat-icon>
   {{ authService.displayTextBS$ | async }}
 </button>
 
+<ng-template #noAuthButton>
+  <button
+    [matMenuTriggerFor]="matMenu"
+    mat-icon-button
+    type="button"
+  >
+    <mat-icon>person</mat-icon>
+  </button>
+</ng-template>
+
 <mat-menu #matMenu="matMenu">
   <button
-    (click)="loginFormComponent.openModal()"
+    (click)="openModal()"
     *ngIf="!(authService.authContinuous$ | async)"
     mat-menu-item
   >

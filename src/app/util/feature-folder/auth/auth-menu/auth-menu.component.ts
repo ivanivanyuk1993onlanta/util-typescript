@@ -23,6 +23,12 @@ export class AuthMenuComponent implements OnDestroy {
     ).subscribe();
   }
 
+  public openModal() {
+    this.authService.openModal$().pipe(
+      takeUntil(this._componentDestroyedBroadcaster.changeS$),
+    ).subscribe();
+  }
+
   public ngOnDestroy(): void {
     this._componentDestroyedBroadcaster.complete();
   }
