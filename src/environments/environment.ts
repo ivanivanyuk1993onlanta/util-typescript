@@ -2,17 +2,9 @@
 // `ng build ---prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
-import * as logTypeWithUiPermissionDataProto from '../app/model-folder/proto/log-type/log-type-with-ui-permission-data_pb.js';
-
 export const environment = {
   apiUrl: 'http://localhost:8080',
   production: false,
-  tableNameToTableProtoMap: {
-    'log_type': logTypeWithUiPermissionDataProto.LogTypeWithUiPermissionData,
-  },
-  tableNameToTableUrlMap: {
-    'log_type': 'log-type',
-  },
 };
 
 /*
