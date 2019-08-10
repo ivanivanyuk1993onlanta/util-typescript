@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {AuthDataSourceInterface} from '../data-source/auth-data-source-interface';
-import {BehaviorSubject, Observable, of, Subject, throwError} from 'rxjs';
+import {BehaviorSubject, Observable, of, throwError} from 'rxjs';
 import {HttpClient, HttpErrorResponse, HttpEvent, HttpHandler, HttpRequest} from '@angular/common/http';
 import * as localForage from 'localforage';
 import {catchError, filter, first, map, mergeMap, tap} from 'rxjs/operators';
@@ -11,6 +11,8 @@ import {apiUrl} from '../../../../config/api-url';
 import {CredentialsInterface} from './credentials-interface';
 import {AuthInterface} from './auth-interface';
 import {FieldDataInterface} from '../data-source/field-data-interface';
+import {MatDialog, MatDialogRef} from '@angular/material';
+import {AuthModalComponent} from '../auth-modal/auth-modal.component';
 
 @Injectable({
   providedIn: 'root'
@@ -24,12 +26,15 @@ export class AuthService implements AuthDataSourceInterface<CredentialsInterface
   readonly displayTextBS$ = new BehaviorSubject<string>(null);
 
   private _authBS$WrapBS$ = new BehaviorSubject<BehaviorSubject<AuthInterface>>(null);
+  private _isDialogOpenedBS$ = new BehaviorSubject(false);
   private _localForage = localForage.createInstance({
     name: AuthService.constructor.name,
   });
+  private _matDialogRef: MatDialogRef<AuthModalComponent<CredentialsInterface, AuthInterface>>;
 
   constructor(
     private _httpClient: HttpClient,
+    private _matDialog: MatDialog,
   ) {
     this._localForage.getItem<AuthInterface>(AuthService._authDBKey).then((auth) => {
       const authBS$ = new BehaviorSubject(auth);
@@ -52,6 +57,12 @@ export class AuthService implements AuthDataSourceInterface<CredentialsInterface
 
   private static _getLogoutUrl(): string {
     return `${apiUrl}${logoutUrlSuffix}`;
+  }
+
+  public closeModal$(): Observable<void> {
+    this._isDialogOpenedBS$.next(false);
+    this._matDialogRef.close();
+    return of();
   }
 
   public getEmptyCredentialsFormGroup$(): Observable<FormGroup> {
@@ -95,7 +106,7 @@ export class AuthService implements AuthDataSourceInterface<CredentialsInterface
         if (error.status === 401 && req.url !== AuthService._getLoginUrl() && req.url !== AuthService._getLogoutUrl()) {
           return this._setAuth$(null).pipe(
             tap(() => {
-              this.error401S$.next();
+              this.openModal$();
               // todo
               // notify(error.message, 'error');
             }),
@@ -136,6 +147,14 @@ export class AuthService implements AuthDataSourceInterface<CredentialsInterface
     return this._httpClient.post(`${apiUrl}${logoutUrlSuffix}`, {}).pipe(
       mergeMap(() => this._setAuth$(null)),
     );
+  }
+
+  public openModal$(): Observable<void> {
+    if (!this._isDialogOpenedBS$.getValue()) {
+      this._isDialogOpenedBS$.next(true);
+      this._matDialogRef = this._matDialog.open(AuthModalComponent);
+    }
+    return of();
   }
 
   private _setAuth$(auth: AuthInterface): Observable<AuthInterface> {

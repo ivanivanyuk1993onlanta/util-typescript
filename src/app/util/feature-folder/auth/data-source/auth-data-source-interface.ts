@@ -7,6 +7,8 @@ export interface AuthDataSourceInterface<CredentialsType, AuthType> {
   readonly authContinuous$: Observable<AuthType>;
   readonly displayTextBS$: BehaviorSubject<string>;
 
+  closeModal$(): Observable<void>;
+
   getEmptyCredentialsFormGroup$(): Observable<FormGroup>;
 
   getLoginFormFieldDataList$(): Observable<Array<FieldDataInterface>>;
@@ -16,4 +18,6 @@ export interface AuthDataSourceInterface<CredentialsType, AuthType> {
   login$(credentials: CredentialsType): Observable<AuthType>;
 
   logout$(): Observable<AuthType>;
+
+  openModal$(): Observable<void>;
 }

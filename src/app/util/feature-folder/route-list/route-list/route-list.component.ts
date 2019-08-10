@@ -1,6 +1,5 @@
 import {ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
 import {RouteListDataSourceInterface} from '../data-source/route-list-data-source-interface';
-import {ComponentDestroyedBroadcaster} from '../../../class-folder/component-destroyed-broadcaster/component-destroyed-broadcaster';
 import {ChangeBroadcaster} from '../../../class-folder/change-broadcaster/change-broadcaster';
 import {filter, takeUntil} from 'rxjs/operators';
 import {BehaviorSubject} from 'rxjs';
@@ -23,7 +22,7 @@ export class RouteListComponent<DataObjectType> implements OnChanges, OnDestroy,
   public searchTextFC = new FormControl();
 
   private _changeBroadcaster = new ChangeBroadcaster();
-  private _componentDestroyedBroadcaster = new ComponentDestroyedBroadcaster();
+  private _componentDestroyedBroadcaster = new ChangeBroadcaster();
 
   constructor(
     private _router: Router,
@@ -35,7 +34,7 @@ export class RouteListComponent<DataObjectType> implements OnChanges, OnDestroy,
 
     this.dataSource.connect(null).pipe(
       takeUntil(this._changeBroadcaster.changeS$),
-      takeUntil(this._componentDestroyedBroadcaster.componentDestroyedS$),
+      takeUntil(this._componentDestroyedBroadcaster.changeS$),
     ).subscribe();
 
     this._subscribeToSearchText();
@@ -43,7 +42,7 @@ export class RouteListComponent<DataObjectType> implements OnChanges, OnDestroy,
 
   public ngOnDestroy(): void {
     this._changeBroadcaster.complete();
-    this._componentDestroyedBroadcaster.broadcastComponentDestroyed();
+    this._componentDestroyedBroadcaster.complete();
   }
 
   public ngOnInit(): void {
@@ -56,7 +55,7 @@ export class RouteListComponent<DataObjectType> implements OnChanges, OnDestroy,
   ): void {
     if (event.source.selected) {
       this.dataSource.getUrl$(dataObject).pipe(
-        takeUntil(this._componentDestroyedBroadcaster.componentDestroyedS$),
+        takeUntil(this._componentDestroyedBroadcaster.changeS$),
       ).subscribe(url => {
         this._router.navigateByUrl(url).then(() => {
           this.searchTextFC.setValue('');
@@ -69,7 +68,7 @@ export class RouteListComponent<DataObjectType> implements OnChanges, OnDestroy,
     this.currentUrlBS$ = new BehaviorSubject<string>(this._router.url);
     this._router.events.pipe(
       filter(e => e instanceof NavigationEnd),
-      takeUntil(this._componentDestroyedBroadcaster.componentDestroyedS$),
+      takeUntil(this._componentDestroyedBroadcaster.changeS$),
     ).subscribe(() => {
       this.currentUrlBS$.next(this._router.url);
     });
@@ -78,11 +77,11 @@ export class RouteListComponent<DataObjectType> implements OnChanges, OnDestroy,
   private _subscribeToSearchText() {
     getControlObservableWithInitialValue$<string>(this.searchTextFC).pipe(
       takeUntil(this._changeBroadcaster.changeS$),
-      takeUntil(this._componentDestroyedBroadcaster.componentDestroyedS$),
+      takeUntil(this._componentDestroyedBroadcaster.changeS$),
     ).subscribe(searchText => {
       this.dataSource.getSearchResultList$(searchText).pipe(
         takeUntil(this._changeBroadcaster.changeS$),
-        takeUntil(this._componentDestroyedBroadcaster.componentDestroyedS$),
+        takeUntil(this._componentDestroyedBroadcaster.changeS$),
       ).subscribe(searchResultList => {
         this.searchResultListBS$.next(searchResultList);
       });
