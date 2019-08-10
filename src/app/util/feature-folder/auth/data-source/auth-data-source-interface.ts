@@ -1,13 +1,11 @@
-import {BehaviorSubject, Observable, Subject} from 'rxjs';
+import {BehaviorSubject, Observable} from 'rxjs';
 import {FormGroup} from '@angular/forms';
 import {FieldDataInterface} from './field-data-interface';
-import {HttpErrorResponse, HttpEvent, HttpHandler, HttpRequest} from '@angular/common/http';
+import {HttpEvent, HttpHandler, HttpRequest} from '@angular/common/http';
 
 export interface AuthDataSourceInterface<CredentialsType, AuthType> {
+  readonly authContinuous$: Observable<AuthType>;
   readonly displayTextBS$: BehaviorSubject<string>;
-  readonly error401S$: Subject<HttpErrorResponse>;
-
-  getAuthContinuous$(): Observable<AuthType>;
 
   getEmptyCredentialsFormGroup$(): Observable<FormGroup>;
 

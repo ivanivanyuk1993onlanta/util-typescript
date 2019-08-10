@@ -1,7 +1,7 @@
 import {ChangeDetectionStrategy, Component, OnDestroy} from '@angular/core';
 import {AuthService} from '../auth/auth.service';
-import {ComponentDestroyedBroadcaster} from '../../../classes/component-destroyed-broadcaster/component-destroyed-broadcaster';
 import {takeUntil} from 'rxjs/operators';
+import {ChangeBroadcaster} from '../../../class-folder/change-broadcaster/change-broadcaster';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -9,21 +9,21 @@ import {takeUntil} from 'rxjs/operators';
   styleUrls: ['./auth-menu.component.scss'],
   templateUrl: './auth-menu.component.html',
 })
-export class AuthMenuComponent<CredentialsType, AuthType> implements OnDestroy {
-  private _componentDestroyedBroadcaster = new ComponentDestroyedBroadcaster();
+export class AuthMenuComponent implements OnDestroy {
+  private _componentDestroyedBroadcaster = new ChangeBroadcaster();
 
   constructor(
-    public authService: AuthService<CredentialsType, AuthType>,
+    public authService: AuthService,
   ) {
   }
 
   public logout() {
-    this.authService.authDataSource.logout$().pipe(
-      takeUntil(this._componentDestroyedBroadcaster.isComponentDestroyedS$),
+    this.authService.logout$().pipe(
+      takeUntil(this._componentDestroyedBroadcaster.changeS$),
     ).subscribe();
   }
 
   public ngOnDestroy(): void {
-    this._componentDestroyedBroadcaster.broadcastComponentDestroyed();
+    this._componentDestroyedBroadcaster.complete();
   }
 }
