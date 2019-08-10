@@ -1,0 +1,28 @@
+<button
+  [attr.mat-button]="authService.authContinuous$ | async"
+  [attr.mat-icon-button]="!(authService.authContinuous$ | async)"
+  [matMenuTriggerFor]="matMenu"
+  type="button"
+>
+  <mat-icon>person</mat-icon>
+  {{ authService.displayTextBS$ | async }}
+</button>
+
+<mat-menu #matMenu="matMenu">
+  <button
+    (click)="loginFormComponent.openModal()"
+    *ngIf="!(authService.authContinuous$ | async)"
+    mat-menu-item
+  >
+    <mat-icon>vpn_key</mat-icon>
+    <span>Войти</span>
+  </button>
+  <button
+    (click)="logout()"
+    *ngIf="authService.authContinuous$ | async"
+    mat-menu-item
+  >
+    <mat-icon>exit_to_app</mat-icon>
+    <span>Выйти</span>
+  </button>
+</mat-menu>
