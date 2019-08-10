@@ -1,9 +1,9 @@
 import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
 import {AuthService} from '../auth/auth.service';
 import {FormGroup} from '@angular/forms';
-import {BehaviorSubject, Observable} from 'rxjs';
+import {BehaviorSubject} from 'rxjs';
 import {FieldDataInterface} from '../data-source/field-data-interface';
-import {takeUntil} from 'rxjs/operators';
+import {mergeMap, takeUntil} from 'rxjs/operators';
 import {ChangeBroadcaster} from '../../../class-folder/change-broadcaster/change-broadcaster';
 import {CredentialsInterface} from '../auth/credentials-interface';
 import {AuthInterface} from '../auth/auth-interface';
@@ -26,11 +26,10 @@ export class AuthModalComponent<CredentialsType extends CredentialsInterface, Au
   }
 
   public loginAndClose() {
-    this._login().pipe(
+    this.authService.login$(this.loginFormGroupBS$.getValue().getRawValue()).pipe(
+      mergeMap(() => this.authService.closeModal$()),
       takeUntil(this._componentDestroyedBroadcaster.changeS$),
-    ).subscribe(() => {
-      this.modal.close();
-    });
+    ).subscribe();
   }
 
   public ngOnDestroy(): void {
@@ -49,9 +48,5 @@ export class AuthModalComponent<CredentialsType extends CredentialsInterface, Au
     ).subscribe(fieldDataList => {
       this.loginFormFieldDataListBS$.next(fieldDataList);
     });
-  }
-
-  private _login(): Observable<AuthInterface> {
-    return this.authService.login$(this.loginFormGroupBS$.getValue().getRawValue());
   }
 }

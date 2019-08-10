@@ -3,8 +3,8 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { AuthModalComponent } from './auth-modal.component';
 
 describe('AuthModalComponent', () => {
-  let component: AuthModalComponent;
-  let fixture: ComponentFixture<AuthModalComponent>;
+  let component: AuthModalComponent<any, any>;
+  let fixture: ComponentFixture<AuthModalComponent<any, any>>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({

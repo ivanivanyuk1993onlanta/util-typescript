@@ -1,26 +1,45 @@
-<app-modal
-  #modal
->
-  <span class="modal__header">Авторизация</span>
-  <div class="modal__body">
-    <form [formGroup]="loginFormGroupBS$ | async">
-      <mat-form-field
-        *ngFor="let fieldData of loginFormFieldDataListBS$ | async"
-        class="w-100"
+<h2 mat-dialog-title>__Форма аутентификации</h2>
+
+<div mat-dialog-content>
+  <form [formGroup]="loginFormGroupBS$ | async">
+    <mat-form-field
+      *ngFor="let fieldData of loginFormFieldDataListBS$ | async"
+      class="w-100"
+    >
+      <input
+        [formControlName]="fieldData.fieldName"
+        [placeholder]="fieldData.label"
+        [type]="fieldData.type"
+        matInput
       >
-        <input
-          [formControlName]="fieldData.fieldName"
-          [placeholder]="fieldData.label"
-          [type]="fieldData.type"
-          matInput
-        >
-      </mat-form-field>
-    </form>
-  </div>
-  <div class="modal__footer">
-    <button
-      (click)="loginAndClose()"
-      mat-button
-    >Войти</button>
-  </div>
-</app-modal>
+    </mat-form-field>
+  </form>
+</div>
+
+<div
+  mat-dialog-actions
+>
+  <button
+    (click)="loginAndClose()"
+    [class.hidden]="(authService.authContinuous$ | async)"
+    mat-button
+  >
+    <mat-icon>vpn_key</mat-icon>
+    Войти
+  </button>
+
+  <button
+    mat-button
+  >
+    <mat-icon>person_add</mat-icon>
+    Зарегистрироваться
+  </button>
+
+  <button
+    mat-button
+    mat-dialog-close
+  >
+    <mat-icon>cancel</mat-icon>
+    Отмена
+  </button>
+</div>
