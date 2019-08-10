@@ -1,0 +1,26 @@
+<app-modal
+  #modal
+>
+  <span class="modal__header">Авторизация</span>
+  <div class="modal__body">
+    <form [formGroup]="loginFormGroupBS$ | async">
+      <mat-form-field
+        *ngFor="let fieldData of loginFormFieldDataListBS$ | async"
+        class="w-100"
+      >
+        <input
+          [formControlName]="fieldData.fieldName"
+          [placeholder]="fieldData.label"
+          [type]="fieldData.type"
+          matInput
+        >
+      </mat-form-field>
+    </form>
+  </div>
+  <div class="modal__footer">
+    <button
+      (click)="loginAndClose()"
+      mat-button
+    >Войти</button>
+  </div>
+</app-modal>

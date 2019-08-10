@@ -1,0 +1,44 @@
+<button
+  [matMenuTriggerFor]="matMenu"
+  mat-button
+  type="button"
+  *ngIf="authService.authDataSource.getAuthContinuous$() | async; else noAuthButton"
+>
+  <mat-icon>person</mat-icon>
+  {{ authService.authDataSource.displayTextBS$ | async }}
+</button>
+
+<ng-template
+  #noAuthButton
+>
+  <button
+    [matMenuTriggerFor]="matMenu"
+    mat-icon-button
+    type="button"
+  >
+    <mat-icon>person</mat-icon>
+  </button>
+</ng-template>
+
+<mat-menu #matMenu="matMenu">
+  <button
+    (click)="loginFormComponent.openModal()"
+    *ngIf="!(authService.authDataSource.getAuthContinuous$() | async)"
+    mat-menu-item
+  >
+    <mat-icon>vpn_key</mat-icon>
+    <span>Войти</span>
+  </button>
+  <button
+    (click)="logout()"
+    *ngIf="authService.authDataSource.getAuthContinuous$() | async"
+    mat-menu-item
+  >
+    <mat-icon>exit_to_app</mat-icon>
+    <span>Выйти</span>
+  </button>
+</mat-menu>
+
+<app-login-form
+  #loginFormComponent
+></app-login-form>
