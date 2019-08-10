@@ -21,15 +21,22 @@
 <mat-menu #matMenu="matMenu">
   <button
     (click)="openModal()"
-    *ngIf="!(authService.authContinuous$ | async)"
+    [class.hidden]="(authService.authContinuous$ | async)"
     mat-menu-item
   >
     <mat-icon>vpn_key</mat-icon>
     <span>Войти</span>
   </button>
   <button
+    (click)="openModal()"
+    mat-menu-item
+  >
+    <mat-icon>person_add</mat-icon>
+    <span>Регистрация</span>
+  </button>
+  <button
     (click)="logout()"
-    *ngIf="authService.authContinuous$ | async"
+    [class.hidden]="!(authService.authContinuous$ | async)"
     mat-menu-item
   >
     <mat-icon>exit_to_app</mat-icon>

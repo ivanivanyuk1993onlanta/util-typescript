@@ -21,8 +21,25 @@
 >
   <button
     (click)="loginAndClose()"
+    [class.hidden]="(authService.authContinuous$ | async)"
     mat-button
   >
+    <mat-icon>vpn_key</mat-icon>
     Войти
+  </button>
+
+  <button
+    mat-button
+  >
+    <mat-icon>person_add</mat-icon>
+    Зарегистрироваться
+  </button>
+
+  <button
+    mat-button
+    mat-dialog-close
+  >
+    <mat-icon>cancel</mat-icon>
+    Отмена
   </button>
 </div>
