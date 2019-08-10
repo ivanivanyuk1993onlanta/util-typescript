@@ -1,11 +1,12 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {AuthModalComponent} from './auth-modal/auth-modal.component';
-import {MatButtonModule, MatFormFieldModule, MatIconModule, MatInputModule, MatMenuModule} from '@angular/material';
+import {MatButtonModule, MatDialogModule, MatFormFieldModule, MatIconModule, MatInputModule, MatMenuModule} from '@angular/material';
 import {ReactiveFormsModule} from '@angular/forms';
 import { AuthMenuComponent } from './auth-menu/auth-menu.component';
 
 @NgModule({
+  bootstrap: [AuthModalComponent],
   declarations: [AuthModalComponent, AuthMenuComponent],
   exports: [
     AuthMenuComponent
@@ -13,6 +14,7 @@ import { AuthMenuComponent } from './auth-menu/auth-menu.component';
   imports: [
     CommonModule,
     MatButtonModule,
+    MatDialogModule,
     MatFormFieldModule,
     MatIconModule,
     MatInputModule,

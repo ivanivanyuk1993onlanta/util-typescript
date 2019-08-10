@@ -20,9 +20,7 @@ import {AuthModalComponent} from '../auth-modal/auth-modal.component';
 export class AuthService implements AuthDataSourceInterface<CredentialsInterface, AuthInterface> {
   private static _authDBKey = 'auth';
 
-  readonly authContinuous$ = this._waitForAuthBS$().pipe(
-    mergeMap(authBS$ => authBS$),
-  );
+  readonly authContinuous$: Observable<AuthInterface>;
   readonly displayTextBS$ = new BehaviorSubject<string>(null);
 
   private _authBS$WrapBS$ = new BehaviorSubject<BehaviorSubject<AuthInterface>>(null);
@@ -36,6 +34,9 @@ export class AuthService implements AuthDataSourceInterface<CredentialsInterface
     private _httpClient: HttpClient,
     private _matDialog: MatDialog,
   ) {
+    this.authContinuous$ = this._waitForAuthBS$().pipe(
+      mergeMap(authBS$ => authBS$),
+    );
     this._localForage.getItem<AuthInterface>(AuthService._authDBKey).then((auth) => {
       const authBS$ = new BehaviorSubject(auth);
       authBS$.subscribe(auth2 => {
