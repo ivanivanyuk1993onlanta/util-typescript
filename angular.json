@@ -3,29 +3,29 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "user-interface-source": {
-      "root": "",
-      "sourceRoot": "src",
+    "util-angular": {
       "projectType": "application",
-      "prefix": "app",
       "schematics": {
         "@schematics/angular:component": {
-          "styleext": "scss"
+          "style": "scss"
         }
       },
+      "root": "",
+      "sourceRoot": "src",
+      "prefix": "app",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/user-interface-source",
+            "outputPath": "dist/util-angular",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
-            "tsConfig": "src/tsconfig.app.json",
+            "tsConfig": "tsconfig.app.json",
+            "aot": false,
             "assets": [
               "src/favicon.ico",
-              "src/assets",
-              "src/manifest.json"
+              "src/assets"
             ],
             "styles": [
               "src/styles.scss"
@@ -34,108 +34,51 @@
           },
           "configurations": {
             "production": {
-              "aot": true,
-              "buildOptimizer": true,
-              "extractCss": true,
-              "extractLicenses": true,
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
                   "with": "src/environments/environment.prod.ts"
                 }
               ],
-              "namedChunks": false,
               "optimization": true,
               "outputHashing": "all",
-              "serviceWorker": true,
               "sourceMap": false,
-              "vendorChunk": false
-            },
-            "prod-en": {
-              "aot": true,
-              "buildOptimizer": true,
               "extractCss": true,
-              "extractLicenses": true,
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.prod.ts"
-                }
-              ],
-              "i18nFile": "src/locale/messages.en.xlf",
-              "i18nFormat": "xlf",
-              "i18nLocale": "en",
-              "i18nMissingTranslation": "error",
               "namedChunks": false,
-              "optimization": true,
-              "outputHashing": "all",
-              "outputPath": "dist/en/",
-              "serviceWorker": true,
-              "sourceMap": false,
-              "vendorChunk": false
-            },
-            "prod-ru": {
               "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
               "buildOptimizer": true,
-              "extractCss": true,
-              "extractLicenses": true,
-              "fileReplacements": [
+              "budgets": [
                 {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.prod.ts"
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
                 }
-              ],
-              "i18nFile": "src/locale/messages.ru.xlf",
-              "i18nFormat": "xlf",
-              "i18nLocale": "ru",
-              "i18nMissingTranslation": "error",
-              "namedChunks": false,
-              "optimization": true,
-              "outputHashing": "all",
-              "outputPath": "dist/ru/",
-              "serviceWorker": true,
-              "sourceMap": false,
-              "vendorChunk": false
-            },
-            "dev-en": {
-              "aot": true,
-              "i18nFile": "src/locale/messages.en.xlf",
-              "i18nFormat": "xlf",
-              "i18nLocale": "en",
-              "i18nMissingTranslation": "error",
-              "outputPath": "dist/dev-en/"
-            },
-            "dev-ru": {
-              "aot": true,
-              "i18nFile": "src/locale/messages.ru.xlf",
-              "i18nFormat": "xlf",
-              "i18nLocale": "ru",
-              "i18nMissingTranslation": "error",
-              "outputPath": "dist/dev-ru/"
+              ]
             }
           }
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "user-interface-source:build"
+            "browserTarget": "util-angular:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "user-interface-source:build:production"
-            },
-            "en": {
-              "browserTarget": "user-interface-source:build:dev-en"
-            },
-            "ru": {
-              "browserTarget": "user-interface-source:build:dev-ru"
+              "browserTarget": "util-angular:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "user-interface-source:build"
+            "browserTarget": "util-angular:build"
           }
         },
         "test": {
@@ -143,60 +86,44 @@
           "options": {
             "main": "src/test.ts",
             "polyfills": "src/polyfills.ts",
-            "tsConfig": "src/tsconfig.spec.json",
-            "karmaConfig": "src/karma.conf.js",
+            "tsConfig": "tsconfig.spec.json",
+            "karmaConfig": "karma.conf.js",
+            "assets": [
+              "src/favicon.ico",
+              "src/assets"
+            ],
             "styles": [
               "src/styles.scss"
             ],
-            "scripts": [],
-            "assets": [
-              "src/favicon.ico",
-              "src/assets",
-              "src/manifest.json"
-            ]
+            "scripts": []
           }
         },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "src/tsconfig.app.json",
-              "src/tsconfig.spec.json"
+              "tsconfig.app.json",
+              "tsconfig.spec.json",
+              "e2e/tsconfig.json"
             ],
             "exclude": [
               "**/node_modules/**"
             ]
           }
-        }
-      }
-    },
-    "user-interface-source-e2e": {
-      "root": "e2e/",
-      "projectType": "application",
-      "architect": {
+        },
         "e2e": {
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "user-interface-source:serve"
+            "devServerTarget": "util-angular:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "user-interface-source:serve:production"
+              "devServerTarget": "util-angular:serve:production"
             }
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": "e2e/tsconfig.e2e.json",
-            "exclude": [
-              "**/node_modules/**"
-            ]
           }
         }
       }
-    }
-  },
-  "defaultProject": "user-interface-source"
+    }},
+  "defaultProject": "util-angular"
 }
