@@ -1,7 +1,5 @@
-import {ChangeDetectionStrategy, Component, OnDestroy} from '@angular/core';
-import {AuthService} from '../auth/auth.service';
-import {takeUntil} from 'rxjs/operators';
-import {ChangeBroadcaster} from '../../../class-folder/change-broadcaster/change-broadcaster';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {AuthService} from '../auth-modal/auth.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -9,27 +7,9 @@ import {ChangeBroadcaster} from '../../../class-folder/change-broadcaster/change
   styleUrls: ['./auth-menu.component.scss'],
   templateUrl: './auth-menu.component.html',
 })
-export class AuthMenuComponent implements OnDestroy {
-  private _componentDestroyedBroadcaster = new ChangeBroadcaster();
-
+export class AuthMenuComponent<CredentialsType, AuthType> {
   constructor(
-    public authService: AuthService,
+    public authService: AuthService<CredentialsType, AuthType>,
   ) {
-  }
-
-  public logout() {
-    this.authService.logout$().pipe(
-      takeUntil(this._componentDestroyedBroadcaster.changeS$),
-    ).subscribe();
-  }
-
-  public openModal() {
-    this.authService.openModal$().pipe(
-      takeUntil(this._componentDestroyedBroadcaster.changeS$),
-    ).subscribe();
-  }
-
-  public ngOnDestroy(): void {
-    this._componentDestroyedBroadcaster.complete();
   }
 }

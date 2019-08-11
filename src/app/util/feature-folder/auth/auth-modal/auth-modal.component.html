@@ -1,9 +1,9 @@
 <h2 mat-dialog-title>__Форма аутентификации</h2>
 
 <div mat-dialog-content>
-  <form [formGroup]="loginFormGroupBS$ | async">
+  <form [formGroup]="credentialsDataSource.formGroup">
     <mat-form-field
-      *ngFor="let fieldData of loginFormFieldDataListBS$ | async"
+      *ngFor="let fieldData of credentialsDataSource.formFieldDataList"
       class="w-100"
     >
       <input
@@ -20,8 +20,8 @@
   mat-dialog-actions
 >
   <button
-    (click)="loginAndClose()"
-    [class.hidden]="(authService.authContinuous$ | async)"
+    (click)="loginButtonClickEvent.emit()"
+    [class.hidden]="(authDataSource.authContinuous$ | async)"
     mat-button
   >
     <mat-icon>vpn_key</mat-icon>
