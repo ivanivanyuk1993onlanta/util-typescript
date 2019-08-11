@@ -11,6 +11,7 @@ import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {AppRoutingModule} from './app-routing.module';
 import {AuthInterceptor} from './util/feature-folder/auth/interceptor/auth-interceptor';
 import {AuthModule} from './util/feature-folder/auth/auth.module';
+import {NotificationModule} from './util/feature-folder/notification/notification.module';
 
 @NgModule({
   bootstrap: [AppComponent],
@@ -25,6 +26,7 @@ import {AuthModule} from './util/feature-folder/auth/auth.module';
     FlexSpacerModule,
     HttpClientModule,
     LayoutModule,
+    NotificationModule,
     RouteListModule,
     RouterModule,
   ],

@@ -2,11 +2,11 @@
 @import "mixin-folder/hidden";
 @import "mixin-folder/w-100";
 
-@import "font-loads";
-@import "theme-constructor";
+@import "font-folder/font-loads";
+@import "theme/theme";
 
-@import "custom-scrollbar";
-@import "height-filler";
+@import "partial-folder/custom-scrollbar";
+@import "partial-folder/height-filler";
 
 html, body {
   height: 100%;
@@ -23,6 +23,11 @@ body {
 
 .hidden.hidden.hidden {
   @include hidden();
+}
+
+.mat-snack-bar-container.mat-snack-bar-container {
+  max-width: unset;
+  min-width: unset;
 }
 
 .w-100 {
