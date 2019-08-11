@@ -1,12 +1,14 @@
 import {Inject, Injectable} from '@angular/core';
 import {BehaviorSubject, Observable, of} from 'rxjs';
-import {first, mergeMap} from 'rxjs/operators';
+import {first, mergeMap, tap} from 'rxjs/operators';
 import {MatDialog, MatDialogRef} from '@angular/material';
 import {AuthModalComponent} from '../auth-modal/auth-modal.component';
 import {AUTH_DATA_SOURCE} from '../../../../config/auth/auth-data-source-injection-token';
 import {AuthDataSourceInterface} from '../data-source/auth-data-source-interface';
 import {CREDENTIALS_DATA_SOURCE} from '../../../../config/auth/credentials-data-source-injection-token';
 import {CredentialsDataSourceInterface} from '../data-source/credentials-data-source-interface';
+import {NotificationService} from '../../notification/notification/notification.service';
+import {MessageTypeEnum} from '../../notification/notification-message-data/message-type-enum';
 
 @Injectable({
   providedIn: 'root'
@@ -19,9 +21,14 @@ export class AuthService<CredentialsType, AuthType> {
     @Inject(AUTH_DATA_SOURCE) public authDataSource: AuthDataSourceInterface<CredentialsType, AuthType>,
     @Inject(CREDENTIALS_DATA_SOURCE) private _credentialsDataSource: CredentialsDataSourceInterface,
     private _matDialog: MatDialog,
+    private _notificationService: NotificationService,
   ) {
-    authDataSource.authErrorS$.subscribe(() => {
+    authDataSource.authErrorS$.subscribe((error) => {
       this.openModal();
+      this._notificationService.pushMessage({
+        message: error.message,
+        type: MessageTypeEnum.Error,
+      });
     });
   }
 
@@ -32,14 +39,30 @@ export class AuthService<CredentialsType, AuthType> {
 
   public loginAndCloseModal() {
     this.authDataSource.login$(this._credentialsDataSource.formGroup.getRawValue()).pipe(
-      // todo notify error
+      tap(
+        () => {},
+        (error: Error) => {
+          this._notificationService.pushMessage({
+            message: error.message,
+            type: MessageTypeEnum.Error,
+          });
+        }
+      ),
       mergeMap(() => this.closeModal$()),
     ).subscribe();
   }
 
   public logout() {
     this.authDataSource.logout$().pipe(
-      // todo notify error
+      tap(
+        () => {},
+        (error: Error) => {
+          this._notificationService.pushMessage({
+            message: error.message,
+            type: MessageTypeEnum.Error,
+          });
+        }
+      ),
     ).subscribe();
   }
 

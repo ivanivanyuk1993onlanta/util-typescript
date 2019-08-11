@@ -3,9 +3,9 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  apiUrl: '/',
-  loginUrlSuffix: '',
-  logoutUrlSuffix: '',
+  apiUrl: 'http://localhost:6101/api/UIService',
+  loginUrlSuffix: '/AuthenticationController/Login',
+  logoutUrlSuffix: '/AuthenticationController/Logout',
   production: false,
 };
 
