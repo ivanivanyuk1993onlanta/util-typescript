@@ -54,6 +54,9 @@ export class AuthService<CredentialsType, AuthType> {
       this._matDialogRef.componentInstance.loginButtonClickEvent.subscribe(() => {
         this.loginAndCloseModal();
       });
+      this._matDialogRef.componentInstance.logoutButtonClickEvent.subscribe(() => {
+        this.logout();
+      });
       this._matDialogRef.beforeClose().pipe(
         first(),
       ).subscribe(() => {
