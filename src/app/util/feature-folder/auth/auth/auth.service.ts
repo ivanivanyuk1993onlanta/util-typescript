@@ -11,7 +11,7 @@ import {apiUrl} from '../../../../config/api-url';
 import {CredentialsInterface} from './credentials-interface';
 import {AuthInterface} from './auth-interface';
 import {FieldDataInterface} from '../data-source/field-data-interface';
-import {MatDialog, MatDialogRef} from '@angular/material';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import {AuthModalComponent} from '../auth-modal/auth-modal.component';
 
 @Injectable({

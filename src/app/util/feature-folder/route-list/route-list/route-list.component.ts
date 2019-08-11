@@ -6,7 +6,7 @@ import {BehaviorSubject} from 'rxjs';
 import {NavigationEnd, Router} from '@angular/router';
 import {FormControl} from '@angular/forms';
 import {getControlObservableWithInitialValue$} from '../../../method-folder/form-helper/get-control-observable-with-initial-value';
-import {MatOptionSelectionChange} from '@angular/material';
+import { MatOptionSelectionChange } from '@angular/material/core';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
