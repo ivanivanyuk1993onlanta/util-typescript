@@ -3,8 +3,8 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { AuthMenuComponent } from './auth-menu.component';
 
 describe('AuthMenuComponent', () => {
-  let component: AuthMenuComponent;
-  let fixture: ComponentFixture<AuthMenuComponent>;
+  let component: AuthMenuComponent<any, any>;
+  let fixture: ComponentFixture<AuthMenuComponent<any, any>>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
