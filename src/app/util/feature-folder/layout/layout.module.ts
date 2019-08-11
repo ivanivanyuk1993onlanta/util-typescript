@@ -5,7 +5,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import {ScrollDispatchModule} from '@angular/cdk/scrolling';
 
 @NgModule({
   declarations: [LayoutComponent],
@@ -16,7 +15,6 @@ import {ScrollDispatchModule} from '@angular/cdk/scrolling';
     MatIconModule,
     MatSidenavModule,
     MatToolbarModule,
-    ScrollDispatchModule,
   ],
 })
 export class LayoutModule {
