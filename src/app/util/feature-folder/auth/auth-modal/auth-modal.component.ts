@@ -12,6 +12,7 @@ import {AuthDataSourceInterface} from '../data-source/auth-data-source-interface
 })
 export class AuthModalComponent<CredentialsType, AuthType> {
   @Output() loginButtonClickEvent = new EventEmitter();
+  @Output() logoutButtonClickEvent = new EventEmitter();
 
   constructor(
     @Inject(AUTH_DATA_SOURCE) public authDataSource: AuthDataSourceInterface<CredentialsType, AuthType>,

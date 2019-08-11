@@ -1,4 +1,4 @@
-<h2 mat-dialog-title>__Форма аутентификации</h2>
+<h2 mat-dialog-title>Аутентификация</h2>
 
 <div mat-dialog-content>
   <form [formGroup]="credentialsDataSource.formGroup">
@@ -26,6 +26,15 @@
   >
     <mat-icon>vpn_key</mat-icon>
     Войти
+  </button>
+
+  <button
+    (click)="logoutButtonClickEvent.emit()"
+    [class.hidden]="!(authDataSource.authContinuous$ | async)"
+    mat-button
+  >
+    <mat-icon>exit_to_app</mat-icon>
+    Выйти
   </button>
 
   <button
