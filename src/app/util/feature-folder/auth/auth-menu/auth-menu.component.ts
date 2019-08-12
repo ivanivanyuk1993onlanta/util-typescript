@@ -7,9 +7,9 @@ import {AuthService} from '../auth/auth.service';
   styleUrls: ['./auth-menu.component.scss'],
   templateUrl: './auth-menu.component.html',
 })
-export class AuthMenuComponent<CredentialsType, AuthType> {
+export class AuthMenuComponent<AuthType, CredentialsType> {
   constructor(
-    public authService: AuthService<CredentialsType, AuthType>,
+    public authService: AuthService<AuthType, CredentialsType>,
   ) {
   }
 }

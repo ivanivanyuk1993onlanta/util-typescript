@@ -2,20 +2,21 @@ import {AuthDataSourceInterface} from '../../util/feature-folder/auth/data-sourc
 import {CredentialsInterface} from './credentials-interface';
 import {AuthInterface} from './auth-interface';
 import {BehaviorSubject, Observable, Subject, throwError} from 'rxjs';
-import {catchError, filter, first, map, mergeMap, tap} from 'rxjs/operators';
+import {catchError, distinctUntilChanged, filter, first, map, mergeMap, share, tap} from 'rxjs/operators';
 import {apiUrl} from '../api-url';
 import {logoutUrlSuffix} from './logout-url-suffix';
 import {loginUrlSuffix} from './login-url-suffix';
 import {HttpClient, HttpErrorResponse, HttpEvent, HttpHandler, HttpRequest} from '@angular/common/http';
 import * as localForage from 'localforage';
 
-export class AuthDataSource implements AuthDataSourceInterface<CredentialsInterface, AuthInterface> {
-  readonly authContinuous$: Observable<AuthInterface>;
+export class AuthDataSource implements AuthDataSourceInterface<AuthInterface, CredentialsInterface> {
   readonly authErrorS$ = new Subject<Error>();
-  readonly displayTextBS$ = new BehaviorSubject<string>(null);
+  readonly displayTextContinuous$: Observable<string>;
+  readonly isLoggedInContinuous$: Observable<boolean>;
 
-  private _authDBKey = 'auth';
+  private readonly _authContinuous$: Observable<AuthInterface>;
   private _authBS$WrapBS$ = new BehaviorSubject<BehaviorSubject<AuthInterface>>(null);
+  private _authDBKey = 'auth';
   private _localForage = localForage.createInstance({
     name: AuthDataSource.constructor.name,
   });
@@ -25,30 +26,36 @@ export class AuthDataSource implements AuthDataSourceInterface<CredentialsInterf
   constructor(
     private _httpClient: HttpClient,
   ) {
-    this.authContinuous$ = this._waitForAuthBS$().pipe(
+    this._authContinuous$ = this._waitForAuthBS$().pipe(
       mergeMap(authBS$ => authBS$),
     );
+    this.displayTextContinuous$ = this._authContinuous$.pipe(
+      map(auth => auth.login),
+      distinctUntilChanged(),
+      share(),
+    );
+    this.isLoggedInContinuous$ = this._authContinuous$.pipe(
+      map(auth => auth.isLoggedIn),
+      distinctUntilChanged(),
+      share(),
+    );
+
     this._localForage.getItem<AuthInterface>(this._authDBKey).then((auth) => {
-      const authBS$ = new BehaviorSubject(auth);
+      const authBS$ = new BehaviorSubject(auth || this._getEmptyAuth());
       authBS$.subscribe(auth2 => {
-        if (auth2) {
-          this._localForage.setItem<AuthInterface>(this._authDBKey, auth2);
-          this.displayTextBS$.next(auth2.login);
-        } else {
-          this._localForage.removeItem(this._authDBKey);
-          this.displayTextBS$.next(null);
-        }
+        this._localForage.setItem<AuthInterface>(this._authDBKey, auth2);
       });
       this._authBS$WrapBS$.next(authBS$);
     });
   }
 
   public interceptHttp$(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    return this.authContinuous$.pipe(
+    // todo add token extraction from response and storing in auth logic
+    return this._authContinuous$.pipe(
       first(),
       mergeMap(auth => {
         return next.handle(
-          auth
+          auth.jwtToken
             ? req.clone({
               setHeaders: {
                 Authorization: `Bearer ${auth.jwtToken}`,
@@ -59,11 +66,12 @@ export class AuthDataSource implements AuthDataSourceInterface<CredentialsInterf
       }),
       catchError((error: HttpErrorResponse, caught) => {
         if (error.status === 401 && req.url !== this._loginUrl && req.url !== this._logoutUrl) {
-          return this._setAuth$(null).pipe(
+          return this._setAuth$(this._getEmptyAuth()).pipe(
             tap(() => {
               this.authErrorS$.next(error);
             }),
-            mergeMap(() => this.authContinuous$),
+            // Waiting for user login
+            mergeMap(() => this._authContinuous$),
             filter(x => !!x),
             first(),
             mergeMap(() => caught),
@@ -81,6 +89,7 @@ export class AuthDataSource implements AuthDataSourceInterface<CredentialsInterf
     }).pipe(
       map((jwtToken) => {
         return {
+          isLoggedIn: true,
           jwtToken,
           login: credentials.login,
         } as AuthInterface;
@@ -91,8 +100,16 @@ export class AuthDataSource implements AuthDataSourceInterface<CredentialsInterf
 
   public logout$(): Observable<AuthInterface> {
     return this._httpClient.post(this._logoutUrl, null).pipe(
-      mergeMap(() => this._setAuth$(null)),
+      mergeMap(() => this._setAuth$(this._getEmptyAuth())),
     );
+  }
+
+  private _getEmptyAuth(): AuthInterface {
+    return {
+      isLoggedIn: false,
+      jwtToken: null,
+      login: null,
+    };
   }
 
   private _setAuth$(auth: AuthInterface): Observable<AuthInterface> {

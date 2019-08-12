@@ -21,7 +21,7 @@
 >
   <button
     (click)="loginButtonClickEvent.emit()"
-    [class.hidden]="(authDataSource.authContinuous$ | async)"
+    [class.hidden]="(authDataSource.isLoggedInContinuous$ | async)"
     mat-button
   >
     <mat-icon>vpn_key</mat-icon>
@@ -30,7 +30,7 @@
 
   <button
     (click)="logoutButtonClickEvent.emit()"
-    [class.hidden]="!(authDataSource.authContinuous$ | async)"
+    [class.hidden]="!(authDataSource.isLoggedInContinuous$ | async)"
     mat-button
   >
     <mat-icon>exit_to_app</mat-icon>
