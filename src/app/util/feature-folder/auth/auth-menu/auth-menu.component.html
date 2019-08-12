@@ -1,11 +1,11 @@
 <button
-  *ngIf="authService.authDataSource.authContinuous$ | async; else noAuthButton"
+  *ngIf="authService.authDataSource.isLoggedInContinuous$ | async; else noAuthButton"
   [matMenuTriggerFor]="matMenu"
   mat-button
   type="button"
 >
   <mat-icon>person</mat-icon>
-  {{ authService.authDataSource.displayTextBS$ | async }}
+  {{ authService.authDataSource.displayTextContinuous$ | async }}
 </button>
 
 <ng-template #noAuthButton>
@@ -21,7 +21,7 @@
 <mat-menu #matMenu="matMenu">
   <button
     (click)="authService.openModal()"
-    [class.hidden]="(authService.authDataSource.authContinuous$ | async)"
+    [class.hidden]="(authService.authDataSource.isLoggedInContinuous$ | async)"
     mat-menu-item
   >
     <mat-icon>vpn_key</mat-icon>
@@ -36,7 +36,7 @@
   </button>
   <button
     (click)="authService.logout()"
-    [class.hidden]="!(authService.authDataSource.authContinuous$ | async)"
+    [class.hidden]="!(authService.authDataSource.isLoggedInContinuous$ | async)"
     mat-menu-item
   >
     <mat-icon>exit_to_app</mat-icon>

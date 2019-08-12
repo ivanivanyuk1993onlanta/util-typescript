@@ -13,12 +13,12 @@ import {MessageTypeEnum} from '../../notification/notification-message-data/mess
 @Injectable({
   providedIn: 'root'
 })
-export class AuthService<CredentialsType, AuthType> {
+export class AuthService<AuthType, CredentialsType> {
   private _isDialogOpenedBS$ = new BehaviorSubject(false);
-  private _matDialogRef: MatDialogRef<AuthModalComponent<CredentialsType, AuthType>>;
+  private _matDialogRef: MatDialogRef<AuthModalComponent<AuthType, CredentialsType>>;
 
   constructor(
-    @Inject(AUTH_DATA_SOURCE) public authDataSource: AuthDataSourceInterface<CredentialsType, AuthType>,
+    @Inject(AUTH_DATA_SOURCE) public authDataSource: AuthDataSourceInterface<AuthType, CredentialsType>,
     @Inject(CREDENTIALS_DATA_SOURCE) private _credentialsDataSource: CredentialsDataSourceInterface,
     private _matDialog: MatDialog,
     private _notificationService: NotificationService,
@@ -73,7 +73,7 @@ export class AuthService<CredentialsType, AuthType> {
   public openModal$(): Observable<void> {
     if (!this._isDialogOpenedBS$.getValue()) {
       this._isDialogOpenedBS$.next(true);
-      this._matDialogRef = this._matDialog.open<AuthModalComponent<CredentialsType, AuthType>>(AuthModalComponent);
+      this._matDialogRef = this._matDialog.open<AuthModalComponent<AuthType, CredentialsType>>(AuthModalComponent);
       this._matDialogRef.componentInstance.loginButtonClickEvent.subscribe(() => {
         this.loginAndCloseModal();
       });

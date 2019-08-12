@@ -10,12 +10,12 @@ import {AuthDataSourceInterface} from '../data-source/auth-data-source-interface
   styleUrls: ['./auth-modal.component.scss'],
   templateUrl: './auth-modal.component.html',
 })
-export class AuthModalComponent<CredentialsType, AuthType> {
+export class AuthModalComponent<AuthType, CredentialsType> {
   @Output() loginButtonClickEvent = new EventEmitter();
   @Output() logoutButtonClickEvent = new EventEmitter();
 
   constructor(
-    @Inject(AUTH_DATA_SOURCE) public authDataSource: AuthDataSourceInterface<CredentialsType, AuthType>,
+    @Inject(AUTH_DATA_SOURCE) public authDataSource: AuthDataSourceInterface<AuthType, CredentialsType>,
     @Inject(CREDENTIALS_DATA_SOURCE) public credentialsDataSource: CredentialsDataSourceInterface,
   ) {
   }
