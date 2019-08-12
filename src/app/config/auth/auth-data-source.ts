@@ -50,6 +50,7 @@ export class AuthDataSource implements AuthDataSourceInterface<AuthInterface, Cr
   }
 
   public interceptHttp$(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    // todo add token extraction from response and storing in auth logic
     return this._authContinuous$.pipe(
       first(),
       mergeMap(auth => {
