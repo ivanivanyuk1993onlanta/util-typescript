@@ -28,6 +28,7 @@ export class AuthDataSource implements AuthDataSourceInterface<AuthInterface, Cr
   ) {
     this._authContinuous$ = this._waitForAuthBS$().pipe(
       mergeMap(authBS$ => authBS$),
+      share(),
     );
     this.displayTextContinuous$ = this._authContinuous$.pipe(
       map(auth => auth.login),
