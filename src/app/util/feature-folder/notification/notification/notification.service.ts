@@ -56,13 +56,11 @@ export class NotificationService {
   }
 
   private _openNotificationWindow() {
+    this._isOpenedBS$.next(true);
     this._matSnackBarRef = this._snackBar.openFromComponent(NotificationWindowComponent, {
       data: {
         notificationMessageDataListBS$: this._notificationMessageDataListBS$,
       } as NotificationWindowDataInterface,
-    });
-    this._matSnackBarRef.afterOpened().subscribe(() => {
-      this._isOpenedBS$.next(true);
     });
     this._matSnackBarRef.afterDismissed().subscribe(() => {
       this._isOpenedBS$.next(false);
