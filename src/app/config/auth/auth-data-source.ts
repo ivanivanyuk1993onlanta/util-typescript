@@ -2,7 +2,7 @@ import {AuthDataSourceInterface} from '../../util/feature-folder/auth/data-sourc
 import {CredentialsInterface} from './credentials-interface';
 import {AuthInterface} from './auth-interface';
 import {BehaviorSubject, Observable, Subject, throwError} from 'rxjs';
-import {catchError, distinctUntilChanged, filter, first, map, mergeMap, share, tap} from 'rxjs/operators';
+import {catchError, distinctUntilChanged, filter, first, map, mergeMap, tap} from 'rxjs/operators';
 import {apiUrl} from '../api-url';
 import {logoutUrlSuffix} from './logout-url-suffix';
 import {loginUrlSuffix} from './login-url-suffix';
@@ -28,17 +28,14 @@ export class AuthDataSource implements AuthDataSourceInterface<AuthInterface, Cr
   ) {
     this._authContinuous$ = this._waitForAuthBS$().pipe(
       mergeMap(authBS$ => authBS$),
-      share(),
     );
     this.displayTextContinuous$ = this._authContinuous$.pipe(
       map(auth => auth.login),
       distinctUntilChanged(),
-      share(),
     );
     this.isLoggedInContinuous$ = this._authContinuous$.pipe(
       map(auth => auth.isLoggedIn),
       distinctUntilChanged(),
-      share(),
     );
 
     this._localForage.getItem<AuthInterface>(this._authDBKey).then((auth) => {
@@ -72,8 +69,8 @@ export class AuthDataSource implements AuthDataSourceInterface<AuthInterface, Cr
               this.authErrorS$.next(error);
             }),
             // Waiting for user login
-            mergeMap(() => this._authContinuous$),
-            filter(x => !!x),
+            mergeMap(() => this.isLoggedInContinuous$),
+            filter(isLoggedIn => isLoggedIn),
             first(),
             mergeMap(() => caught),
           );
