@@ -2,7 +2,7 @@ import {AuthDataSourceInterface} from '../../util/feature-folder/auth/data-sourc
 import {CredentialsInterface} from './credentials-interface';
 import {AuthInterface} from './auth-interface';
 import {BehaviorSubject, Observable, Subject, throwError} from 'rxjs';
-import {catchError, distinctUntilChanged, filter, first, map, mergeMap, tap} from 'rxjs/operators';
+import {catchError, distinctUntilChanged, filter, first, map, mergeMap, shareReplay, tap} from 'rxjs/operators';
 import {apiUrl} from '../api-url';
 import {logoutUrlSuffix} from './logout-url-suffix';
 import {loginUrlSuffix} from './login-url-suffix';
@@ -28,14 +28,20 @@ export class AuthDataSource implements AuthDataSourceInterface<AuthInterface, Cr
   ) {
     this._authContinuous$ = this._waitForAuthBS$().pipe(
       mergeMap(authBS$ => authBS$),
+      // using shareReplay to not duplicate streams, but still serve it to late subscribers
+      shareReplay(1),
     );
     this.displayTextContinuous$ = this._authContinuous$.pipe(
       map(auth => auth.login),
       distinctUntilChanged(),
+      // using shareReplay to not duplicate streams, but still serve it to late subscribers
+      shareReplay(1),
     );
     this.isLoggedInContinuous$ = this._authContinuous$.pipe(
       map(auth => auth.isLoggedIn),
       distinctUntilChanged(),
+      // using shareReplay to not duplicate streams, but still serve it to late subscribers
+      shareReplay(1),
     );
 
     this._localForage.getItem<AuthInterface>(this._authDBKey).then((auth) => {
