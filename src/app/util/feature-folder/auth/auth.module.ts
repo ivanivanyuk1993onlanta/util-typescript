@@ -9,6 +9,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import {ReactiveFormsModule} from '@angular/forms';
 import { AuthMenuComponent } from './auth-menu/auth-menu.component';
+import {LocalizationModule} from '../localization/localization.module';
 
 @NgModule({
   bootstrap: [AuthModalComponent],
@@ -25,6 +26,7 @@ import { AuthMenuComponent } from './auth-menu/auth-menu.component';
     MatInputModule,
     MatMenuModule,
     ReactiveFormsModule,
+    LocalizationModule,
   ]
 })
 export class AuthModule {
