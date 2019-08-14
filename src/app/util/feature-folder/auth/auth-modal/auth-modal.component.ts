@@ -14,6 +14,8 @@ export class AuthModalComponent<AuthType, CredentialsType> {
   @Output() loginButtonClickEvent = new EventEmitter();
   @Output() logoutButtonClickEvent = new EventEmitter();
 
+  public strList = Array.from(Array(100).keys()).map(x => x.toString());
+
   constructor(
     @Inject(AUTH_DATA_SOURCE) public authDataSource: AuthDataSourceInterface<AuthType, CredentialsType>,
     @Inject(CREDENTIALS_DATA_SOURCE) public credentialsDataSource: CredentialsDataSourceInterface,

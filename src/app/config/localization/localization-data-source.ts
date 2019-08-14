@@ -1,6 +1,6 @@
 import {LocalizationDataSourceInterface} from '../../util/feature-folder/localization/data-source/localization-data-source-interface';
-import {BehaviorSubject, interval, Observable} from 'rxjs';
-import {filter, first, map, mergeMap, shareReplay, tap} from 'rxjs/operators';
+import {BehaviorSubject, interval, Observable, of, Subject} from 'rxjs';
+import {buffer, debounceTime, filter, first, mergeMap, shareReplay, tap} from 'rxjs/operators';
 import * as localForage from 'localforage';
 
 export class LocalizationDataSource implements LocalizationDataSourceInterface {
@@ -12,9 +12,13 @@ export class LocalizationDataSource implements LocalizationDataSourceInterface {
   private _currentLocaleLocalForage = localForage.createInstance({
     name: `${LocalizationDataSource.name}-${this._currentLocaleDBKey}`,
   });
+  private _debounceTime = 0;
+  // todo use it to persist localization
   private _localizationLocalForage = localForage.createInstance({
     name: LocalizationDataSource.name,
   });
+  private _localeWithPrefixToLocalizedMessageBS$Map = new Map<string, BehaviorSubject<string>>();
+  private _requestedLocaleWithMessageCodeS$ = new Subject<string>();
 
   constructor() {
     this._currentLocaleContinuous$ = this._waitForCurrentLocaleBS$().pipe(
@@ -23,15 +27,30 @@ export class LocalizationDataSource implements LocalizationDataSourceInterface {
       shareReplay(1),
     );
 
+    this._requestedLocaleWithMessageCodeS$.pipe(
+      buffer(this._requestedLocaleWithMessageCodeS$.pipe(debounceTime(this._debounceTime))),
+    ).subscribe(requestedLocaleWithMessageCodeList => {
+      console.log(requestedLocaleWithMessageCodeList);
+      this._loadLocalizationMessageList$(requestedLocaleWithMessageCodeList).subscribe(localizationMessageList => {
+        const localeWithPrefixToLocalizedMessageBS$Map = this._localeWithPrefixToLocalizedMessageBS$Map;
+        localizationMessageList.forEach((localizationMessage, index) => {
+          localeWithPrefixToLocalizedMessageBS$Map.get(requestedLocaleWithMessageCodeList[index]).next(localizationMessage);
+        });
+      });
+    });
+
     this._currentLocaleLocalForage.getItem<string>(this._currentLocaleDBKey).then((currentLocale) => {
       const currentLocaleBS$ = new BehaviorSubject(currentLocale || 'en');
       currentLocaleBS$.subscribe(currentLocale2 => {
         this._currentLocaleLocalForage.setItem<string>(this._currentLocaleDBKey, currentLocale2);
       });
+
       // todo remove debug code
+      const localeList = ['en', 'ru', 'ge', 'jp'];
       interval(1000).subscribe((num) => {
-        this.setLocale$(`${num % 2 === 0 ? 'en' : 'ru'}`).subscribe();
+        this.setLocale$(`${localeList[num % localeList.length]}`).subscribe();
       });
+
       this._currentLocaleBS$WrapBS$.next(currentLocaleBS$);
     });
   }
@@ -48,7 +67,17 @@ export class LocalizationDataSource implements LocalizationDataSourceInterface {
     //  on debounced(because it will likely send data to server, which we do not want to happen for each key one by one) requested key list
     //  change and sends values to in-memory map and persistent storage
     return this._currentLocaleContinuous$.pipe(
-      map(locale => `${locale}|${messageCode}`)
+      mergeMap(locale => {
+        const localeWithMessageCode = this._getLocaleWithMessageCode(locale, messageCode);
+        let inMemoryLocalizationMessageBS$ = this._localeWithPrefixToLocalizedMessageBS$Map.get(localeWithMessageCode);
+        if (!inMemoryLocalizationMessageBS$) {
+          inMemoryLocalizationMessageBS$ = new BehaviorSubject<string>(null);
+          this._localeWithPrefixToLocalizedMessageBS$Map.set(localeWithMessageCode, inMemoryLocalizationMessageBS$);
+          this._requestedLocaleWithMessageCodeS$.next(localeWithMessageCode);
+        }
+        return inMemoryLocalizationMessageBS$;
+      }),
+      filter(x => !!x),
     );
   }
 
@@ -60,6 +89,19 @@ export class LocalizationDataSource implements LocalizationDataSourceInterface {
       mergeMap(currentLocaleBS$ => currentLocaleBS$),
       first(),
     );
+  }
+
+  private _getLocaleWithMessageCode(
+    locale: string,
+    messageCode: string,
+  ): string {
+    return `${locale}|${messageCode}`;
+  }
+
+  private _loadLocalizationMessageList$(
+    localeWithMessageCodeList: Array<string>,
+  ): Observable<Array<string>> {
+    return of(localeWithMessageCodeList);
   }
 
   private _waitForCurrentLocaleBS$(): Observable<BehaviorSubject<string>> {

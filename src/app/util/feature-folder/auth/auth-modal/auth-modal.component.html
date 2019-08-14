@@ -1,5 +1,9 @@
 <h2 mat-dialog-title>{{ 'Authentication' | getLocalizedMessageContinuous$Pure | async }}</h2>
 
+<ng-container
+  *ngFor="let i of strList"
+>{{ i | getLocalizedMessageContinuous$Pure | async }}</ng-container>
+
 <div mat-dialog-content>
   <form [formGroup]="credentialsDataSource.formGroup">
     <mat-form-field
