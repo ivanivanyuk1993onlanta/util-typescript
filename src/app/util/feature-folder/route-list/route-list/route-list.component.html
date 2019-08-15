@@ -4,8 +4,7 @@
       <mat-label>
         <span matPrefix>&nbsp;</span>
         <mat-icon matPrefix>search</mat-icon>
-        <!-- todo render with localization pipe -->
-        Поиск
+        {{ 'Search' | getLocalizedMessageContinuous$Pure | async }}...
       </mat-label>
       <input
         [formControl]="searchTextFC"

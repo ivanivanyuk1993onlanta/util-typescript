@@ -18,7 +18,7 @@ export class AuthDataSource implements AuthDataSourceInterface<AuthInterface, Cr
   private _authBS$WrapBS$ = new BehaviorSubject<BehaviorSubject<AuthInterface>>(null);
   private _authDBKey = 'auth';
   private _localForage = localForage.createInstance({
-    name: AuthDataSource.constructor.name,
+    name: AuthDataSource.name,
   });
   private _loginUrl = `${apiUrl}${loginUrlSuffix}`;
   private _logoutUrl = `${apiUrl}${logoutUrlSuffix}`;
