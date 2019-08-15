@@ -1,0 +1,8 @@
+import {inject, InjectionToken} from '@angular/core';
+import {RouteListDataSource} from './route-list-data-source';
+import {LocalizationService} from '../../util/feature-folder/localization/localization/localization.service';
+
+export const ROUTE_LIST_DATA_SOURCE = new InjectionToken<RouteListDataSource>('Manually constructed RouteListDataSource', {
+  providedIn: 'root',
+  factory: () => new RouteListDataSource(inject(LocalizationService)),
+});

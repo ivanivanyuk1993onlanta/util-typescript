@@ -40,7 +40,7 @@ export class RouteListItemComponent<DataObjectType> implements OnChanges, OnDest
       this.childListBS$.next(childList);
     });
 
-    dataSource.getDisplayTextBS$(this.dataObject).pipe(
+    dataSource.getDisplayTextContinuous$(this.dataObject).pipe(
       takeUntil(this._changeBroadcaster.changeS$),
       takeUntil(this._componentDestroyedBroadcaster.changeS$),
     ).subscribe(displayText => {
