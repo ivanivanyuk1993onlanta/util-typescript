@@ -2,6 +2,7 @@ import {LocalizationDataSourceInterface} from '../../util/feature-folder/localiz
 import {BehaviorSubject, interval, Observable, of, Subject, timer} from 'rxjs';
 import {buffer, debounceTime, filter, first, mergeMap, shareReplay, tap} from 'rxjs/operators';
 import * as localForage from 'localforage';
+import {LocaleWithMessageCodeInterface} from './locale-with-message-code-interface';
 
 export class LocalizationDataSource implements LocalizationDataSourceInterface {
   localeListContinuous$: Observable<Array<string>>;
@@ -18,7 +19,7 @@ export class LocalizationDataSource implements LocalizationDataSourceInterface {
   });
   private _localeWithPrefixToLocalizedMessageBS$Map = new Map<string, BehaviorSubject<string>>();
   private _requestImitationTime = 100;
-  private _requestedLocaleWithMessageCodeS$ = new Subject<string>();
+  private _requestedLocaleWithMessageCodeS$ = new Subject<LocaleWithMessageCodeInterface>();
 
   constructor() {
     this._currentLocaleContinuous$ = this._waitForCurrentLocaleBS$().pipe(
@@ -33,8 +34,13 @@ export class LocalizationDataSource implements LocalizationDataSourceInterface {
       this._loadLocalizationMessageList$(requestedLocaleWithMessageCodeList).subscribe(localizationMessageList => {
         const localeWithPrefixToLocalizedMessageBS$Map = this._localeWithPrefixToLocalizedMessageBS$Map;
         localizationMessageList.forEach((localizationMessage, index) => {
-          localeWithPrefixToLocalizedMessageBS$Map.get(requestedLocaleWithMessageCodeList[index]).next(localizationMessage);
-          this._localizationLocalForage.setItem<string>(requestedLocaleWithMessageCodeList[index], localizationMessage);
+          const localeWithMessageCode = requestedLocaleWithMessageCodeList[index];
+          const localeWithMessageCodeString = this._getLocaleWithMessageCodeString(
+            localeWithMessageCode.locale,
+            localeWithMessageCode.messageCode,
+          );
+          localeWithPrefixToLocalizedMessageBS$Map.get(localeWithMessageCodeString).next(localizationMessage);
+          this._localizationLocalForage.setItem<string>(localeWithMessageCodeString, localizationMessage);
         });
       });
     });
@@ -68,7 +74,7 @@ export class LocalizationDataSource implements LocalizationDataSourceInterface {
     //  change and sends values to in-memory map and persistent storage
     return this._currentLocaleContinuous$.pipe(
       mergeMap(locale => {
-        const localeWithMessageCode = this._getLocaleWithMessageCode(locale, messageCode);
+        const localeWithMessageCode = this._getLocaleWithMessageCodeString(locale, messageCode);
         let inMemoryLocalizationMessageBS$ = this._localeWithPrefixToLocalizedMessageBS$Map.get(localeWithMessageCode);
         if (!inMemoryLocalizationMessageBS$) {
           inMemoryLocalizationMessageBS$ = new BehaviorSubject<string>(null);
@@ -78,7 +84,10 @@ export class LocalizationDataSource implements LocalizationDataSourceInterface {
             if (localizationMessage) {
               inMemoryLocalizationMessageBS$.next(localizationMessage);
             } else {
-              this._requestedLocaleWithMessageCodeS$.next(localeWithMessageCode);
+              this._requestedLocaleWithMessageCodeS$.next({
+                locale,
+                messageCode,
+              });
             }
           });
         }
@@ -98,7 +107,7 @@ export class LocalizationDataSource implements LocalizationDataSourceInterface {
     );
   }
 
-  private _getLocaleWithMessageCode(
+  private _getLocaleWithMessageCodeString(
     locale: string,
     messageCode: string,
   ): string {
@@ -106,12 +115,17 @@ export class LocalizationDataSource implements LocalizationDataSourceInterface {
   }
 
   private _loadLocalizationMessageList$(
-    localeWithMessageCodeList: Array<string>,
+    localeWithMessageCodeList: Array<LocaleWithMessageCodeInterface>,
   ): Observable<Array<string>> {
     // todo remove log
     console.log(localeWithMessageCodeList);
     return timer(this._requestImitationTime).pipe(
-      mergeMap(() => of(localeWithMessageCodeList)),
+      mergeMap(() => of(localeWithMessageCodeList.map(localeWithMessageCode => {
+        return this._getLocaleWithMessageCodeString(
+          localeWithMessageCode.locale,
+          localeWithMessageCode.messageCode,
+        );
+      }))),
     );
   }
 
