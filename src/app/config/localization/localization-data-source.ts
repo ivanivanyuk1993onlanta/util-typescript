@@ -28,6 +28,8 @@ export class LocalizationDataSource implements LocalizationDataSourceInterface {
       shareReplay(1),
     );
 
+    // this buffer collects requested localization keys and generates load request after some time after last request, in our case, 0 is
+    // enough to collect all localization requests from page
     this._requestedLocaleWithMessageCodeS$.pipe(
       buffer(this._requestedLocaleWithMessageCodeS$.pipe(debounceTime(this._debounceTime))),
     ).subscribe(requestedLocaleWithMessageCodeList => {
@@ -39,7 +41,9 @@ export class LocalizationDataSource implements LocalizationDataSourceInterface {
             localeWithMessageCode.locale,
             localeWithMessageCode.messageCode,
           );
+          // storing received value to in-memory map
           localeWithPrefixToLocalizedMessageBS$Map.get(localeWithMessageCodeString).next(localizationMessage);
+          // storing received value to persistent storage
           this._localizationLocalForage.setItem<string>(localeWithMessageCodeString, localizationMessage);
         });
       });
@@ -62,27 +66,31 @@ export class LocalizationDataSource implements LocalizationDataSourceInterface {
   }
 
   public getLocalizedMessageContinuous$(messageCode: string): Observable<string> {
-    // todo pay attention that method takes only message code and is used in pure pipe, so it has to either return self-recomputing
-    //  Observable(which is not effective, as even keys that were removed from page will be recomputed on locale change), or take both
-    //  messageCode and locale, which will require moving locale passing logic to either pipe transform method(best choice, if possible), or
-    //  into template(which is not DRY, not readable, not easy to use)
+    // When writing method for your data source, pay attention that this method is very effective in combination with localization pipe, as
+    // it requests only current locale, buffers locale requests before generating http requests, generates request for each
+    // locale-messageCode only once
 
-    // todo try getting by key from in-memory map, then from persistent storage, then if got from persistent storage - register in
-    //  in-memory map, else, add BehaviorSubject<LocalizedMessage> to in-memory map by key Locale+MessageCode, but with null value, add key
-    //  to requested key list - BehaviorSubject<Array<Locale+MessageCode>>, which will have subscription that sends list to server
-    //  on debounced(because it will likely send data to server, which we do not want to happen for each key one by one) requested key list
-    //  change and sends values to in-memory map and persistent storage
+    // here template with pipe has appeared on page or method was called manually, subscription was created
+    // we subscribe to continuous locale
     return this._currentLocaleContinuous$.pipe(
       mergeMap(locale => {
-        const localeWithMessageCode = this._getLocaleWithMessageCodeString(locale, messageCode);
-        let inMemoryLocalizationMessageBS$ = this._localeWithPrefixToLocalizedMessageBS$Map.get(localeWithMessageCode);
+        // we get key from locale and messageCode
+        const localeWithMessageCodeString = this._getLocaleWithMessageCodeString(locale, messageCode);
+        // we try to get localization observable from in-memory map
+        let inMemoryLocalizationMessageBS$ = this._localeWithPrefixToLocalizedMessageBS$Map.get(localeWithMessageCodeString);
+        // if in-memory map doesn't have localization observable, we have to put it there
         if (!inMemoryLocalizationMessageBS$) {
+          // we build and put to in-memory map localization observable
           inMemoryLocalizationMessageBS$ = new BehaviorSubject<string>(null);
-          this._localeWithPrefixToLocalizedMessageBS$Map.set(localeWithMessageCode, inMemoryLocalizationMessageBS$);
+          this._localeWithPrefixToLocalizedMessageBS$Map.set(localeWithMessageCodeString, inMemoryLocalizationMessageBS$);
 
-          this._localizationLocalForage.getItem<string>(localeWithMessageCode).then(localizationMessage => {
+          // we try to load localization from persistent storage
+          this._localizationLocalForage.getItem<string>(localeWithMessageCodeString).then(localizationMessage => {
+            // if persistent storage has localization, we push it to observable
             if (localizationMessage) {
               inMemoryLocalizationMessageBS$.next(localizationMessage);
+            // else we notify requestedLocaleWithMessageCodeS$ with buffer logic that we need to load locale with message, as we do not want
+            // each key to generate http request, but want to wait for all localization requests from page before sending requests
             } else {
               this._requestedLocaleWithMessageCodeS$.next({
                 locale,
@@ -93,6 +101,7 @@ export class LocalizationDataSource implements LocalizationDataSourceInterface {
         }
         return inMemoryLocalizationMessageBS$;
       }),
+      // we filter newly registered in map value, that does not have localization yet
       filter(x => !!x),
     );
   }
