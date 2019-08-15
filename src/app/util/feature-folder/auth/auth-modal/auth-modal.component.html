@@ -1,9 +1,5 @@
 <h2 mat-dialog-title>{{ 'Authentication' | getLocalizedMessageContinuous$Pure | async }}</h2>
 
-<ng-container
-  *ngFor="let i of strList"
->{{ i | getLocalizedMessageContinuous$Pure | async }}</ng-container>
-
 <div mat-dialog-content>
   <form [formGroup]="credentialsDataSource.formGroup">
     <mat-form-field
@@ -29,7 +25,7 @@
     mat-button
   >
     <mat-icon>vpn_key</mat-icon>
-    Войти
+    {{ 'Log in' | getLocalizedMessageContinuous$Pure | async }}
   </button>
 
   <button
@@ -38,14 +34,14 @@
     mat-button
   >
     <mat-icon>exit_to_app</mat-icon>
-    Выйти
+    {{ 'Log out' | getLocalizedMessageContinuous$Pure | async }}
   </button>
 
   <button
     mat-button
   >
     <mat-icon>person_add</mat-icon>
-    Зарегистрироваться
+    {{ 'Register' | getLocalizedMessageContinuous$Pure | async }}
   </button>
 
   <button
@@ -53,6 +49,6 @@
     mat-dialog-close
   >
     <mat-icon>cancel</mat-icon>
-    Отмена
+    {{ 'Cancel' | getLocalizedMessageContinuous$Pure | async }}
   </button>
 </div>
