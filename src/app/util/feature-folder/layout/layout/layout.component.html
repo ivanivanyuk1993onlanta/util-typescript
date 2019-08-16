@@ -14,6 +14,15 @@
     </button>
 
     <ng-content select=".layout__header"></ng-content>
+
+    <button
+      (click)="drawerEnd.toggle()"
+      aria-label="Toggle sidenav"
+      mat-icon-button
+      type="button"
+    >
+      <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+    </button>
   </mat-toolbar>
 
   <mat-sidenav-container
@@ -26,9 +35,22 @@
       [mode]="(mediaQueryObserverService.matchesMediumQuerySubject$ | async) ? 'side' : 'over'"
       [opened]="mediaQueryObserverService.matchesMediumQuerySubject$ | async"
       class="layout__sidenav-container"
+      position="start"
       role="navigation"
     >
       <ng-content select=".layout__sidenav"></ng-content>
+    </mat-sidenav>
+
+    <mat-sidenav
+      #drawerEnd
+      [disableClose]="true"
+      [mode]="(mediaQueryObserverService.matchesMediumQuerySubject$ | async) ? 'side' : 'over'"
+      [opened]="mediaQueryObserverService.matchesMediumQuerySubject$ | async"
+      class="layout__sidenav-container"
+      position="end"
+      role="navigation"
+    >
+      <ng-content select=".layout__sidenav-end"></ng-content>
     </mat-sidenav>
 
     <mat-sidenav-content

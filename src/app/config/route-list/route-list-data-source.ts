@@ -2,7 +2,7 @@ import {RouteListDataSourceInterface} from '../../util/feature-folder/route-list
 import {RouteData} from './route-data';
 import {BehaviorSubject, combineLatest, Observable, of} from 'rxjs';
 import {CollectionViewer} from '@angular/cdk/collections';
-import {first, map, tap} from 'rxjs/operators';
+import {map, take, tap} from 'rxjs/operators';
 import {computeLevenshteinDistanceAmortized} from '../../util/method-folder/compute-levenshtein-distance/compute-levenshtein-distance-amortized';
 import {sortByFuncResult} from '../../util/method-folder/sort-by-func-result/sort-by-func-result';
 import {LocalizationService} from '../../util/feature-folder/localization/localization/localization.service';
@@ -74,7 +74,7 @@ export class RouteListDataSource implements RouteListDataSourceInterface<RouteDa
         return this._localizationService.localizationDataSource.getLocalizedMessageContinuous$(dataObject.text);
       }),
     ).pipe(
-      first(),
+      take(1),
       map(localizedMessageList => {
         const dataObjectToLocalizedMessageMap = new Map<RouteData, string>(flatListCopy.map((dataObject, index) => {
           return [
