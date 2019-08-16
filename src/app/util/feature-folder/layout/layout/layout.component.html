@@ -22,10 +22,11 @@
   >
     <mat-sidenav
       #drawer
+      [disableClose]="true"
       [mode]="(mediaQueryObserverService.matchesMediumQuerySubject$ | async) ? 'side' : 'over'"
       [opened]="mediaQueryObserverService.matchesMediumQuerySubject$ | async"
-      role="navigation"
       class="layout__sidenav-container"
+      role="navigation"
     >
       <ng-content select=".layout__sidenav"></ng-content>
     </mat-sidenav>

@@ -13,9 +13,10 @@ import {ReactiveFormsModule} from '@angular/forms';
 import {GetUrl$PurePipe} from './get-url$-pure/get-url$-pure.pipe';
 import {GetDisplayTextContinuous$PurePipe} from './get-display-text-continuous$-pure/get-display-text-continuous$-pure.pipe';
 import {LocalizationModule} from '../localization/localization.module';
+import { GetIconCode$PurePipe } from './get-icon-code$-pure/get-icon-code$-pure.pipe';
 
 @NgModule({
-  declarations: [RouteListComponent, RouteListItemComponent, GetUrl$PurePipe, GetDisplayTextContinuous$PurePipe],
+  declarations: [RouteListComponent, RouteListItemComponent, GetUrl$PurePipe, GetDisplayTextContinuous$PurePipe, GetIconCode$PurePipe],
   exports: [RouteListComponent],
   imports: [
     CommonModule,
