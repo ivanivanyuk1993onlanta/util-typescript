@@ -56,7 +56,7 @@ export class LocalizationDataSource implements LocalizationDataSourceInterface {
       });
 
       // todo remove debug code
-      const localeList = ['en', 'ru', 'ge', 'jp'];
+      const localeList = ['en', 'ru'];
       interval(1000).subscribe((num) => {
         this.setLocale$(`${localeList[num % localeList.length]}`).subscribe();
       });

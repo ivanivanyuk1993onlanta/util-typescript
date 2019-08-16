@@ -3,4 +3,5 @@ export const environment = {
   loginUrlSuffix: '/AuthenticationController/Login',
   logoutUrlSuffix: '/AuthenticationController/Logout',
   production: true,
+  routeListUrlSuffix: '/MainMenu/GetItemByCode',
 };

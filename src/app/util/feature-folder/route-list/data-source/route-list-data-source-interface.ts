@@ -6,8 +6,10 @@ export interface RouteListDataSourceInterface<DataObjectType> extends DataSource
 
   getChildList$(dataObject: DataObjectType): Observable<Array<DataObjectType>>;
 
-  // We return BehaviorSubject<string> instead of string, taking into account that app can have reactive localization
-  getDisplayTextBS$(dataObject: DataObjectType): BehaviorSubject<string>;
+  // We return continuous observable, taking into account that app can have reactive localization
+  getDisplayTextContinuous$(dataObject: DataObjectType): Observable<string>;
+
+  getIconCode$(dataObject: DataObjectType): Observable<string>;
 
   getSearchResultList$(searchText: string): Observable<Array<DataObjectType>>;
 

@@ -11,11 +11,12 @@ import {MatInputModule} from '@angular/material/input';
 import {MatListModule} from '@angular/material/list';
 import {ReactiveFormsModule} from '@angular/forms';
 import {GetUrl$PurePipe} from './get-url$-pure/get-url$-pure.pipe';
-import {GetDisplayTextBS$PurePipe} from './get-display-text-bs$-pure/get-display-text-bs$-pure.pipe';
+import {GetDisplayTextContinuous$PurePipe} from './get-display-text-continuous$-pure/get-display-text-continuous$-pure.pipe';
 import {LocalizationModule} from '../localization/localization.module';
+import { GetIconCode$PurePipe } from './get-icon-code$-pure/get-icon-code$-pure.pipe';
 
 @NgModule({
-  declarations: [RouteListComponent, RouteListItemComponent, GetUrl$PurePipe, GetDisplayTextBS$PurePipe],
+  declarations: [RouteListComponent, RouteListItemComponent, GetUrl$PurePipe, GetDisplayTextContinuous$PurePipe, GetIconCode$PurePipe],
   exports: [RouteListComponent],
   imports: [
     CommonModule,

@@ -4,7 +4,7 @@
       <mat-label>
         <span matPrefix>&nbsp;</span>
         <mat-icon matPrefix>search</mat-icon>
-        {{ 'Search' | getLocalizedMessageContinuous$Pure | async }}...
+        {{ 'Search' | getLocalizedMessageContinuous$Pure | async }}
       </mat-label>
       <input
         [formControl]="searchTextFC"
@@ -23,14 +23,18 @@
       <mat-option
         (onSelectionChange)="selectOption($event, searchResult)"
         *ngFor="let searchResult of searchResultListBS$ | async"
-        [value]="dataSource | getDisplayTextBS$Pure: searchResult | async"
+        [value]="dataSource | getDisplayTextContinuous$Pure: searchResult | async"
       >
         <mat-nav-list>
           <a
             [routerLink]="dataSource | getUrl$Pure: searchResult | async"
             mat-list-item
           >
-            {{ dataSource | getDisplayTextBS$Pure: searchResult | async }}
+            <mat-icon
+              *ngIf="dataSource | getIconCode$Pure: searchResult | async"
+              mat-list-icon
+            >{{ dataSource | getIconCode$Pure: searchResult | async }}</mat-icon>
+            {{ dataSource | getDisplayTextContinuous$Pure: searchResult | async }}
           </a>
         </mat-nav-list>
       </mat-option>

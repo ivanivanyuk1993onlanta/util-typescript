@@ -16,6 +16,7 @@ export class RouteListItemComponent<DataObjectType> implements OnChanges, OnDest
 
   public childListBS$ = new BehaviorSubject<Array<DataObjectType>>([]);
   public displayTextBS$ = new BehaviorSubject<string>(null);
+  public iconCodeBS$ = new BehaviorSubject<string>(null);
   public isExpandedBS$ = new BehaviorSubject(false);
   public matchesUrlBS$ = new BehaviorSubject<boolean>(null);
   public urlBS$ = new BehaviorSubject<string>(null);
@@ -40,11 +41,18 @@ export class RouteListItemComponent<DataObjectType> implements OnChanges, OnDest
       this.childListBS$.next(childList);
     });
 
-    dataSource.getDisplayTextBS$(this.dataObject).pipe(
+    dataSource.getDisplayTextContinuous$(this.dataObject).pipe(
       takeUntil(this._changeBroadcaster.changeS$),
       takeUntil(this._componentDestroyedBroadcaster.changeS$),
     ).subscribe(displayText => {
       this.displayTextBS$.next(displayText);
+    });
+
+    dataSource.getIconCode$(this.dataObject).pipe(
+      takeUntil(this._changeBroadcaster.changeS$),
+      takeUntil(this._componentDestroyedBroadcaster.changeS$),
+    ).subscribe(iconCode => {
+      this.iconCodeBS$.next(iconCode);
     });
 
     routeListComponent.currentUrlBS$.pipe(
