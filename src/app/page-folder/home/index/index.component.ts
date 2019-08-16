@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-index',
+  styleUrls: ['./index.component.scss'],
   templateUrl: './index.component.html',
-  styleUrls: ['./index.component.scss']
 })
 export class IndexComponent implements OnInit {
 

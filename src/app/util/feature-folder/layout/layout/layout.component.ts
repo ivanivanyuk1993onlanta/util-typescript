@@ -1,10 +1,11 @@
-import {Component} from '@angular/core';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {MediaQueryObserverService} from '../../media-query-observer/media-query-observer.service';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-layout',
-  templateUrl: './layout.component.html',
   styleUrls: ['./layout.component.scss'],
+  templateUrl: './layout.component.html',
 })
 export class LayoutComponent {
   constructor(
