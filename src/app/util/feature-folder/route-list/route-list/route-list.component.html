@@ -7,6 +7,7 @@
         {{ 'Search' | getLocalizedMessageContinuous$Pure | async }}
       </mat-label>
       <input
+        (focus)="handleFocus()"
         [formControl]="searchTextFC"
         [matAutocomplete]="matAutocomplete"
         matInput

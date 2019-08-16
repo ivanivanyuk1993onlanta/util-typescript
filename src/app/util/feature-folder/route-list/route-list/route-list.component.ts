@@ -29,6 +29,10 @@ export class RouteListComponent<DataObjectType> implements OnChanges, OnDestroy,
   ) {
   }
 
+  public handleFocus() {
+    this.searchTextFC.updateValueAndValidity();
+  }
+
   public ngOnChanges(changes: SimpleChanges): void {
     this._changeBroadcaster.broadcastChange();
 
