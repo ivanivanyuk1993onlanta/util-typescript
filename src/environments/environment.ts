@@ -7,6 +7,7 @@ export const environment = {
   loginUrlSuffix: '/AuthenticationController/Login',
   logoutUrlSuffix: '/AuthenticationController/Logout',
   production: false,
+  routeListUrlSuffix: '/MainMenu/GetItemByCode',
 };
 
 /*

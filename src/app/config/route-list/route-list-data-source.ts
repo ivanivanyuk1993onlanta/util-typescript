@@ -6,6 +6,9 @@ import {first, map, tap} from 'rxjs/operators';
 import {computeLevenshteinDistanceAmortized} from '../../util/method-folder/compute-levenshtein-distance/compute-levenshtein-distance-amortized';
 import {sortByFuncResult} from '../../util/method-folder/sort-by-func-result/sort-by-func-result';
 import {LocalizationService} from '../../util/feature-folder/localization/localization/localization.service';
+import {HttpClient} from '@angular/common/http';
+import {apiUrl} from '../api-url';
+import {routeListUrlSuffix} from './route-list-url-suffix';
 
 export class RouteListDataSource implements RouteListDataSourceInterface<RouteData> {
   readonly dataObjectTreeBS$ = new BehaviorSubject<Array<RouteData>>([]);
@@ -14,15 +17,18 @@ export class RouteListDataSource implements RouteListDataSourceInterface<RouteDa
   private _dataMatchingCurrentUrlSet = new Set<RouteData>();
   private _dataObjectToParentMapBS$ = new BehaviorSubject(new Map<RouteData, RouteData>());
   private _flatDataObjectListBS$ = new BehaviorSubject<Array<RouteData>>([]);
+  private _routeListUrl = `${apiUrl}${routeListUrlSuffix}`;
   private _urlToDataObjectSetMapBS$ = new BehaviorSubject(new Map<string, Set<RouteData>>());
 
   constructor(
+    private _httpClient: HttpClient,
     private _localizationService: LocalizationService,
   ) {
   }
 
   public connect(collectionViewer: CollectionViewer): Observable<RouteData[]> {
-    return of(this._generateList(3, 10)).pipe(
+    return this._httpClient.post<Array<RouteData>>(this._routeListUrl, {code: 'main-menu-vertical'}).pipe(
+      map(menuRoot => (menuRoot as any).items),
       tap(dataObjectTree => {
         this.dataObjectTreeBS$.next(dataObjectTree);
 
@@ -48,19 +54,24 @@ export class RouteListDataSource implements RouteListDataSourceInterface<RouteDa
   }
 
   public getChildList$(dataObject: RouteData): Observable<Array<RouteData>> {
-    return of(dataObject.children || null);
+    return of(dataObject.items || null);
   }
 
   public getDisplayTextContinuous$(dataObject: RouteData): Observable<string> {
-    return this._localizationService.localizationDataSource.getLocalizedMessageContinuous$(dataObject.localizationCode);
+    return of(dataObject.text);
+    // return this._localizationService.localizationDataSource.getLocalizedMessageContinuous$(dataObject.text);
+  }
+
+  public getIconCode$(dataObject: RouteData): Observable<string> {
+    return of(dataObject.imageUrl ? 'folder' : null);
   }
 
   getSearchResultList$(searchText: string): Observable<RouteData[]> {
-    let flatListCopy = [...this._flatDataObjectListBS$.getValue()];
+    let flatListCopy = this._flatDataObjectListBS$.getValue().filter(dataObject => dataObject.action && dataObject.action !== '#');
 
     return combineLatest(
       flatListCopy.map(dataObject => {
-        return this._localizationService.localizationDataSource.getLocalizedMessageContinuous$(dataObject.localizationCode);
+        return this._localizationService.localizationDataSource.getLocalizedMessageContinuous$(dataObject.text);
       }),
     ).pipe(
       first(),
@@ -124,7 +135,7 @@ export class RouteListDataSource implements RouteListDataSourceInterface<RouteDa
   }
 
   public getUrl$(dataObject: RouteData): Observable<string> {
-    return of(dataObject.url || null);
+    return of((dataObject.action && dataObject.action !== '#') ? dataObject.action : null);
   }
 
   public matchesUrl$(dataObject: RouteData, url: string): Observable<boolean> {
@@ -154,12 +165,12 @@ export class RouteListDataSource implements RouteListDataSourceInterface<RouteDa
     flatDataObjectList: Array<RouteData>,
     parent: RouteData = null,
   ) {
-    let dataObjectSet = urlToDataObjectSetMap.get(dataObject.url);
+    let dataObjectSet = urlToDataObjectSetMap.get(dataObject.action);
     if (dataObjectSet) {
       dataObjectSet.add(dataObject);
     } else {
       dataObjectSet = new Set<RouteData>([dataObject]);
-      urlToDataObjectSetMap.set(dataObject.url, dataObjectSet);
+      urlToDataObjectSetMap.set(dataObject.action, dataObjectSet);
     }
 
     if (parent) {
@@ -168,7 +179,7 @@ export class RouteListDataSource implements RouteListDataSourceInterface<RouteDa
 
     flatDataObjectList.push(dataObject);
 
-    const childList = dataObject.children;
+    const childList = dataObject.items;
     if (childList) {
       for (const child of childList) {
         this._appendDataObjectToMaps(
@@ -182,25 +193,26 @@ export class RouteListDataSource implements RouteListDataSourceInterface<RouteDa
     }
   }
 
-  private _generateList(
-    levelCount: number,
-    countPerLevel: number,
-    currentLevelCount = 1,
-    parent: RouteData = null,
-  ): Array<RouteData> {
-    const routeList: Array<RouteData> = [];
-
-    for (const index of Array.from(Array(countPerLevel).keys())) {
-      const route: RouteData = {
-        localizationCode: `${parent ? `${parent.localizationCode}-` : ''}${index + 1}`,
-        url: `${parent ? `${parent.url}-` : '/'}${index + 1}`,
-      };
-      if (currentLevelCount < levelCount) {
-        route.children = this._generateList(levelCount, countPerLevel, currentLevelCount + 1, route);
-      }
-      routeList.push(route);
-    }
-
-    return routeList;
-  }
+  // Do not delete this debug example
+  // private _generateList(
+  //   levelCount: number,
+  //   countPerLevel: number,
+  //   currentLevelCount = 1,
+  //   parent: RouteData = null,
+  // ): Array<RouteData> {
+  //   const routeList: Array<RouteData> = [];
+  //
+  //   for (const index of Array.from(Array(countPerLevel).keys())) {
+  //     const route: RouteData = {
+  //       localizationCode: `${parent ? `${parent.localizationCode}-` : ''}${index + 1}`,
+  //       url: `${parent ? `${parent.url}-` : '/'}${index + 1}`,
+  //     };
+  //     if (currentLevelCount < levelCount) {
+  //       route.children = this._generateList(levelCount, countPerLevel, currentLevelCount + 1, route);
+  //     }
+  //     routeList.push(route);
+  //   }
+  //
+  //   return routeList;
+  // }
 }

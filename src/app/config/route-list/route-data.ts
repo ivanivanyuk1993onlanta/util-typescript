@@ -1,5 +1,6 @@
 export interface RouteData {
-  children?: Array<RouteData>;
-  localizationCode: string;
-  url?: string;
+  action?: string;
+  imageUrl?: string;
+  items?: Array<RouteData>;
+  text: string;
 }

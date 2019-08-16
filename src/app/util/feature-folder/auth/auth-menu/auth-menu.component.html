@@ -25,14 +25,14 @@
     mat-menu-item
   >
     <mat-icon>vpn_key</mat-icon>
-    <span>Войти</span>
+    <span>{{ 'Log in' | getLocalizedMessageContinuous$Pure | async }}</span>
   </button>
   <button
     (click)="authService.openModal()"
     mat-menu-item
   >
     <mat-icon>person_add</mat-icon>
-    <span>Регистрация</span>
+    <span>{{ 'Register' | getLocalizedMessageContinuous$Pure | async }}</span>
   </button>
   <button
     (click)="authService.logout()"
@@ -40,6 +40,6 @@
     mat-menu-item
   >
     <mat-icon>exit_to_app</mat-icon>
-    <span>Выйти</span>
+    <span>{{ 'Log out' | getLocalizedMessageContinuous$Pure | async }}</span>
   </button>
 </mat-menu>
