@@ -7,7 +7,7 @@
     [class.active]="matchesUrlBS$ | async"
   >
     <mat-panel-title>
-      <ng-container *ngTemplateOutlet="link"></ng-container>
+      <ng-container *ngTemplateOutlet="item"></ng-container>
     </mat-panel-title>
   </mat-expansion-panel-header>
 
@@ -29,15 +29,29 @@
 <ng-template #noChildList>
   <div [class.active]="matchesUrlBS$ | async">
     <div [class.active]="matchesUrlBS$ | async">
-      <ng-container *ngTemplateOutlet="link"></ng-container>
+      <ng-container *ngTemplateOutlet="item"></ng-container>
     </div>
   </div>
 </ng-template>
 
-<ng-template #link>
+<ng-template #item>
   <a
     (click)="$event.stopPropagation()"
+    *ngIf="urlBS$ | async; else noLinkItem"
     [routerLink]="urlBS$ | async"
     mat-list-item
-  >{{ displayTextBS$ | async }}</a>
+  >
+    <ng-container *ngTemplateOutlet="iconWithText"></ng-container>
+  </a>
+
+  <ng-template #noLinkItem>
+    <mat-list-item>
+      <ng-container *ngTemplateOutlet="iconWithText"></ng-container>
+    </mat-list-item>
+  </ng-template>
+
+  <ng-template #iconWithText>
+    <mat-icon *ngIf="iconCodeBS$ | async" mat-list-icon>{{ iconCodeBS$ | async }}</mat-icon>
+    <span>{{ displayTextBS$ | async }}</span>
+  </ng-template>
 </ng-template>
