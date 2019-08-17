@@ -21,12 +21,12 @@
       class="custom-scrollbar"
       panelWidth="auto"
     >
-      <mat-option
-        (onSelectionChange)="selectOption($event, searchResult)"
-        *ngFor="let searchResult of searchResultListBS$ | async"
-        [value]="dataSource | getDisplayTextContinuous$Pure: searchResult | async"
-      >
-        <mat-nav-list>
+      <mat-nav-list>
+        <mat-option
+          (onSelectionChange)="selectOption($event, searchResult)"
+          *ngFor="let searchResult of searchResultListBS$ | async"
+          [value]="dataSource | getDisplayTextContinuous$Pure: searchResult | async"
+        >
           <a
             [routerLink]="dataSource | getUrl$Pure: searchResult | async"
             mat-list-item
@@ -37,8 +37,8 @@
             >{{ dataSource | getIconCode$Pure: searchResult | async }}</mat-icon>
             {{ dataSource | getDisplayTextContinuous$Pure: searchResult | async }}
           </a>
-        </mat-nav-list>
-      </mat-option>
+        </mat-option>
+      </mat-nav-list>
     </mat-autocomplete>
   </div>
   <div class="height-filler__row-rest-height">
