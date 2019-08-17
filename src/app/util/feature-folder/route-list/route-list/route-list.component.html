@@ -44,7 +44,7 @@
   <div class="height-filler__row-rest-height">
     <mat-nav-list>
       <app-route-list-item
-        *ngFor="let dataObject of dataSource.dataObjectTreeBS$ | async"
+        *ngFor="let dataObject of dataSource.dataObjectTreeRootListBS$ | async"
         [dataObject]="dataObject"
         [routeListComponent]="this"
       ></app-route-list-item>

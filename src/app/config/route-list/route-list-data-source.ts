@@ -1,19 +1,19 @@
 import {RouteListDataSourceInterface} from '../../util/feature-folder/route-list/data-source/route-list-data-source-interface';
 import {RouteData} from './route-data';
 import {BehaviorSubject, combineLatest, Observable, of} from 'rxjs';
-import {CollectionViewer} from '@angular/cdk/collections';
-import {map, take, tap} from 'rxjs/operators';
+import {distinctUntilChanged, map, take, tap} from 'rxjs/operators';
 import {computeLevenshteinDistanceAmortized} from '../../util/method-folder/compute-levenshtein-distance/compute-levenshtein-distance-amortized';
 import {sortByFuncResult} from '../../util/method-folder/sort-by-func-result/sort-by-func-result';
 import {LocalizationService} from '../../util/feature-folder/localization/localization/localization.service';
 import {HttpClient} from '@angular/common/http';
 import {apiUrl} from '../api-url';
 import {routeListUrlSuffix} from './route-list-url-suffix';
+import {AuthService} from '../../util/feature-folder/auth/auth/auth.service';
 
 export class RouteListDataSource implements RouteListDataSourceInterface<RouteData> {
-  readonly dataObjectTreeBS$ = new BehaviorSubject<Array<RouteData>>([]);
+  readonly dataObjectTreeRootListBS$ = new BehaviorSubject<Array<RouteData>>([]);
 
-  private _currentUrl: string = null;
+  private _currentUrlBS$ = new BehaviorSubject<string>(null);
   private _dataMatchingCurrentUrlSet = new Set<RouteData>();
   private _dataObjectToParentMapBS$ = new BehaviorSubject(new Map<RouteData, RouteData>());
   private _flatDataObjectListBS$ = new BehaviorSubject<Array<RouteData>>([]);
@@ -21,36 +21,30 @@ export class RouteListDataSource implements RouteListDataSourceInterface<RouteDa
   private _urlToDataObjectSetMapBS$ = new BehaviorSubject(new Map<string, Set<RouteData>>());
 
   constructor(
+    private _authService: AuthService<any, any>,
     private _httpClient: HttpClient,
     private _localizationService: LocalizationService,
   ) {
-  }
+    this._authService.authDataSource.isLoggedInContinuous$.subscribe(() => {
+      this._loadRouteListDataSource().subscribe();
+    });
 
-  public connect(collectionViewer: CollectionViewer): Observable<RouteData[]> {
-    return this._httpClient.post<Array<RouteData>>(this._routeListUrl, {code: 'main-menu-vertical'}).pipe(
-      map(menuRoot => (menuRoot as any).items),
-      tap(dataObjectTree => {
-        this.dataObjectTreeBS$.next(dataObjectTree);
-
-        const dataObjectToParentMap = new Map<RouteData, RouteData>();
-        const flatDataObjectList: Array<RouteData> = [];
-        const urlToDataObjectSetMap = new Map<string, Set<RouteData>>();
-        for (const dataObject of dataObjectTree) {
-          this._appendDataObjectToMaps(
-            dataObject,
-            dataObjectToParentMap,
-            urlToDataObjectSetMap,
-            flatDataObjectList,
-          );
+    combineLatest([
+      this._currentUrlBS$.pipe(distinctUntilChanged()),
+      this._dataObjectToParentMapBS$,
+      this._urlToDataObjectSetMapBS$,
+    ]).subscribe(([currentUrl, dataObjectToParentMap, urlToDataObjectSetMap]) => {
+      this._dataMatchingCurrentUrlSet = new Set<RouteData>();
+      const urlToMatchingDataObjectSet = urlToDataObjectSetMap.get(currentUrl);
+      if (urlToMatchingDataObjectSet) {
+        for (let matchingDataObject of Array.from(urlToMatchingDataObjectSet)) {
+          while (matchingDataObject) {
+            this._dataMatchingCurrentUrlSet.add(matchingDataObject);
+            matchingDataObject = dataObjectToParentMap.get(matchingDataObject);
+          }
         }
-        this._dataObjectToParentMapBS$.next(dataObjectToParentMap);
-        this._flatDataObjectListBS$.next(flatDataObjectList);
-        this._urlToDataObjectSetMapBS$.next(urlToDataObjectSetMap);
-      }),
-    );
-  }
-
-  public disconnect(collectionViewer: CollectionViewer): void {
+      }
+    });
   }
 
   public getChildList$(dataObject: RouteData): Observable<Array<RouteData>> {
@@ -74,6 +68,7 @@ export class RouteListDataSource implements RouteListDataSourceInterface<RouteDa
         return this._localizationService.localizationDataSource.getLocalizedMessageContinuous$(dataObject.text);
       }),
     ).pipe(
+      // using take(1) instead of first(), because it produces error
       take(1),
       map(localizedMessageList => {
         const dataObjectToLocalizedMessageMap = new Map<RouteData, string>(flatListCopy.map((dataObject, index) => {
@@ -139,22 +134,7 @@ export class RouteListDataSource implements RouteListDataSourceInterface<RouteDa
   }
 
   public matchesUrl$(dataObject: RouteData, url: string): Observable<boolean> {
-    if (url !== this._currentUrl) {
-      this._currentUrl = url;
-      const dataObjectToParentMap = this._dataObjectToParentMapBS$.getValue();
-      this._dataMatchingCurrentUrlSet = new Set<RouteData>();
-      const urlToDataObjectSetMap = this._urlToDataObjectSetMapBS$.getValue();
-      const urlToMatchingDataObjectSet = urlToDataObjectSetMap.get(url);
-      if (urlToMatchingDataObjectSet) {
-        for (let matchingDataObject of Array.from(urlToMatchingDataObjectSet)) {
-          while (matchingDataObject) {
-            this._dataMatchingCurrentUrlSet.add(matchingDataObject);
-
-            matchingDataObject = dataObjectToParentMap.get(matchingDataObject);
-          }
-        }
-      }
-    }
+    this._currentUrlBS$.next(url);
     return of(this._dataMatchingCurrentUrlSet.has(dataObject));
   }
 
@@ -191,6 +171,30 @@ export class RouteListDataSource implements RouteListDataSourceInterface<RouteDa
         );
       }
     }
+  }
+
+  private _loadRouteListDataSource(): Observable<Array<RouteData>> {
+    return this._httpClient.post<Array<RouteData>>(this._routeListUrl, {code: 'main-menu-vertical'}).pipe(
+      map(menuRoot => (menuRoot as unknown as RouteData).items),
+      tap(dataObjectTree => {
+        this.dataObjectTreeRootListBS$.next(dataObjectTree);
+
+        const dataObjectToParentMap = new Map<RouteData, RouteData>();
+        const flatDataObjectList: Array<RouteData> = [];
+        const urlToDataObjectSetMap = new Map<string, Set<RouteData>>();
+        for (const dataObject of dataObjectTree) {
+          this._appendDataObjectToMaps(
+            dataObject,
+            dataObjectToParentMap,
+            urlToDataObjectSetMap,
+            flatDataObjectList,
+          );
+        }
+        this._dataObjectToParentMapBS$.next(dataObjectToParentMap);
+        this._flatDataObjectListBS$.next(flatDataObjectList);
+        this._urlToDataObjectSetMapBS$.next(urlToDataObjectSetMap);
+      }),
+    );
   }
 
   // Do not delete this debug example
