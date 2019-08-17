@@ -36,11 +36,6 @@ export class RouteListComponent<DataObjectType> implements OnChanges, OnDestroy,
   public ngOnChanges(changes: SimpleChanges): void {
     this._changeBroadcaster.broadcastChange();
 
-    this.dataSource.connect(null).pipe(
-      takeUntil(this._changeBroadcaster.changeS$),
-      takeUntil(this._componentDestroyedBroadcaster.changeS$),
-    ).subscribe();
-
     this._subscribeToSearchText();
   }
 

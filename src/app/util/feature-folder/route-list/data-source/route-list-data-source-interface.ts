@@ -1,8 +1,7 @@
 import {BehaviorSubject, Observable} from 'rxjs';
-import {DataSource} from '@angular/cdk/table';
 
-export interface RouteListDataSourceInterface<DataObjectType> extends DataSource<DataObjectType> {
-  readonly dataObjectTreeBS$: BehaviorSubject<Array<DataObjectType>>;
+export interface RouteListDataSourceInterface<DataObjectType> {
+  readonly dataObjectTreeRootListBS$: BehaviorSubject<Array<DataObjectType>>;
 
   getChildList$(dataObject: DataObjectType): Observable<Array<DataObjectType>>;
 

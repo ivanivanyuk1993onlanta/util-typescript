@@ -18,7 +18,7 @@ export class RouteListItemComponent<DataObjectType> implements OnChanges, OnDest
   public displayTextBS$ = new BehaviorSubject<string>(null);
   public iconCodeBS$ = new BehaviorSubject<string>(null);
   public isExpandedBS$ = new BehaviorSubject(false);
-  public matchesUrlBS$ = new BehaviorSubject<boolean>(null);
+  public matchesUrlBS$ = new BehaviorSubject<boolean>(false);
   public urlBS$ = new BehaviorSubject<string>(null);
 
   private _changeBroadcaster = new ChangeBroadcaster();
