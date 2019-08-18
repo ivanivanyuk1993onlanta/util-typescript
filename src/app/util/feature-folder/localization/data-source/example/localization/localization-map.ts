@@ -1,5 +1,5 @@
 export const localizationMap = {
-  'ru-RU': {
+  ru: {
     'Log in': 'Войти',
     'Log out': 'Выйти',
     Authentication: 'Аутентификация',

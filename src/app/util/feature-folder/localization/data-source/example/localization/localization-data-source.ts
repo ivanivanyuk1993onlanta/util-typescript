@@ -1,15 +1,15 @@
 import {LocalizationDataSourceInterface} from '../../localization-data-source-interface';
-import {BehaviorSubject, interval, Observable, of, Subject, timer} from 'rxjs';
+import {BehaviorSubject, Observable, of, Subject, timer} from 'rxjs';
 import {buffer, debounceTime, filter, first, mergeMap, shareReplay, tap} from 'rxjs/operators';
 import * as localForage from 'localforage';
 import {LocaleWithMessageCodeInterface} from './locale-with-message-code-interface';
 import {localizationMap} from './localization-map';
 
 export class LocalizationDataSource implements LocalizationDataSourceInterface {
-  localeListContinuous$: Observable<Array<string>>;
+  readonly currentLocaleContinuous$: Observable<string>;
+  readonly localeListContinuous$: Observable<Array<string>>;
 
   private _currentLocaleBS$WrapBS$ = new BehaviorSubject<BehaviorSubject<string>>(null);
-  private _currentLocaleContinuous$: Observable<string>;
   private _currentLocaleDBKey = 'currentLocale';
   private _currentLocaleLocalForage = localForage.createInstance({
     name: `${LocalizationDataSource.name}-${this._currentLocaleDBKey}`,
@@ -23,8 +23,13 @@ export class LocalizationDataSource implements LocalizationDataSourceInterface {
   private _requestedLocaleWithMessageCodeS$ = new Subject<LocaleWithMessageCodeInterface>();
 
   constructor() {
-    this._currentLocaleContinuous$ = this._waitForCurrentLocaleBS$().pipe(
+    this.currentLocaleContinuous$ = this._waitForCurrentLocaleBS$().pipe(
       mergeMap(currentLocaleBS$ => currentLocaleBS$),
+      // using shareReplay to not duplicate streams, but still serve it to late subscribers
+      shareReplay(1),
+    );
+
+    this.localeListContinuous$ = of(['en', 'ru']).pipe(
       // using shareReplay to not duplicate streams, but still serve it to late subscribers
       shareReplay(1),
     );
@@ -60,13 +65,6 @@ export class LocalizationDataSource implements LocalizationDataSourceInterface {
       currentLocaleBS$.subscribe(currentLocale2 => {
         this._currentLocaleLocalForage.setItem<string>(this._currentLocaleDBKey, currentLocale2);
       });
-
-      // todo remove debug code
-      const localeList = ['en', 'ru-RU'];
-      interval(1000).subscribe((num) => {
-        this.setLocale$(`${localeList[num % localeList.length]}`).subscribe();
-      });
-
       this._currentLocaleBS$WrapBS$.next(currentLocaleBS$);
     });
   }
@@ -78,7 +76,7 @@ export class LocalizationDataSource implements LocalizationDataSourceInterface {
 
     // here template with pipe has appeared on page or method was called manually, subscription was created
     // we subscribe to continuous locale
-    return this._currentLocaleContinuous$.pipe(
+    return this.currentLocaleContinuous$.pipe(
       mergeMap(locale => {
         // we get key from locale and messageCode
         const localeWithMessageCodeString = this._getLocaleWithMessageCodeString(locale, messageCode);
@@ -95,8 +93,8 @@ export class LocalizationDataSource implements LocalizationDataSourceInterface {
             // if persistent storage has localization, we push it to observable
             if (localizationMessage) {
               inMemoryLocalizationMessageBS$.next(localizationMessage);
-            // else we notify requestedLocaleWithMessageCodeS$ with buffer logic that we need to load locale with message, as we do not want
-            // each key to generate http request, but want to wait for all localization requests from page before sending requests
+              // else we notify requestedLocaleWithMessageCodeS$ with buffer logic that we need to load locale with message, as we do not want
+              // each key to generate http request, but want to wait for all localization requests from page before sending requests
             } else {
               this._requestedLocaleWithMessageCodeS$.next({
                 locale,
@@ -123,11 +121,13 @@ export class LocalizationDataSource implements LocalizationDataSourceInterface {
   }
 
   private _getNavigatorLanguage(): string {
+    let fullLocale: string;
     if (navigator.languages && navigator.languages.length) {
-      return navigator.languages[0];
+      fullLocale = navigator.languages[0];
     } else {
-      return navigator.language || 'en';
+      fullLocale = navigator.language || 'en';
     }
+    return fullLocale.substring(0, 2);
   }
 
   private _getLocaleWithMessageCodeString(

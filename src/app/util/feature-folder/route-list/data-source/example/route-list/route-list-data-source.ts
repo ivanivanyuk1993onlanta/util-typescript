@@ -175,7 +175,7 @@ export class RouteListDataSource implements RouteListDataSourceInterface<RouteDa
   private _loadRouteListDataSource(): Observable<Array<RouteData>> {
     return this._authService.authDataSource.isLoggedInContinuous$.pipe(
       map(isLoggedIn => {
-        return isLoggedIn ? this._generateList(3, 10) : this._generateList(1, 5);
+        return isLoggedIn ? this._generateList(3, 10) : this._generateList(2, 5);
       }),
     // return this._httpClient.post<Array<RouteData>>(this._routeListUrl, {code: 'main-menu-vertical'}).pipe(
       tap(dataObjectTree => {

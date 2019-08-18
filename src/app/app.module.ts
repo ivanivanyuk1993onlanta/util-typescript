@@ -12,6 +12,7 @@ import {AppRoutingModule} from './app-routing.module';
 import {AuthInterceptor} from './util/feature-folder/auth/interceptor/auth-interceptor';
 import {AuthModule} from './util/feature-folder/auth/auth.module';
 import {NotificationModule} from './util/feature-folder/notification/notification.module';
+import {LocalizationModule} from './util/feature-folder/localization/localization.module';
 
 @NgModule({
   bootstrap: [AppComponent],
@@ -29,6 +30,7 @@ import {NotificationModule} from './util/feature-folder/notification/notificatio
     NotificationModule,
     RouteListModule,
     RouterModule,
+    LocalizationModule,
   ],
   providers: [
     [
