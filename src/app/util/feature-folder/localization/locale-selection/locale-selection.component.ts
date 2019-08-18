@@ -1,4 +1,5 @@
-import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {LocalizationService} from '../localization/localization.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -6,11 +7,15 @@ import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
   styleUrls: ['./locale-selection.component.scss'],
   templateUrl: './locale-selection.component.html',
 })
-export class LocaleSelectionComponent implements OnInit {
-
-  constructor() { }
-
-  ngOnInit() {
+export class LocaleSelectionComponent {
+  constructor(
+    public localizationService: LocalizationService,
+  ) {
   }
 
+  public setLocale(
+    locale: string
+  ) {
+    this.localizationService.localizationDataSource.setLocale$(locale).subscribe();
+  }
 }

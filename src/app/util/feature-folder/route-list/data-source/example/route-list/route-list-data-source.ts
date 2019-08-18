@@ -1,14 +1,14 @@
-import {RouteListDataSourceInterface} from '../../util/feature-folder/route-list/data-source/route-list-data-source-interface';
+import {RouteListDataSourceInterface} from '../../route-list-data-source-interface';
 import {RouteData} from './route-data';
 import {BehaviorSubject, combineLatest, Observable, of} from 'rxjs';
 import {distinctUntilChanged, map, take, tap} from 'rxjs/operators';
-import {computeLevenshteinDistanceAmortized} from '../../util/method-folder/compute-levenshtein-distance/compute-levenshtein-distance-amortized';
-import {sortByFuncResult} from '../../util/method-folder/sort-by-func-result/sort-by-func-result';
-import {LocalizationService} from '../../util/feature-folder/localization/localization/localization.service';
+import {computeLevenshteinDistanceAmortized} from '../../../../../method-folder/compute-levenshtein-distance/compute-levenshtein-distance-amortized';
+import {sortByFuncResult} from '../../../../../method-folder/sort-by-func-result/sort-by-func-result';
+import {LocalizationService} from '../../../../localization/localization/localization.service';
 import {HttpClient} from '@angular/common/http';
-import {apiUrl} from '../api-url';
+import {apiUrl} from '../../../../../../config/api-url';
 import {routeListUrlSuffix} from './route-list-url-suffix';
-import {AuthService} from '../../util/feature-folder/auth/auth/auth.service';
+import {AuthService} from '../../../../auth/auth/auth.service';
 
 export class RouteListDataSource implements RouteListDataSourceInterface<RouteData> {
   readonly dataObjectTreeRootListBS$ = new BehaviorSubject<Array<RouteData>>([]);
@@ -52,20 +52,19 @@ export class RouteListDataSource implements RouteListDataSourceInterface<RouteDa
   }
 
   public getDisplayTextContinuous$(dataObject: RouteData): Observable<string> {
-    return of(dataObject.text);
-    // return this._localizationService.localizationDataSource.getLocalizedMessageContinuous$(dataObject.text);
+    return this._localizationService.localizationDataSource.getLocalizedMessageContinuous$(dataObject.localizationCode);
   }
 
   public getIconCode$(dataObject: RouteData): Observable<string> {
-    return of(dataObject.imageUrl ? 'folder' : null);
+    return of(dataObject.iconCode ? 'folder' : null);
   }
 
   getSearchResultList$(searchText: string): Observable<RouteData[]> {
-    let flatListCopy = this._flatDataObjectListBS$.getValue().filter(dataObject => dataObject.action && dataObject.action !== '#');
+    let flatListCopy = this._flatDataObjectListBS$.getValue().filter(dataObject => dataObject.url && dataObject.url !== '#');
 
     return combineLatest(
       flatListCopy.map(dataObject => {
-        return this._localizationService.localizationDataSource.getLocalizedMessageContinuous$(dataObject.text);
+        return this._localizationService.localizationDataSource.getLocalizedMessageContinuous$(dataObject.localizationCode);
       }),
     ).pipe(
       // using take(1) instead of first(), because it produces error
@@ -130,7 +129,7 @@ export class RouteListDataSource implements RouteListDataSourceInterface<RouteDa
   }
 
   public getUrl$(dataObject: RouteData): Observable<string> {
-    return of((dataObject.action && dataObject.action !== '#') ? dataObject.action : null);
+    return of((dataObject.url && dataObject.url !== '#') ? dataObject.url : null);
   }
 
   public matchesUrl$(dataObject: RouteData, url: string): Observable<boolean> {
@@ -145,12 +144,12 @@ export class RouteListDataSource implements RouteListDataSourceInterface<RouteDa
     flatDataObjectList: Array<RouteData>,
     parent: RouteData = null,
   ) {
-    let dataObjectSet = urlToDataObjectSetMap.get(dataObject.action);
+    let dataObjectSet = urlToDataObjectSetMap.get(dataObject.url);
     if (dataObjectSet) {
       dataObjectSet.add(dataObject);
     } else {
       dataObjectSet = new Set<RouteData>([dataObject]);
-      urlToDataObjectSetMap.set(dataObject.action, dataObjectSet);
+      urlToDataObjectSetMap.set(dataObject.url, dataObjectSet);
     }
 
     if (parent) {
@@ -174,8 +173,11 @@ export class RouteListDataSource implements RouteListDataSourceInterface<RouteDa
   }
 
   private _loadRouteListDataSource(): Observable<Array<RouteData>> {
-    return this._httpClient.post<Array<RouteData>>(this._routeListUrl, {code: 'main-menu-vertical'}).pipe(
-      map(menuRoot => (menuRoot as unknown as RouteData).items),
+    return this._authService.authDataSource.isLoggedInContinuous$.pipe(
+      map(isLoggedIn => {
+        return isLoggedIn ? this._generateList(3, 10) : this._generateList(2, 5);
+      }),
+    // return this._httpClient.post<Array<RouteData>>(this._routeListUrl, {code: 'main-menu-vertical'}).pipe(
       tap(dataObjectTree => {
         this.dataObjectTreeRootListBS$.next(dataObjectTree);
 
@@ -197,26 +199,25 @@ export class RouteListDataSource implements RouteListDataSourceInterface<RouteDa
     );
   }
 
-  // Do not delete this debug example
-  // private _generateList(
-  //   levelCount: number,
-  //   countPerLevel: number,
-  //   currentLevelCount = 1,
-  //   parent: RouteData = null,
-  // ): Array<RouteData> {
-  //   const routeList: Array<RouteData> = [];
-  //
-  //   for (const index of Array.from(Array(countPerLevel).keys())) {
-  //     const route: RouteData = {
-  //       localizationCode: `${parent ? `${parent.localizationCode}-` : ''}${index + 1}`,
-  //       url: `${parent ? `${parent.url}-` : '/'}${index + 1}`,
-  //     };
-  //     if (currentLevelCount < levelCount) {
-  //       route.children = this._generateList(levelCount, countPerLevel, currentLevelCount + 1, route);
-  //     }
-  //     routeList.push(route);
-  //   }
-  //
-  //   return routeList;
-  // }
+  private _generateList(
+    levelCount: number,
+    countPerLevel: number,
+    currentLevelCount = 1,
+    parent: RouteData = null,
+  ): Array<RouteData> {
+    const routeList: Array<RouteData> = [];
+
+    for (const index of Array.from(Array(countPerLevel).keys())) {
+      const route: RouteData = {
+        localizationCode: `${parent ? `${parent.localizationCode}-` : ''}${index + 1}`,
+        url: `${parent ? `${parent.url}-` : '/'}${index + 1}`,
+      };
+      if (currentLevelCount < levelCount) {
+        route.items = this._generateList(levelCount, countPerLevel, currentLevelCount + 1, route);
+      }
+      routeList.push(route);
+    }
+
+    return routeList;
+  }
 }

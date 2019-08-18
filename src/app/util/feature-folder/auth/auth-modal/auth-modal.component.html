@@ -8,7 +8,7 @@
     >
       <input
         [formControlName]="fieldData.fieldName"
-        [placeholder]="fieldData.label"
+        [placeholder]="fieldData.label | getLocalizedMessageContinuous$Pure | async"
         [type]="fieldData.type"
         matInput
       >

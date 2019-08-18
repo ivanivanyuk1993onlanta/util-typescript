@@ -1,9 +1,9 @@
-import {AuthDataSourceInterface} from '../../util/feature-folder/auth/data-source/auth-data-source-interface';
+import {AuthDataSourceInterface} from '../../auth-data-source-interface';
 import {CredentialsInterface} from './credentials-interface';
 import {AuthInterface} from './auth-interface';
-import {BehaviorSubject, Observable, Subject, throwError} from 'rxjs';
+import {BehaviorSubject, Observable, of, Subject, throwError} from 'rxjs';
 import {catchError, distinctUntilChanged, filter, first, map, mergeMap, shareReplay, tap} from 'rxjs/operators';
-import {apiUrl} from '../api-url';
+import {apiUrl} from '../../../../../../config/api-url';
 import {logoutUrlSuffix} from './logout-url-suffix';
 import {loginUrlSuffix} from './login-url-suffix';
 import {HttpClient, HttpErrorResponse, HttpEvent, HttpHandler, HttpRequest} from '@angular/common/http';
@@ -54,15 +54,16 @@ export class AuthDataSource implements AuthDataSourceInterface<AuthInterface, Cr
   }
 
   public interceptHttp$(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    // todo add token extraction from response and storing in auth logic
+    // todo add token extraction from response and storing in auth logic to allow for paranoid level security (server will answer with new
+    //  token if more than some seconds passed, still remembering and allowing old token for some seconds)
     return this._authContinuous$.pipe(
       first(),
       mergeMap(auth => {
         return next.handle(
-          auth.jwtToken
+          auth.token
             ? req.clone({
               setHeaders: {
-                Authorization: `Bearer ${auth.jwtToken}`,
+                Authorization: `Bearer ${auth.token}`,
               },
             })
             : req
@@ -88,13 +89,15 @@ export class AuthDataSource implements AuthDataSourceInterface<AuthInterface, Cr
   }
 
   public login$(credentials: CredentialsInterface): Observable<AuthInterface> {
-    return this._httpClient.post(this._loginUrl, credentials, {
-      responseType: 'text',
-    }).pipe(
+    // this code is for demo app that should work without server, comment is to ease migrating
+    return of('1').pipe(
+    // this._httpClient.post(this._loginUrl, credentials, {
+    //   responseType: 'text',
+    // }).pipe(
       map((jwtToken) => {
         return {
           isLoggedIn: true,
-          jwtToken,
+          token: jwtToken,
           login: credentials.login,
         } as AuthInterface;
       }),
@@ -103,7 +106,9 @@ export class AuthDataSource implements AuthDataSourceInterface<AuthInterface, Cr
   }
 
   public logout$(): Observable<AuthInterface> {
-    return this._httpClient.post(this._logoutUrl, null).pipe(
+    // this code is for demo app that should work without server, comment is to ease migrating
+    return of(null).pipe(
+    // return this._httpClient.post(this._logoutUrl, null).pipe(
       mergeMap(() => this._setAuth$(this._getEmptyAuth())),
     );
   }
@@ -111,7 +116,7 @@ export class AuthDataSource implements AuthDataSourceInterface<AuthInterface, Cr
   private _getEmptyAuth(): AuthInterface {
     return {
       isLoggedIn: false,
-      jwtToken: null,
+      token: null,
       login: null,
     };
   }
