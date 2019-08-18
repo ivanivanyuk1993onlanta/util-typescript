@@ -1,5 +1,5 @@
 import {FormControl, FormGroup} from '@angular/forms';
-import {CredentialsDataSourceInterface} from '../../util/feature-folder/auth/data-source/credentials-data-source-interface';
+import {CredentialsDataSourceInterface} from '../../credentials-data-source-interface';
 
 export class CredentialsDataSource implements CredentialsDataSourceInterface {
   readonly formGroup = new FormGroup({
@@ -10,11 +10,11 @@ export class CredentialsDataSource implements CredentialsDataSourceInterface {
   readonly formFieldDataList = [
     {
       fieldName: 'login',
-      label: 'Логин',
+      label: 'Login',
     },
     {
       fieldName: 'password',
-      label: 'Пароль',
+      label: 'Password',
       type: 'password',
     },
   ];

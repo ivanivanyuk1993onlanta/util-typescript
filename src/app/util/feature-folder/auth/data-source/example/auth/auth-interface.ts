@@ -1,5 +1,5 @@
 export interface AuthInterface {
   isLoggedIn: boolean;
-  jwtToken: string;
+  token: string;
   login: string;
 }
