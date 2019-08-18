@@ -1,6 +1,6 @@
 import {Inject, Injectable} from '@angular/core';
 import {LocalizationDataSourceInterface} from '../data-source/localization-data-source-interface';
-import {LOCALIZATION_DATA_SOURCE} from '../../../../config/localization/localization-data-source-injection-token';
+import {LOCALIZATION_DATA_SOURCE} from '../data-source/example/localization/localization-data-source-injection-token';
 
 @Injectable({
   providedIn: 'root'

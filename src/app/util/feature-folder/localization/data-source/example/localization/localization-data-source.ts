@@ -1,8 +1,9 @@
-import {LocalizationDataSourceInterface} from '../../util/feature-folder/localization/data-source/localization-data-source-interface';
+import {LocalizationDataSourceInterface} from '../../localization-data-source-interface';
 import {BehaviorSubject, interval, Observable, of, Subject, timer} from 'rxjs';
 import {buffer, debounceTime, filter, first, mergeMap, shareReplay, tap} from 'rxjs/operators';
 import * as localForage from 'localforage';
 import {LocaleWithMessageCodeInterface} from './locale-with-message-code-interface';
+import {localizationMap} from './localization-map';
 
 export class LocalizationDataSource implements LocalizationDataSourceInterface {
   localeListContinuous$: Observable<Array<string>>;
@@ -41,22 +42,27 @@ export class LocalizationDataSource implements LocalizationDataSourceInterface {
             localeWithMessageCode.locale,
             localeWithMessageCode.messageCode,
           );
-          // storing received value to in-memory map
-          localeWithPrefixToLocalizedMessageBS$Map.get(localeWithMessageCodeString).next(localizationMessage);
-          // storing received value to persistent storage
-          this._localizationLocalForage.setItem<string>(localeWithMessageCodeString, localizationMessage);
+          if (localizationMessage) {
+            // storing received value to in-memory map
+            localeWithPrefixToLocalizedMessageBS$Map.get(localeWithMessageCodeString).next(localizationMessage);
+            // storing received value to persistent storage
+            this._localizationLocalForage.setItem<string>(localeWithMessageCodeString, localizationMessage);
+          } else {
+            // Not persisting not found value, but still storing it in memory
+            localeWithPrefixToLocalizedMessageBS$Map.get(localeWithMessageCodeString).next(localeWithMessageCodeString);
+          }
         });
       });
     });
 
     this._currentLocaleLocalForage.getItem<string>(this._currentLocaleDBKey).then((currentLocale) => {
-      const currentLocaleBS$ = new BehaviorSubject(currentLocale || 'en');
+      const currentLocaleBS$ = new BehaviorSubject(currentLocale || this._getNavigatorLanguage());
       currentLocaleBS$.subscribe(currentLocale2 => {
         this._currentLocaleLocalForage.setItem<string>(this._currentLocaleDBKey, currentLocale2);
       });
 
       // todo remove debug code
-      const localeList = ['en', 'ru'];
+      const localeList = ['en', 'ru-RU'];
       interval(1000).subscribe((num) => {
         this.setLocale$(`${localeList[num % localeList.length]}`).subscribe();
       });
@@ -116,6 +122,14 @@ export class LocalizationDataSource implements LocalizationDataSourceInterface {
     );
   }
 
+  private _getNavigatorLanguage(): string {
+    if (navigator.languages && navigator.languages.length) {
+      return navigator.languages[0];
+    } else {
+      return navigator.language || 'en';
+    }
+  }
+
   private _getLocaleWithMessageCodeString(
     locale: string,
     messageCode: string,
@@ -126,14 +140,17 @@ export class LocalizationDataSource implements LocalizationDataSourceInterface {
   private _loadLocalizationMessageList$(
     localeWithMessageCodeList: Array<LocaleWithMessageCodeInterface>,
   ): Observable<Array<string>> {
-    // todo remove log
-    console.log(localeWithMessageCodeList);
     return timer(this._requestImitationTime).pipe(
       mergeMap(() => of(localeWithMessageCodeList.map(localeWithMessageCode => {
-        return this._getLocaleWithMessageCodeString(
-          localeWithMessageCode.locale,
-          localeWithMessageCode.messageCode,
-        );
+        if (localeWithMessageCode.locale === 'en') {
+          return localeWithMessageCode.messageCode;
+        } else {
+          const jsonLocale = localizationMap[localeWithMessageCode.locale];
+          if (jsonLocale) {
+            return jsonLocale[localeWithMessageCode.messageCode];
+          }
+          return null;
+        }
       }))),
     );
   }
