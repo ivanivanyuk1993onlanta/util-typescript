@@ -3,12 +3,12 @@ import {BehaviorSubject, Observable, of} from 'rxjs';
 import {first, mergeMap, tap} from 'rxjs/operators';
 import {MatDialog, MatDialogRef} from '@angular/material';
 import {AuthModalComponent} from '../auth-modal/auth-modal.component';
-import {AUTH_DATA_SOURCE} from '../data-source/example/auth/auth-data-source-injection-token';
 import {AuthDataSourceInterface} from '../data-source/auth-data-source-interface';
-import {CREDENTIALS_DATA_SOURCE} from '../data-source/example/auth/credentials-data-source-injection-token';
 import {CredentialsDataSourceInterface} from '../data-source/credentials-data-source-interface';
 import {NotificationService} from '../../notification/notification/notification.service';
 import {MessageTypeEnum} from '../../notification/notification-message-data/message-type-enum';
+import {CREDENTIALS_DATA_SOURCE} from '../../../../config/auth/credentials-data-source-injection-token';
+import {AUTH_DATA_SOURCE} from '../../../../config/auth/auth-data-source-injection-token';
 
 @Injectable({
   providedIn: 'root'
