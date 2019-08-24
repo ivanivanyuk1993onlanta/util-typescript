@@ -1,12 +1,12 @@
 import {ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
 import {RouteListDataSourceInterface} from '../data-source/route-list-data-source-interface';
-import {ChangeBroadcaster} from '../../../class-folder/change-broadcaster/change-broadcaster';
+import {Broadcaster} from '../../../class-folder/broadcaster/broadcaster';
 import {filter, takeUntil} from 'rxjs/operators';
 import {BehaviorSubject} from 'rxjs';
 import {NavigationEnd, Router} from '@angular/router';
 import {FormControl} from '@angular/forms';
-import {getControlObservableWithInitialValue$} from '../../../method-folder/form-helper/get-control-observable-with-initial-value';
 import { MatOptionSelectionChange } from '@angular/material/core';
+import {getControlObservableWithInitialValue} from '../../../method-folder/form-group-helper-folder/get-control-observable-with-initial-value';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -21,8 +21,8 @@ export class RouteListComponent<DataObjectType> implements OnChanges, OnDestroy,
   public searchResultListBS$ = new BehaviorSubject<Array<DataObjectType>>([]);
   public searchTextFC = new FormControl();
 
-  private _changeBroadcaster = new ChangeBroadcaster();
-  private _componentDestroyedBroadcaster = new ChangeBroadcaster();
+  private _changeBroadcaster = new Broadcaster();
+  private _componentDestroyedBroadcaster = new Broadcaster();
 
   constructor(
     private _router: Router,
@@ -34,14 +34,14 @@ export class RouteListComponent<DataObjectType> implements OnChanges, OnDestroy,
   }
 
   public ngOnChanges(changes: SimpleChanges): void {
-    this._changeBroadcaster.broadcastChange();
+    this._changeBroadcaster.broadcast();
 
     this._subscribeToSearchText();
   }
 
   public ngOnDestroy(): void {
-    this._changeBroadcaster.complete();
-    this._componentDestroyedBroadcaster.complete();
+    this._changeBroadcaster.broadcastAndComplete();
+    this._componentDestroyedBroadcaster.broadcastAndComplete();
   }
 
   public ngOnInit(): void {
@@ -54,7 +54,7 @@ export class RouteListComponent<DataObjectType> implements OnChanges, OnDestroy,
   ): void {
     if (event.source.selected) {
       this.dataSource.getUrl$(dataObject).pipe(
-        takeUntil(this._componentDestroyedBroadcaster.changeS$),
+        takeUntil(this._componentDestroyedBroadcaster.broadcastS$),
       ).subscribe(url => {
         this._router.navigateByUrl(url).then(() => {
           this.searchTextFC.setValue('');
@@ -67,20 +67,20 @@ export class RouteListComponent<DataObjectType> implements OnChanges, OnDestroy,
     this.currentUrlBS$ = new BehaviorSubject<string>(this._router.url);
     this._router.events.pipe(
       filter(e => e instanceof NavigationEnd),
-      takeUntil(this._componentDestroyedBroadcaster.changeS$),
+      takeUntil(this._componentDestroyedBroadcaster.broadcastS$),
     ).subscribe(() => {
       this.currentUrlBS$.next(this._router.url);
     });
   }
 
   private _subscribeToSearchText() {
-    getControlObservableWithInitialValue$<string>(this.searchTextFC).pipe(
-      takeUntil(this._changeBroadcaster.changeS$),
-      takeUntil(this._componentDestroyedBroadcaster.changeS$),
+    getControlObservableWithInitialValue<string>(this.searchTextFC).pipe(
+      takeUntil(this._changeBroadcaster.broadcastS$),
+      takeUntil(this._componentDestroyedBroadcaster.broadcastS$),
     ).subscribe(searchText => {
       this.dataSource.getSearchResultList$(searchText).pipe(
-        takeUntil(this._changeBroadcaster.changeS$),
-        takeUntil(this._componentDestroyedBroadcaster.changeS$),
+        takeUntil(this._changeBroadcaster.broadcastS$),
+        takeUntil(this._componentDestroyedBroadcaster.broadcastS$),
       ).subscribe(searchResultList => {
         this.searchResultListBS$.next(searchResultList);
       });
