@@ -5,8 +5,8 @@ import {filter, takeUntil} from 'rxjs/operators';
 import {BehaviorSubject} from 'rxjs';
 import {NavigationEnd, Router} from '@angular/router';
 import {FormControl} from '@angular/forms';
-import {getControlObservableWithInitialValue$} from '../../../method-folder/form-helper/get-control-observable-with-initial-value';
 import { MatOptionSelectionChange } from '@angular/material/core';
+import {getControlObservableWithInitialValue} from '../../../method-folder/form-group-helper-folder/get-control-observable-with-initial-value';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -74,7 +74,7 @@ export class RouteListComponent<DataObjectType> implements OnChanges, OnDestroy,
   }
 
   private _subscribeToSearchText() {
-    getControlObservableWithInitialValue$<string>(this.searchTextFC).pipe(
+    getControlObservableWithInitialValue<string>(this.searchTextFC).pipe(
       takeUntil(this._changeBroadcaster.changeS$),
       takeUntil(this._componentDestroyedBroadcaster.changeS$),
     ).subscribe(searchText => {

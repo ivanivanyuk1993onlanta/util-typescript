@@ -1,6 +1,6 @@
 export function getEnumMemberName<EnumMemberType>(
   enum2: any,
-  enumMember: EnumMemberType,
+  enumMemberValue: EnumMemberType,
 ): string {
-  return enum2[enumMember];
+  return enum2[enum2[enumMemberValue]];
 }

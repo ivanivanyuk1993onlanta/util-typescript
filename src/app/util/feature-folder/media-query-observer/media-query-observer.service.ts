@@ -1,22 +1,22 @@
-import {BehaviorSubject} from 'rxjs';
-import {BreakpointObserver, Breakpoints, BreakpointState} from '@angular/cdk/layout';
+import {Observable} from 'rxjs';
+import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
 import {Injectable} from '@angular/core';
+import {getSharedObservableWithLastValue} from '../../method-folder/get-shared-observable-with-last-value/get-shared-observable-with-last-value';
+import {map} from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
 })
 export class MediaQueryObserverService {
-  matchesMediumQuerySubject$ = new BehaviorSubject<boolean>(false);
+  readonly isHandset$: Observable<boolean>;
 
   constructor(
     private _breakpointObserver: BreakpointObserver,
   ) {
-    _breakpointObserver.observe([
-      Breakpoints.Large,
-      Breakpoints.Medium,
-      Breakpoints.XLarge,
-    ]).subscribe((breakpointState: BreakpointState) => {
-      this.matchesMediumQuerySubject$.next(breakpointState.matches);
-    });
+    this.isHandset$ = getSharedObservableWithLastValue(
+      _breakpointObserver.observe(Breakpoints.Handset).pipe(
+        map(breakpointState => breakpointState.matches)
+      ),
+    );
   }
 }
