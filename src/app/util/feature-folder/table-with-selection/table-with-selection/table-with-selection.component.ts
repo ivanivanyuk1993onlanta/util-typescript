@@ -17,10 +17,10 @@ export class TableWithSelectionComponent<CellDataSourceType, ColumnDescriptionTy
   @Output() rowDoubleClick = new EventEmitter<DataObjectType>();
 
   public dataListBS$ = new BehaviorSubject<Array<DataObjectType>>([]);
+  public keySelectionModel = new SelectionModel<KeyType>(true, []);
   public keyToIsSelectedBS$MapBS$ = new BehaviorSubject(new Map<KeyType, BehaviorSubject<boolean>>());
 
   private _changeBroadcaster = new Broadcaster();
-  private _keySelectionModel = new SelectionModel<KeyType>(true, []);
   private _keyToRowIndexMapBS$ = new BehaviorSubject(new Map<KeyType, number>());
   private _lastClickedWithoutShiftKeyBS$ = new BehaviorSubject<KeyType>(null);
 
@@ -31,7 +31,7 @@ export class TableWithSelectionComponent<CellDataSourceType, ColumnDescriptionTy
     this.dataSource.getKey$(row).pipe(
       takeUntil(this._changeBroadcaster.broadcastS$),
     ).subscribe(clickedKey => {
-      const selectionModel = this._keySelectionModel;
+      const selectionModel = this.keySelectionModel;
 
       const lastClickedWithoutShiftKeyBS$ = this._lastClickedWithoutShiftKeyBS$;
       if (event.shiftKey) {
@@ -107,7 +107,7 @@ export class TableWithSelectionComponent<CellDataSourceType, ColumnDescriptionTy
     this.dataSource.getKeyList$(dataList.slice(leftIndex, rightIndex + 1)).pipe(
       takeUntil(this._changeBroadcaster.broadcastS$),
     ).subscribe(keyList => {
-      this._keySelectionModel.select(...keyList);
+      this.keySelectionModel.select(...keyList);
     });
   }
 
@@ -144,7 +144,7 @@ export class TableWithSelectionComponent<CellDataSourceType, ColumnDescriptionTy
   }
 
   private _subscribeToSelectionChanged() {
-    this._keySelectionModel.changed.pipe(
+    this.keySelectionModel.changed.pipe(
       takeUntil(this._changeBroadcaster.broadcastS$),
     ).subscribe((selectionChange) => {
       if (selectionChange) {
