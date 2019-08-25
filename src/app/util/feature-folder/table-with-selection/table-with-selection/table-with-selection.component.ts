@@ -28,6 +28,11 @@ export class TableWithSelectionComponent<CellDataSourceType, ColumnDescriptionTy
     row: DataObjectType,
     event: MouseEvent,
   ) {
+    // Cleaning selection if shift key is pressed
+    if (event.shiftKey) {
+      window.getSelection().empty();
+    }
+
     this.dataSource.getKey$(row).pipe(
       takeUntil(this._changeBroadcaster.broadcastS$),
     ).subscribe(clickedKey => {
