@@ -1,0 +1,32 @@
+<table
+  [dataSource]="dataSource"
+  [trackBy]="dataSource.trackByFunction"
+  mat-table
+>
+  <ng-container
+    *ngFor="let columnDescription of dataSource.columnDescriptionListContinuous$ | async"
+    [matColumnDef]="dataSource | getColumnCodePure: columnDescription | async"
+  >
+    <th
+      *matHeaderCellDef
+      mat-header-cell
+    >{{ dataSource | getColumnHeaderTextContinuousPure: columnDescription | async }}</th>
+    <td
+      *matCellDef="let row"
+      mat-cell
+    >{{ dataSource | getColumnTextContinuousPure:columnDescription:row | async }}</td>
+  </ng-container>
+
+  <tr
+    *matHeaderRowDef="dataSource.columnCodeListContinuous$ | async; sticky: true"
+    mat-header-row
+  ></tr>
+  <tr
+    *matRowDef="let row; columns: dataSource.columnCodeListContinuous$ | async;"
+    mat-row
+  ></tr>
+</table>
+
+<!--(click)="handleRowClick(row, $event)"-->
+<!--(dblclick)="handleRowDoubleClick(row)"-->
+<!--[ngClass]="{ selected: (keyToIsSelectedBS$MapBS$ | async) | getValueFromMapPure: ((dataSource | getKey$Pure: row) | async) | async }"-->

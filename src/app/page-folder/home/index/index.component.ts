@@ -1,4 +1,6 @@
-import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {TableWithSelectionDataSourceExample} from '../../../util/feature-folder/table-with-selection/data-source/example/table-with-selection-data-source-example';
+import {LocalizationService} from '../../../util/feature-folder/localization/localization/localization.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -6,11 +8,12 @@ import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
   styleUrls: ['./index.component.scss'],
   templateUrl: './index.component.html',
 })
-export class IndexComponent implements OnInit {
+export class IndexComponent {
+  public tableDataSource: TableWithSelectionDataSourceExample;
 
-  constructor() { }
-
-  ngOnInit() {
+  constructor(
+    private _localizationService: LocalizationService,
+  ) {
+    this.tableDataSource = new TableWithSelectionDataSourceExample(_localizationService);
   }
-
 }
