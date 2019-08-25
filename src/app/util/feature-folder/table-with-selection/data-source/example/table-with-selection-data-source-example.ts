@@ -2,7 +2,7 @@ import {TableWithSelectionDataSourceInterface} from '../table-with-selection-dat
 import {ColumnDescriptionExampleInterface} from './column-description-example-interface';
 import {DataObjectExampleInterface} from './data-object-example-interface';
 import {CollectionViewer} from '@angular/cdk/collections';
-import {Observable, of} from 'rxjs';
+import {BehaviorSubject, interval, Observable, of} from 'rxjs';
 import {LocalizationService} from '../../../localization/localization/localization.service';
 import {CellExampleComponent} from './cell-example/cell-example.component';
 import {CellDataSourceExample} from './cell-data-source-example';
@@ -32,14 +32,18 @@ export class TableWithSelectionDataSourceExample implements TableWithSelectionDa
   }
 
   connect(collectionViewer: CollectionViewer): Observable<DataObjectExampleInterface[] | ReadonlyArray<DataObjectExampleInterface>> {
-    return of(
-      Array.from(Array(100).keys()).map(number => {
-        return {
-          id: number,
-          name: `Name ${number}`,
-        };
-      }),
-    );
+    const BS$ = new BehaviorSubject(Array.from(Array(100).keys()).map(number => {
+      return {
+        id: number,
+        name: `Name ${number}`,
+      };
+    }));
+
+    interval(1000).subscribe(() => {
+      BS$.next(BS$.getValue().slice(1));
+    });
+
+    return BS$;
   }
 
   disconnect(collectionViewer: CollectionViewer): void {
