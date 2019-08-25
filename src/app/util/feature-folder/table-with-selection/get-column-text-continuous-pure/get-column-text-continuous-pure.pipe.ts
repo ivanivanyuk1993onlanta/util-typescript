@@ -5,9 +5,9 @@ import {Observable} from 'rxjs';
 @Pipe({
   name: 'getColumnTextContinuousPure'
 })
-export class GetColumnTextContinuousPurePipe<ColumnDescriptionType, DataObjectType> implements PipeTransform {
+export class GetColumnTextContinuousPurePipe<CellDataSourceType, ColumnDescriptionType, DataObjectType, HeaderCellDataSourceType> implements PipeTransform {
   transform(
-    dataSource: TableWithSelectionDataSourceInterface<ColumnDescriptionType, DataObjectType>,
+    dataSource: TableWithSelectionDataSourceInterface<CellDataSourceType, ColumnDescriptionType, DataObjectType, HeaderCellDataSourceType>,
     columnDescription: ColumnDescriptionType,
     dataObject: DataObjectType,
   ): Observable<string> {

@@ -7,6 +7,7 @@ import {TableWithSelectionDataSourceInterface} from '../data-source/table-with-s
   styleUrls: ['./table-with-selection.component.scss'],
   templateUrl: './table-with-selection.component.html',
 })
-export class TableWithSelectionComponent<ColumnDescriptionType, DataObjectType> {
-  @Input() dataSource: TableWithSelectionDataSourceInterface<ColumnDescriptionType, DataObjectType>;
+export class TableWithSelectionComponent<CellDataSourceType, ColumnDescriptionType, DataObjectType, HeaderCellDataSourceType> {
+  // tslint:disable-next-line:max-line-length
+  @Input() dataSource: TableWithSelectionDataSourceInterface<CellDataSourceType, ColumnDescriptionType, DataObjectType, HeaderCellDataSourceType>;
 }

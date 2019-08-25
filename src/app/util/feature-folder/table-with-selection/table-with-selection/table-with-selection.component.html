@@ -10,11 +10,21 @@
     <th
       *matHeaderCellDef
       mat-header-cell
-    >{{ dataSource | getColumnHeaderTextContinuousPure: columnDescription | async }}</th>
+    >
+      <app-dynamic-container
+        [componentType]="dataSource.headerCellComponentType"
+        [input]="{columnDescription: columnDescription, dataSource: dataSource}"
+      ></app-dynamic-container>
+    </th>
     <td
-      *matCellDef="let row"
+      *matCellDef="let dataObject"
       mat-cell
-    >{{ dataSource | getColumnTextContinuousPure:columnDescription:row | async }}</td>
+    >
+      <app-dynamic-container
+        [componentType]="dataSource.cellComponentType"
+        [input]="{columnDescription: columnDescription, dataObject: dataObject, dataSource: dataSource}"
+      ></app-dynamic-container>
+    </td>
   </ng-container>
 
   <tr
@@ -22,7 +32,7 @@
     mat-header-row
   ></tr>
   <tr
-    *matRowDef="let row; columns: dataSource.columnCodeListContinuous$ | async;"
+    *matRowDef="let dataObject; columns: dataSource.columnCodeListContinuous$ | async;"
     mat-row
   ></tr>
 </table>

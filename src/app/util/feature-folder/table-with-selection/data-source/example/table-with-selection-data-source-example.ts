@@ -4,8 +4,14 @@ import {DataObjectExampleInterface} from './data-object-example-interface';
 import {CollectionViewer} from '@angular/cdk/collections';
 import {Observable, of} from 'rxjs';
 import {LocalizationService} from '../../../localization/localization/localization.service';
+import {CellExampleComponent} from './cell-example/cell-example.component';
+import {CellDataSourceExample} from './cell-data-source-example';
+import {HeaderCellDataSourceExample} from './header-cell-data-source-example';
+import {HeaderCellExampleComponent} from './header-cell-example/header-cell-example.component';
 
-export class TableWithSelectionDataSourceExample implements TableWithSelectionDataSourceInterface<ColumnDescriptionExampleInterface, DataObjectExampleInterface> {
+export class TableWithSelectionDataSourceExample implements TableWithSelectionDataSourceInterface<CellDataSourceExample, ColumnDescriptionExampleInterface, DataObjectExampleInterface, HeaderCellDataSourceExample> {
+  readonly cellComponentType = CellExampleComponent;
+  readonly cellDataSource = new CellDataSourceExample();
   readonly columnCodeListContinuous$: Observable<Array<string>> = of(['id', 'name']);
   readonly columnDescriptionListContinuous$: Observable<Array<ColumnDescriptionExampleInterface>> = of([
     {
@@ -17,10 +23,13 @@ export class TableWithSelectionDataSourceExample implements TableWithSelectionDa
       headerLocalizationCode: 'Name',
     },
   ]);
+  readonly headerCellComponentType = HeaderCellExampleComponent;
+  readonly headerCellDataSource = new HeaderCellDataSourceExample();
 
   constructor(
     private _localizationService: LocalizationService,
-  ) {}
+  ) {
+  }
 
   connect(collectionViewer: CollectionViewer): Observable<DataObjectExampleInterface[] | ReadonlyArray<DataObjectExampleInterface>> {
     return of(
