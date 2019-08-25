@@ -9,7 +9,7 @@ import {CellDataSourceExample} from './cell-data-source-example';
 import {HeaderCellDataSourceExample} from './header-cell-data-source-example';
 import {HeaderCellExampleComponent} from './header-cell-example/header-cell-example.component';
 
-export class TableWithSelectionDataSourceExample implements TableWithSelectionDataSourceInterface<CellDataSourceExample, ColumnDescriptionExampleInterface, DataObjectExampleInterface, HeaderCellDataSourceExample> {
+export class TableWithSelectionDataSourceExample implements TableWithSelectionDataSourceInterface<CellDataSourceExample, ColumnDescriptionExampleInterface, DataObjectExampleInterface, HeaderCellDataSourceExample, number> {
   readonly cellComponentType = CellExampleComponent;
   readonly cellDataSource = new CellDataSourceExample();
   readonly columnCodeListContinuous$: Observable<Array<string>> = of(['id', 'name']);
@@ -26,24 +26,27 @@ export class TableWithSelectionDataSourceExample implements TableWithSelectionDa
   readonly headerCellComponentType = HeaderCellExampleComponent;
   readonly headerCellDataSource = new HeaderCellDataSourceExample();
 
+  private _dataListBS$ = new BehaviorSubject<Array<DataObjectExampleInterface>>([]);
+
   constructor(
     private _localizationService: LocalizationService,
   ) {
+    this._dataListBS$.next(
+      Array.from(Array(100).keys()).map(number => {
+        return {
+          id: number,
+          name: `Name ${number}`,
+        };
+      }),
+    );
+
+    interval(1000).subscribe(() => {
+      this._dataListBS$.next(this._dataListBS$.getValue().slice(1));
+    });
   }
 
   connect(collectionViewer: CollectionViewer): Observable<DataObjectExampleInterface[] | ReadonlyArray<DataObjectExampleInterface>> {
-    const BS$ = new BehaviorSubject(Array.from(Array(100).keys()).map(number => {
-      return {
-        id: number,
-        name: `Name ${number}`,
-      };
-    }));
-
-    interval(1000).subscribe(() => {
-      BS$.next(BS$.getValue().slice(1));
-    });
-
-    return BS$;
+    return this._dataListBS$;
   }
 
   disconnect(collectionViewer: CollectionViewer): void {
@@ -64,6 +67,14 @@ export class TableWithSelectionDataSourceExample implements TableWithSelectionDa
     return columnDescription.code === 'id'
       ? of(dataObject.id.toString())
       : this._localizationService.localizationDataSource.getLocalizedMessageContinuous$(dataObject.name);
+  }
+
+  getKey$(dataObject: DataObjectExampleInterface): Observable<number> {
+    return of(dataObject.id);
+  }
+
+  getKeyList$(dataList: Array<DataObjectExampleInterface>): Observable<Array<number>> {
+    return of(dataList.map(dataObject => dataObject.id));
   }
 
   trackByFunction(index: number, dataObject: DataObjectExampleInterface): any {

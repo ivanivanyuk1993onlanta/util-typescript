@@ -5,9 +5,10 @@ import {Observable} from 'rxjs';
 @Pipe({
   name: 'getColumnCodePure'
 })
-export class GetColumnCodePurePipe<CellDataSourceType, ColumnDescriptionType, DataObjectType, HeaderCellDataSourceType> implements PipeTransform {
+export class GetColumnCodePurePipe<CellDataSourceType, ColumnDescriptionType, DataObjectType, HeaderCellDataSourceType, KeyType> implements PipeTransform {
   transform(
-    dataSource: TableWithSelectionDataSourceInterface<CellDataSourceType, ColumnDescriptionType, DataObjectType, HeaderCellDataSourceType>,
+    // tslint:disable-next-line:max-line-length
+    dataSource: TableWithSelectionDataSourceInterface<CellDataSourceType, ColumnDescriptionType, DataObjectType, HeaderCellDataSourceType, KeyType>,
     columnDescription: ColumnDescriptionType,
   ): Observable<string> {
     return dataSource.getColumnCode$(columnDescription);

@@ -1,5 +1,5 @@
 <table
-  [dataSource]="dataSource"
+  [dataSource]="dataListBS$ | async"
   [trackBy]="dataSource.trackByFunction"
   mat-table
 >
@@ -32,11 +32,11 @@
     mat-header-row
   ></tr>
   <tr
+    (click)="handleRowClick(dataObject, $event)"
+    (dblclick)="rowDoubleClick.emit(dataObject)"
     *matRowDef="let dataObject; columns: dataSource.columnCodeListContinuous$ | async;"
+    [ngClass]="{ selected: (keyToIsSelectedBS$MapBS$ | async) | mapGetPure: ((dataSource | getKey$Pure: dataObject) | async) | async }"
     mat-row
   ></tr>
 </table>
 
-<!--(click)="handleRowClick(row, $event)"-->
-<!--(dblclick)="handleRowDoubleClick(row)"-->
-<!--[ngClass]="{ selected: (keyToIsSelectedBS$MapBS$ | async) | getValueFromMapPure: ((dataSource | getKey$Pure: row) | async) | async }"-->

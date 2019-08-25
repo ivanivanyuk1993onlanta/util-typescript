@@ -9,8 +9,9 @@ import {CellDataSourceExample} from '../cell-data-source-example';
   styleUrls: ['./cell-example.component.scss'],
   templateUrl: './cell-example.component.html',
 })
-export class CellExampleComponent<ColumnDescriptionType, DataObjectType, HeaderCellDataSourceType> implements DynamicComponentInterface<CellComponentInputInterface<CellDataSourceExample, ColumnDescriptionType, DataObjectType, HeaderCellDataSourceType>>, OnChanges {
-  @Input() input: CellComponentInputInterface<CellDataSourceExample, ColumnDescriptionType, DataObjectType, HeaderCellDataSourceType>;
+export class CellExampleComponent<ColumnDescriptionType, DataObjectType, HeaderCellDataSourceType, KeyType> implements DynamicComponentInterface<CellComponentInputInterface<CellDataSourceExample, ColumnDescriptionType, DataObjectType, HeaderCellDataSourceType, KeyType>>, OnChanges {
+  // tslint:disable-next-line:max-line-length
+  @Input() input: CellComponentInputInterface<CellDataSourceExample, ColumnDescriptionType, DataObjectType, HeaderCellDataSourceType, KeyType>;
 
   public ngOnChanges(changes: SimpleChanges): void {
   }

@@ -9,9 +9,9 @@ import {HeaderCellDataSourceExample} from '../header-cell-data-source-example';
   styleUrls: ['./header-cell-example.component.scss'],
   templateUrl: './header-cell-example.component.html',
 })
-export class HeaderCellExampleComponent<CellDataSourceType, ColumnDescriptionType, DataObjectType> implements DynamicComponentInterface<HeaderCellComponentInputInterface<CellDataSourceType, ColumnDescriptionType, DataObjectType, HeaderCellDataSourceExample>>, OnChanges {
+export class HeaderCellExampleComponent<CellDataSourceType, ColumnDescriptionType, DataObjectType, KeyType> implements DynamicComponentInterface<HeaderCellComponentInputInterface<CellDataSourceType, ColumnDescriptionType, DataObjectType, HeaderCellDataSourceExample, KeyType>>, OnChanges {
   // tslint:disable-next-line:max-line-length
-  @Input() input: HeaderCellComponentInputInterface<CellDataSourceType, ColumnDescriptionType, DataObjectType, HeaderCellDataSourceExample>;
+  @Input() input: HeaderCellComponentInputInterface<CellDataSourceType, ColumnDescriptionType, DataObjectType, HeaderCellDataSourceExample, KeyType>;
 
   public ngOnChanges(changes: SimpleChanges): void {
   }

@@ -8,6 +8,8 @@ import {GetColumnTextContinuousPurePipe} from './get-column-text-continuous-pure
 import {DynamicContainerModule} from '../dynamic-container/dynamic-container.module';
 import { CellExampleComponent } from './data-source/example/cell-example/cell-example.component';
 import { HeaderCellExampleComponent } from './data-source/example/header-cell-example/header-cell-example.component';
+import {MapGetPureModule} from '../map-get-pure/map-get-pure.module';
+import { GetKey$PurePipe } from './get-key$-pure/get-key$-pure.pipe';
 
 @NgModule({
   bootstrap: [CellExampleComponent, HeaderCellExampleComponent],
@@ -18,6 +20,7 @@ import { HeaderCellExampleComponent } from './data-source/example/header-cell-ex
     GetColumnTextContinuousPurePipe,
     TableWithSelectionComponent,
     HeaderCellExampleComponent,
+    GetKey$PurePipe,
   ],
   exports: [
     TableWithSelectionComponent
@@ -26,6 +29,7 @@ import { HeaderCellExampleComponent } from './data-source/example/header-cell-ex
     CommonModule,
     DynamicContainerModule,
     MatTableModule,
+    MapGetPureModule,
   ]
 })
 export class TableWithSelectionModule {
