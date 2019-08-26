@@ -10,7 +10,7 @@ import { CellExampleComponent } from './data-source/example/cell-example/cell-ex
 import { HeaderCellExampleComponent } from './data-source/example/header-cell-example/header-cell-example.component';
 import {MapGetPureModule} from '../map-get-pure/map-get-pure.module';
 import { GetKey$PurePipe } from './get-key$-pure/get-key$-pure.pipe';
-
+// todo remove
 @NgModule({
   bootstrap: [CellExampleComponent, HeaderCellExampleComponent],
   declarations: [
