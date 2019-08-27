@@ -1,3 +1,5 @@
+import {ComparatorFuncResultEnum} from '../../class-folder/comparator/comparator-func-result-enum';
+
 export function sortByFuncResult<T, V>(
   list: Array<T>,
   func: (item: T) => V,
@@ -7,11 +9,11 @@ export function sortByFuncResult<T, V>(
     const rightResult = func(right);
 
     if (leftResult < rightResult) {
-      return -1;
+      return ComparatorFuncResultEnum.LeftLess;
     } else if (leftResult > rightResult) {
-      return 1;
+      return ComparatorFuncResultEnum.LeftGreater;
     } else {
-      return 0;
+      return ComparatorFuncResultEnum.Equal;
     }
   });
 }
