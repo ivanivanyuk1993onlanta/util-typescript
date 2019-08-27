@@ -4,10 +4,12 @@ import {DynamicComponentInterface} from '../../dynamic-container/dynamic-contain
 import {CellComponentInputInterface} from './cell-component-input-interface';
 import {HeaderCellComponentInputInterface} from './header-cell-component-input-interface';
 
-export interface TreeTableDataSourceInterface<CellComponentType, DataObjectType> {
-  readonly cellComponentType: Type<DynamicComponentInterface<HeaderCellComponentInputInterface<CellComponentType, DataObjectType>>>;
+export interface TreeTableDataSourceInterface<CellComponentType, DataObjectType, HeaderCellComponentType> {
+  // tslint:disable-next-line:max-line-length
+  readonly cellComponentType: Type<DynamicComponentInterface<HeaderCellComponentInputInterface<CellComponentType, DataObjectType, HeaderCellComponentType>>>;
 
-  readonly headerCellComponentType: Type<DynamicComponentInterface<CellComponentInputInterface<CellComponentType, DataObjectType>>>;
+  // tslint:disable-next-line:max-line-length
+  readonly headerCellComponentType: Type<DynamicComponentInterface<CellComponentInputInterface<CellComponentType, DataObjectType, HeaderCellComponentType>>>;
 
   readonly trackByFunc: TrackByFunction<DataObjectType>;
 

@@ -1,6 +1,6 @@
 import {TreeTableDataSourceInterface} from './tree-table-data-source-interface';
 
-export interface HeaderCellComponentInputInterface<CellComponentType, DataObjectType> {
+export interface HeaderCellComponentInputInterface<CellComponentType, HeaderCellComponentType, DataObjectType> {
   columnCode: string;
-  dataSource: TreeTableDataSourceInterface<CellComponentType, DataObjectType>;
+  dataSource: TreeTableDataSourceInterface<CellComponentType, HeaderCellComponentType, DataObjectType>;
 }

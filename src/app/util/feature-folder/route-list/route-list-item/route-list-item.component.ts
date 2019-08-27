@@ -10,6 +10,9 @@ import {Broadcaster} from '../../../class-folder/broadcaster/broadcaster';
   styleUrls: ['./route-list-item.component.scss'],
   templateUrl: './route-list-item.component.html',
 })
+
+// todo make childListBS$ lazy loaded
+
 export class RouteListItemComponent<DataObjectType> implements OnChanges, OnDestroy {
   @Input() dataObject: DataObjectType;
   @Input() routeListComponent: RouteListComponent<DataObjectType>;

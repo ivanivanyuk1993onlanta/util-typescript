@@ -4,9 +4,9 @@ import {TreeTableDataSourceInterface} from '../tree-table-data-source-interface'
 @Pipe({
   name: 'getDataListContinuous$Pure'
 })
-export class GetDataListContinuous$PurePipe<DataObjectType> implements PipeTransform {
+export class GetDataListContinuous$PurePipe<CellComponentType, DataObjectType, HeaderCellComponentType> implements PipeTransform {
   transform(
-    treeTableDataSource: TreeTableDataSourceInterface<DataObjectType>,
+    treeTableDataSource: TreeTableDataSourceInterface<CellComponentType, DataObjectType, HeaderCellComponentType>,
   ) {
     return treeTableDataSource.getDataListContinuous$();
   }

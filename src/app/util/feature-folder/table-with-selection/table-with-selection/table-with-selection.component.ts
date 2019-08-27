@@ -11,6 +11,7 @@ import {SelectionModel} from '@angular/cdk/collections';
   styleUrls: ['./table-with-selection.component.scss'],
   templateUrl: './table-with-selection.component.html',
 })
+// todo move all logic to TreeTableComponent, then remove
 export class TableWithSelectionComponent<CellDataSourceType, ColumnDescriptionType, DataObjectType, HeaderCellDataSourceType, KeyType> implements OnChanges, OnDestroy {
   // tslint:disable-next-line:max-line-length
   @Input() dataSource: TableWithSelectionDataSourceInterface<CellDataSourceType, ColumnDescriptionType, DataObjectType, HeaderCellDataSourceType, KeyType>;

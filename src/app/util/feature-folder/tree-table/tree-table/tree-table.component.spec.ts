@@ -3,8 +3,8 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { TreeTableComponent } from './tree-table.component';
 
 describe('TreeTableComponent', () => {
-  let component: TreeTableComponent;
-  let fixture: ComponentFixture<TreeTableComponent>;
+  let component: TreeTableComponent<unknown, unknown, unknown>;
+  let fixture: ComponentFixture<TreeTableComponent<unknown, unknown, unknown>>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
