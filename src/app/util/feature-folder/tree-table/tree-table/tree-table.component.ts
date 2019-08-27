@@ -7,6 +7,6 @@ import {TreeTableDataSourceInterface} from '../data-source/tree-table-data-sourc
   styleUrls: ['./tree-table.component.scss'],
   templateUrl: './tree-table.component.html',
 })
-export class TreeTableComponent<CellComponentType, DataObjectType> {
-  @Input() dataSource: TreeTableDataSourceInterface<CellComponentType, DataObjectType>;
+export class TreeTableComponent<CellComponentType, DataObjectType, HeaderCellComponentType> {
+  @Input() dataSource: TreeTableDataSourceInterface<CellComponentType, DataObjectType, HeaderCellComponentType>;
 }
