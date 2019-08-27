@@ -1,0 +1,2 @@
+{{ input.dataSource | getColumnTextContinuousPure:input.columnDescription:input.dataObject | async }}
+<button (click)="input.dataSource.cellDataSource.log()">{{ input.dataSource | getColumnTextContinuousPure:input.columnDescription:input.dataObject | async }}</button>
