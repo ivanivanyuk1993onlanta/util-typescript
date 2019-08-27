@@ -62,6 +62,7 @@ export class RouteListDataSource implements RouteListDataSourceInterface<RouteDa
   getSearchResultList$(searchText: string): Observable<RouteData[]> {
     let flatListCopy = this._flatDataObjectListBS$.getValue().filter(dataObject => dataObject.url && dataObject.url !== '#');
 
+    // todo sort by 1 merged comparator func instead of multiple sorts
     return combineLatest(
       flatListCopy.map(dataObject => {
         return this._localizationService.localizationDataSource.getLocalizedMessageContinuous$(dataObject.localizationCode);
