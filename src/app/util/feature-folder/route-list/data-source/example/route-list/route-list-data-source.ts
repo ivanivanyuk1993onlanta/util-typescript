@@ -3,12 +3,13 @@ import {RouteData} from './route-data';
 import {BehaviorSubject, combineLatest, Observable, of} from 'rxjs';
 import {distinctUntilChanged, map, take, tap} from 'rxjs/operators';
 import {computeLevenshteinDistanceAmortized} from '../../../../../method-folder/compute-levenshtein-distance/compute-levenshtein-distance-amortized';
-import {sortByFuncResult} from '../../../../../method-folder/sort-by-func-result/sort-by-func-result';
 import {LocalizationService} from '../../../../localization/localization/localization.service';
 import {HttpClient} from '@angular/common/http';
 import {apiUrl} from '../../../../../../config/api-url';
 import {routeListUrlSuffix} from './route-list-url-suffix';
 import {AuthService} from '../../../../auth/auth/auth.service';
+import {getMergedComparatorFunc} from '../../../../../method-folder/get-merged-comparator-func/get-merged-comparator-func';
+import {getComparatorByFuncResult} from '../../../../../method-folder/get-comparator-by-func-result/get-comparator-by-func-result';
 
 export class RouteListDataSource implements RouteListDataSourceInterface<RouteData> {
   readonly dataObjectTreeRootListBS$ = new BehaviorSubject<Array<RouteData>>([]);
@@ -62,7 +63,6 @@ export class RouteListDataSource implements RouteListDataSourceInterface<RouteDa
   getSearchResultList$(searchText: string): Observable<RouteData[]> {
     let flatListCopy = this._flatDataObjectListBS$.getValue().filter(dataObject => dataObject.url && dataObject.url !== '#');
 
-    // todo sort by 1 merged comparator func instead of multiple sorts
     return combineLatest(
       flatListCopy.map(dataObject => {
         return this._localizationService.localizationDataSource.getLocalizedMessageContinuous$(dataObject.localizationCode);
@@ -87,41 +87,43 @@ export class RouteListDataSource implements RouteListDataSourceInterface<RouteDa
             ) < 1;
           });
 
-          // Sorting by name
-          sortByFuncResult(flatListCopy, (dataObject) => {
-            return dataObjectToLocalizedMessageMap.get(dataObject);
-          });
-
-          // Sorting by index of first symbol in search text
           const firstSearchTextChar = searchTextLowerCased[0];
-          sortByFuncResult(flatListCopy, (dataObject) => {
-            const matchIndex = dataObjectToLocalizedMessageMap.get(dataObject).toLowerCase().indexOf(firstSearchTextChar);
-            if (matchIndex < 0) {
-              return Infinity;
-            } else {
-              return matchIndex;
-            }
-          });
-
-          // Sorting by amortised levenshtein distance
-          sortByFuncResult(flatListCopy, (dataObject) => {
-            return computeLevenshteinDistanceAmortized(searchTextLowerCased, dataObjectToLocalizedMessageMap.get(dataObject).toLowerCase());
-          });
-
-          // Sorting by index of full search text match
-          sortByFuncResult(flatListCopy, (dataObject) => {
-            const matchIndex = dataObjectToLocalizedMessageMap.get(dataObject).toLowerCase().indexOf(searchTextLowerCased);
-            if (matchIndex < 0) {
-              return Infinity;
-            } else {
-              return matchIndex;
-            }
-          });
+          flatListCopy.sort(getMergedComparatorFunc([
+            // Sorting by index of full search text match
+            getComparatorByFuncResult((dataObject) => {
+              const matchIndex = dataObjectToLocalizedMessageMap.get(dataObject).toLowerCase().indexOf(searchTextLowerCased);
+              if (matchIndex < 0) {
+                return Infinity;
+              } else {
+                return matchIndex;
+              }
+            }),
+            // Sorting by amortised levenshtein distance
+            getComparatorByFuncResult((dataObject) => {
+              return computeLevenshteinDistanceAmortized(
+                searchTextLowerCased,
+                dataObjectToLocalizedMessageMap.get(dataObject).toLowerCase(),
+              );
+            }),
+            // Sorting by index of first symbol in search text
+            getComparatorByFuncResult((dataObject) => {
+              const matchIndex = dataObjectToLocalizedMessageMap.get(dataObject).toLowerCase().indexOf(firstSearchTextChar);
+              if (matchIndex < 0) {
+                return Infinity;
+              } else {
+                return matchIndex;
+              }
+            }),
+            // Sorting by name
+            getComparatorByFuncResult((dataObject) => {
+              return dataObjectToLocalizedMessageMap.get(dataObject);
+            }),
+          ]));
         } else {
           // Sorting by name
-          sortByFuncResult(flatListCopy, (dataObject) => {
+          flatListCopy.sort(getComparatorByFuncResult((dataObject) => {
             return dataObjectToLocalizedMessageMap.get(dataObject);
-          });
+          }));
         }
 
         return flatListCopy.slice(0, 50);
