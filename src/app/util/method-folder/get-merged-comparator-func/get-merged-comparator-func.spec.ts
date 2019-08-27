@@ -7,6 +7,8 @@ interface PropertyHolderInterface {
   sortField3: number;
 }
 
+// This test is weak, but not very important yet, if method works incorrectly, also add to basic cases good tests which will generate big
+// random arrays, apply multiple sequential sorts to them and compare result with merged comparator result
 describe('getMergedComparatorFunc', () => {
   const comparator1 = (l, r: PropertyHolderInterface) => l.sortField1 - r.sortField1;
   const comparator2 = (l, r: PropertyHolderInterface) => l.sortField2 - r.sortField2;
