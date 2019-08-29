@@ -14,5 +14,7 @@ export interface RouteListDataSourceInterface<DataObjectType> {
 
   getUrl$(dataObject: DataObjectType): Observable<string>;
 
+  hasChildList$(dataObject: DataObjectType): Observable<boolean>;
+
   matchesUrl$(dataObject: DataObjectType, url: string): Observable<boolean>;
 }

@@ -1,8 +1,8 @@
-import {ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnChanges} from '@angular/core';
 import {RouteListComponent} from '../route-list/route-list.component';
-import {BehaviorSubject} from 'rxjs';
-import {mergeMap, takeUntil} from 'rxjs/operators';
-import {Broadcaster} from '../../../class-folder/broadcaster/broadcaster';
+import {BehaviorSubject, Observable} from 'rxjs';
+import {filter, mergeMap} from 'rxjs/operators';
+import {getSharedObservableWithLastValue} from '../../../method-folder/get-shared-observable-with-last-value/get-shared-observable-with-last-value';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -11,73 +11,40 @@ import {Broadcaster} from '../../../class-folder/broadcaster/broadcaster';
   templateUrl: './route-list-item.component.html',
 })
 
-// todo make childListBS$ lazy loaded
-
-export class RouteListItemComponent<DataObjectType> implements OnChanges, OnDestroy {
+export class RouteListItemComponent<DataObjectType> implements OnChanges {
   @Input() dataObject: DataObjectType;
   @Input() routeListComponent: RouteListComponent<DataObjectType>;
 
-  public childListBS$ = new BehaviorSubject<Array<DataObjectType>>([]);
-  public displayTextBS$ = new BehaviorSubject<string>(null);
-  public iconCodeBS$ = new BehaviorSubject<string>(null);
+  public childListContinuousS$: Observable<DataObjectType[]>;
+  public iconCodeContinuousS$: Observable<string>;
   public isExpandedBS$ = new BehaviorSubject(false);
-  public matchesUrlBS$ = new BehaviorSubject<boolean>(false);
-  public urlBS$ = new BehaviorSubject<string>(null);
-
-  private _changeBroadcaster = new Broadcaster();
-  private _componentDestroyedBroadcaster = new Broadcaster();
+  public matchesUrlContinuousS$: Observable<boolean>;
+  public urlContinuousS$: Observable<string>;
 
   public handleExpandedChange(isExpanded: boolean) {
     this.isExpandedBS$.next(isExpanded);
   }
 
   public ngOnChanges(): void {
-    this._changeBroadcaster.broadcast();
-
+    const dataObject = this.dataObject;
     const routeListComponent = this.routeListComponent;
     const dataSource = routeListComponent.dataSource;
 
-    dataSource.getChildList$(this.dataObject).pipe(
-      takeUntil(this._changeBroadcaster.broadcastS$),
-      takeUntil(this._componentDestroyedBroadcaster.broadcastS$),
-    ).subscribe(childList => {
-      this.childListBS$.next(childList);
-    });
+    this.childListContinuousS$ = getSharedObservableWithLastValue(
+      this.isExpandedBS$.pipe(
+        filter(x => !!x),
+        mergeMap(() => dataSource.getChildList$(dataObject)),
+      ),
+    );
 
-    dataSource.getDisplayTextContinuous$(this.dataObject).pipe(
-      takeUntil(this._changeBroadcaster.broadcastS$),
-      takeUntil(this._componentDestroyedBroadcaster.broadcastS$),
-    ).subscribe(displayText => {
-      this.displayTextBS$.next(displayText);
-    });
+    this.iconCodeContinuousS$ = getSharedObservableWithLastValue(dataSource.getIconCode$(dataObject));
 
-    dataSource.getIconCode$(this.dataObject).pipe(
-      takeUntil(this._changeBroadcaster.broadcastS$),
-      takeUntil(this._componentDestroyedBroadcaster.broadcastS$),
-    ).subscribe(iconCode => {
-      this.iconCodeBS$.next(iconCode);
-    });
+    this.matchesUrlContinuousS$ = getSharedObservableWithLastValue(
+      routeListComponent.currentUrlBS$.pipe(
+        mergeMap(url => dataSource.matchesUrl$(dataObject, url)),
+      ),
+    );
 
-    routeListComponent.currentUrlBS$.pipe(
-      mergeMap(url => {
-        return dataSource.matchesUrl$(this.dataObject, url);
-      }),
-      takeUntil(this._changeBroadcaster.broadcastS$),
-      takeUntil(this._componentDestroyedBroadcaster.broadcastS$),
-    ).subscribe(matchesUrl => {
-      this.matchesUrlBS$.next(matchesUrl);
-    });
-
-    dataSource.getUrl$(this.dataObject).pipe(
-      takeUntil(this._changeBroadcaster.broadcastS$),
-      takeUntil(this._componentDestroyedBroadcaster.broadcastS$),
-    ).subscribe(url => {
-      this.urlBS$.next(url);
-    });
-  }
-
-  public ngOnDestroy(): void {
-    this._changeBroadcaster.broadcastAndComplete();
-    this._componentDestroyedBroadcaster.broadcastAndComplete();
+    this.urlContinuousS$ = getSharedObservableWithLastValue(dataSource.getUrl$(dataObject));
   }
 }

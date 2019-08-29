@@ -1,10 +1,10 @@
 <mat-expansion-panel
   (expandedChange)="handleExpandedChange($event)"
-  *ngIf="childListBS$ | async; else noChildList"
-  [class.active]="matchesUrlBS$ | async"
+  *ngIf="routeListComponent.dataSource | hasChildList$Pure:dataObject | async; else noChildList"
+  [class.active]="matchesUrlContinuousS$ | async"
 >
   <mat-expansion-panel-header
-    [class.active]="matchesUrlBS$ | async"
+    [class.active]="matchesUrlContinuousS$ | async"
   >
     <mat-panel-title>
       <ng-container *ngTemplateOutlet="item"></ng-container>
@@ -18,7 +18,7 @@
       [class.hidden]="!(isExpandedBS$ | async)"
     >
       <app-route-list-item
-        *ngFor="let childDataObject of childListBS$ | async"
+        *ngFor="let childDataObject of childListContinuousS$ | async"
         [dataObject]="childDataObject"
         [routeListComponent]="routeListComponent"
       ></app-route-list-item>
@@ -27,8 +27,8 @@
 </mat-expansion-panel>
 
 <ng-template #noChildList>
-  <div [class.active]="matchesUrlBS$ | async">
-    <div [class.active]="matchesUrlBS$ | async">
+  <div [class.active]="matchesUrlContinuousS$ | async">
+    <div [class.active]="matchesUrlContinuousS$ | async">
       <ng-container *ngTemplateOutlet="item"></ng-container>
     </div>
   </div>
@@ -37,8 +37,8 @@
 <ng-template #item>
   <a
     (click)="$event.stopPropagation()"
-    *ngIf="urlBS$ | async; else noLinkItem"
-    [routerLink]="urlBS$ | async"
+    *ngIf="urlContinuousS$ | async; else noLinkItem"
+    [routerLink]="urlContinuousS$ | async"
     mat-list-item
   >
     <ng-container *ngTemplateOutlet="iconWithText"></ng-container>
@@ -51,7 +51,7 @@
   </ng-template>
 
   <ng-template #iconWithText>
-    <mat-icon *ngIf="iconCodeBS$ | async" mat-list-icon>{{ iconCodeBS$ | async }}</mat-icon>
-    <span>{{ displayTextBS$ | async }}</span>
+    <mat-icon *ngIf="iconCodeContinuousS$ | async" mat-list-icon>{{ iconCodeContinuousS$ | async }}</mat-icon>
+    <span>{{ routeListComponent.dataSource | getDisplayTextContinuous$Pure:dataObject | async }}</span>
   </ng-template>
 </ng-template>

@@ -60,7 +60,7 @@ export class RouteListDataSource implements RouteListDataSourceInterface<RouteDa
     return of(dataObject.iconCode ? 'folder' : null);
   }
 
-  getSearchResultList$(searchText: string): Observable<RouteData[]> {
+  public getSearchResultList$(searchText: string): Observable<RouteData[]> {
     let flatListCopy = this._flatDataObjectListBS$.getValue().filter(dataObject => dataObject.url && dataObject.url !== '#');
 
     return combineLatest(
@@ -135,6 +135,10 @@ export class RouteListDataSource implements RouteListDataSourceInterface<RouteDa
     return of((dataObject.url && dataObject.url !== '#') ? dataObject.url : null);
   }
 
+  public hasChildList$(dataObject: RouteData): Observable<boolean> {
+    return of(!!dataObject.items);
+  }
+
   public matchesUrl$(dataObject: RouteData, url: string): Observable<boolean> {
     this._currentUrlBS$.next(url);
     return of(this._dataMatchingCurrentUrlSet.has(dataObject));
@@ -180,7 +184,7 @@ export class RouteListDataSource implements RouteListDataSourceInterface<RouteDa
       map(isLoggedIn => {
         return isLoggedIn ? this._generateList(3, 10) : this._generateList(2, 5);
       }),
-    // return this._httpClient.post<Array<RouteData>>(this._routeListUrl, {code: 'main-menu-vertical'}).pipe(
+      // return this._httpClient.post<Array<RouteData>>(this._routeListUrl, {code: 'main-menu-vertical'}).pipe(
       tap(dataObjectTree => {
         this.dataObjectTreeRootListBS$.next(dataObjectTree);
 
