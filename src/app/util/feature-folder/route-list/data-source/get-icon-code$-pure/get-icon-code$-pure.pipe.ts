@@ -1,5 +1,5 @@
 import {Pipe, PipeTransform} from '@angular/core';
-import {RouteListDataSourceInterface} from '../data-source/route-list-data-source-interface';
+import {RouteListDataSourceInterface} from '../route-list-data-source-interface';
 import {Observable} from 'rxjs';
 
 @Pipe({
