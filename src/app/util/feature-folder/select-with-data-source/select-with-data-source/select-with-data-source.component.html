@@ -1,0 +1,14 @@
+<mat-form-field appearance="outline">
+  <mat-label>{{ dataSource | getLabelTextContinuous$Pure | async }}</mat-label>
+  <mat-select
+    (selectionChange)="select($event)"
+    [formControl]="dataSource.formControl"
+  >
+    <mat-option
+      *ngFor="let value of dataSource | getValueListContinuous$Pure | async"
+      [value]="value"
+    >
+      {{ dataSource | getDisplayTextContinuous$Pure:value | async }}
+    </mat-option>
+  </mat-select>
+</mat-form-field>
