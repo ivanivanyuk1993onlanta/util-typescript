@@ -1,13 +1,12 @@
 import {SelectionDataSourceInterface} from '../selection-data-source-interface';
 import {SelectionModel} from '@angular/cdk/collections';
-import {BehaviorSubject, Observable, Subject} from 'rxjs';
+import {BehaviorSubject, Observable, of, Subject} from 'rxjs';
 import {getSharedObservableWithLastValue} from '../../../method-folder/get-shared-observable-with-last-value/get-shared-observable-with-last-value';
 import {map, mergeMap, takeUntil, tap, withLatestFrom} from 'rxjs/operators';
 
 // This class uses optimisation - we know data list, hence we can build map of single observables for O(n) on data list
 // change and use it in isSelectedContinuous$, which will allow to call isSelected(dataObject) only in affected
 // Observable
-// Notice method destroy, which should be called to kill subscription
 
 // todo think about adding counter subject that should count data source users and emit when it reaches 0 to destroy
 //  subscriptions
@@ -84,7 +83,12 @@ export class OptimisedForDataListSelectionDataSource<DataObjectType> implements 
 
   public isSelectedContinuous$(dataObject: DataObjectType): Observable<boolean> {
     return this._dataObjectToIsSelectedBS$MapContinuous$.pipe(
-      mergeMap(dataObjectToIsSelectedBS$Map => dataObjectToIsSelectedBS$Map.get(dataObject)),
+      // Notice that we return of(false) when value does not exist in map(it can happen legitimately when map or key
+      // stream fired before key or map stream, we do not want creating synchronization outside, hence we return
+      // of(false), as it is logical that value, which is not in data list, not selected)
+      // We could also filter values that don't exist in map, but it wouldn't be logical, because stream wouldn't fire,
+      // even if we know that data object can not be selected, hence it is not
+      mergeMap(dataObjectToIsSelectedBS$Map => dataObjectToIsSelectedBS$Map.get(dataObject) || of(false)),
     );
   }
 }
