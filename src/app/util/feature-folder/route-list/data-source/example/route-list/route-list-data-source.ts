@@ -216,6 +216,7 @@ export class RouteListDataSource implements RouteListDataSourceInterface<RouteDa
 
     for (const index of Array.from(Array(countPerLevel).keys())) {
       const route: RouteData = {
+        iconCode: 'folder',
         localizationCode: `${parent ? `${parent.localizationCode}-` : ''}${index + 1}`,
         url: `${parent ? `${parent.url}-` : '/'}${index + 1}`,
       };
