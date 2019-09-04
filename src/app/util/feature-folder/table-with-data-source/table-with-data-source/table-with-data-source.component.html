@@ -30,11 +30,27 @@
     *matHeaderRowDef="dataSource | getColumnCodeListContinuous$Pure | async; sticky: true;"
     mat-header-row
   ></tr>
-  <tr
-    (click)="handleRowClick(dataObject, $event)"
-    (dblclick)="rowDoubleClick.emit(dataObject)"
-    *matRowDef="let dataObject; columns: dataSource | getColumnCodeListContinuous$Pure | async;"
-    [ngClass]="{ selected: (keySelectionDataSourceContinuous$ | async) | isSelectedContinuous$Pure: (dataSource | getKeyContinuous$Pure:dataObject | async) | async }"
-    mat-row
-  ></tr>
+  <ng-container
+    *ngIf="dataSource.getRowNgClassContinuous$; else noNgClassRowTemplate"
+  >
+    <tr
+      (click)="handleRowClick(dataObject, $event)"
+      (dblclick)="rowDoubleClick.emit(dataObject)"
+      *matRowDef="let dataObject; columns: dataSource | getColumnCodeListContinuous$Pure | async;"
+      [class.selected]="(keySelectionDataSourceContinuous$ | async) | isSelectedContinuous$Pure: (dataSource | getKeyContinuous$Pure:dataObject | async) | async"
+      [ngClass]="dataSource | getRowNgClassContinuous$Pure: dataObject | async"
+      mat-row
+    ></tr>
+  </ng-container>
+  <ng-template
+    #noNgClassRowTemplate
+  >
+    <tr
+      (click)="handleRowClick(dataObject, $event)"
+      (dblclick)="rowDoubleClick.emit(dataObject)"
+      *matRowDef="let dataObject; columns: dataSource | getColumnCodeListContinuous$Pure | async;"
+      [class.selected]="(keySelectionDataSourceContinuous$ | async) | isSelectedContinuous$Pure: (dataSource | getKeyContinuous$Pure:dataObject | async) | async"
+      mat-row
+    ></tr>
+  </ng-template>
 </table>

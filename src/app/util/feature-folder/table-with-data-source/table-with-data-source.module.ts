@@ -7,6 +7,7 @@ import {GetColumnCodeListContinuous$PurePipe} from './data-source/get-column-cod
 import {DynamicContainerModule} from '../dynamic-container/dynamic-container.module';
 import {SelectionDataSourceModule} from '../selection-data-source/selection-data-source.module';
 import {GetKeyContinuous$PurePipe} from './data-source/get-key-continuous$-pure/get-key-continuous$-pure.pipe';
+import {GetRowNgClassContinuous$PurePipe} from './data-source/get-row-ng-class-continuous$-pure/get-row-ng-class-continuous$-pure.pipe';
 
 
 @NgModule({
@@ -14,6 +15,7 @@ import {GetKeyContinuous$PurePipe} from './data-source/get-key-continuous$-pure/
     GetColumnCodeListContinuous$PurePipe,
     GetDataListContinuous$PurePipe,
     GetKeyContinuous$PurePipe,
+    GetRowNgClassContinuous$PurePipe,
     TableWithDataSourceComponent,
   ],
   exports: [
