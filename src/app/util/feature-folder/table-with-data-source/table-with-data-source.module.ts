@@ -6,15 +6,14 @@ import {GetDataListContinuous$PurePipe} from './data-source/get-data-list-contin
 import {GetColumnCodeListContinuous$PurePipe} from './data-source/get-column-code-list-continuous$-pure/get-column-code-list-continuous$-pure.pipe';
 import {DynamicContainerModule} from '../dynamic-container/dynamic-container.module';
 import {SelectionDataSourceModule} from '../selection-data-source/selection-data-source.module';
-import {GetKeyContinuous$PurePipe} from './data-source/get-key-continuous$-pure/get-key-continuous$-pure.pipe';
 import {GetRowNgClassContinuous$PurePipe} from './data-source/get-row-ng-class-continuous$-pure/get-row-ng-class-continuous$-pure.pipe';
+import {GetKeyContinuous$PureModule} from './data-source/get-key-continuous$-pure/get-key-continuous$-pure.module';
 
 
 @NgModule({
   declarations: [
     GetColumnCodeListContinuous$PurePipe,
     GetDataListContinuous$PurePipe,
-    GetKeyContinuous$PurePipe,
     GetRowNgClassContinuous$PurePipe,
     TableWithDataSourceComponent,
   ],
@@ -24,6 +23,7 @@ import {GetRowNgClassContinuous$PurePipe} from './data-source/get-row-ng-class-c
   imports: [
     CommonModule,
     DynamicContainerModule,
+    GetKeyContinuous$PureModule,
     MatTableModule,
     SelectionDataSourceModule,
   ]
