@@ -1,0 +1,5 @@
+@import "../mixin-folder/no-select";
+
+.no-select {
+  @include no-select
+}

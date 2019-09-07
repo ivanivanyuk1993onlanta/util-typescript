@@ -3,6 +3,7 @@ import {Observable} from 'rxjs';
 import {DynamicCellComponentInterface} from './dynamic-cell-component-interface';
 import {DynamicHeaderCellComponentInterface} from './dynamic-header-cell-component-interface';
 import {NgClass} from '@angular/common';
+import {CdkDragDrop} from '@angular/cdk/drag-drop';
 
 // used to get typeof ngClass in generic
 const ngClassInstance = new NgClass(null);
@@ -27,6 +28,8 @@ export interface TableDataSourceInterface<CellComponentType extends DynamicCellC
   readonly cellComponentType: Type<CellComponentType>;
   readonly headerCellComponentType: Type<HeaderCellComponentType>;
   readonly trackByFunc: TrackByFunction<DataObjectType>;
+
+  dragItem$?(event: CdkDragDrop<DataObjectType>): Observable<void>;
 
   getColumnCodeListContinuous$(): Observable<string[]>;
 

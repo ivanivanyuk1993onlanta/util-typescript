@@ -10,8 +10,6 @@
     &-rest-height {
       flex: 1;
       min-height: 0;
-
-      @include custom-scrollbar()
     }
   }
 }

@@ -16,6 +16,7 @@ import {DynamicCellComponentInterface} from '../data-source/dynamic-cell-compone
 import {DynamicHeaderCellComponentInterface} from '../data-source/dynamic-header-cell-component-interface';
 import {Broadcaster} from '../../../class-folder/broadcaster/broadcaster';
 import {getSharedObservableWithLastValue} from '../../../method-folder/get-shared-observable-with-last-value/get-shared-observable-with-last-value';
+import {CdkDragDrop} from '@angular/cdk/drag-drop';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -57,6 +58,12 @@ export class TableWithDataSourceComponent<CellComponentType extends DynamicCellC
         filter(x => !!x),
       ),
     );
+  }
+
+  public cdkDropListDropped(event: CdkDragDrop<DataObjectType>) {
+    this.dataSource.dragItem$(event).pipe(
+      takeUntil(this._changeBroadcaster.broadcastS$),
+    ).subscribe();
   }
 
   public handleRowClick(

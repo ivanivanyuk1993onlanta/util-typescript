@@ -1,4 +1,4 @@
-@mixin custom-scrollbar {
+@mixin custom-scrollbar-dark {
   overflow: auto;
 
   &::-webkit-scrollbar {
@@ -8,5 +8,18 @@
 
   &::-webkit-scrollbar-thumb {
     background: rgba(256, 256, 256, .26);
+  }
+}
+
+@mixin custom-scrollbar-light {
+  overflow: auto;
+
+  &::-webkit-scrollbar {
+    height: 4px;
+    width: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, .26);
   }
 }
