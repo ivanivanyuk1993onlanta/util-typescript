@@ -1,7 +1,15 @@
+html, body {
+  height: 100%;
+}
+
 // app specific
 @import "app/style-folder/color-folder/color-mixin";
 @import "app/style-folder/theme/theme-mixin";
 
+@import 'app/style-folder/partial-folder/bootstrap-override';
+@import 'app/style-folder/partial-folder/dx-button';
+@import 'app/style-folder/partial-folder/mat-icon-button';
+@import 'app/style-folder/partial-folder/mat-menu';
 @import 'app/style-folder/partial-folder/table';
 
 // legacy
@@ -16,10 +24,20 @@
 @import "assets/css/icons/icomoon/styles.css";
 
 // bootstrap
+$theme-colors: (
+  "app-blue": mat-color($app-blue-palette)
+);
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/mixins";
+@import "~bootstrap/scss/variables";
+
+.bootstrap-4 {
+  @import "~bootstrap/scss/bootstrap";
+}
 .bootstrap-grid {
   @import "~bootstrap/scss/bootstrap-grid";
 }
-@import "~bootstrap/scss/utilities/sizing";
+@import "~bootstrap/scss/utilities";
 
 // util
 // colors
@@ -54,4 +72,4 @@
   @import "app/util/style-folder/theme/theme-light-partial";
 }
 
-@import "app/style-folder/theming";
+@import "app/style-folder/to-refactor";
