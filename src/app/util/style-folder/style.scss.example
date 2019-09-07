@@ -1,0 +1,57 @@
+// app specific
+@import "app/style-folder/color-folder/color-mixin";
+@import "app/style-folder/theme/theme-mixin";
+
+@import 'app/style-folder/partial-folder/table';
+
+// legacy
+@import "~bootstrap3/dist/css/bootstrap.css";
+@import "~devextreme/dist/css/dx.common.css";
+@import "~devextreme/dist/css/dx.light.compact.css";
+@import "~devextreme/dist/css/dx.spa.css";
+@import "assets/css/colors.min.css";
+@import "assets/css/components.css";
+@import "assets/css/core.min.css";
+@import "assets/css/icons/fontawesome/styles.min.css";
+@import "assets/css/icons/icomoon/styles.css";
+
+// bootstrap
+.bootstrap-grid {
+  @import "~bootstrap/scss/bootstrap-grid";
+}
+@import "~bootstrap/scss/utilities/sizing";
+
+// util
+// colors
+@import "app/util/style-folder/color-folder/color-partial";
+
+// fonts
+@import "app/util/style-folder/font-folder/material-icons";
+@import "app/util/style-folder/font-folder/roboto-fontface";
+
+// theme
+@import "app/util/style-folder/theme/theme-core-partial";
+@import "app/util/style-folder/theme/theme-light-partial";
+
+// partials
+@import "app/util/style-folder/partial-folder/active/active-light";
+@import "app/util/style-folder/partial-folder/cdk-drag-drop";
+@import "app/util/style-folder/partial-folder/custom-scrollbar/custom-scrollbar-light";
+@import "app/util/style-folder/partial-folder/height-filler";
+@import "app/util/style-folder/partial-folder/hidden";
+@import "app/util/style-folder/partial-folder/mat-snack-bar";
+@import "app/util/style-folder/partial-folder/no-select";
+
+.dark-theme {
+  @import "app/util/style-folder/partial-folder/active/active-dark";
+  @import "app/util/style-folder/partial-folder/custom-scrollbar/custom-scrollbar-dark";
+  @import "app/util/style-folder/theme/theme-dark-partial";
+}
+
+.light-theme {
+  @import "app/util/style-folder/partial-folder/active/active-light";
+  @import "app/util/style-folder/partial-folder/custom-scrollbar/custom-scrollbar-light";
+  @import "app/util/style-folder/theme/theme-light-partial";
+}
+
+@import "app/style-folder/theming";

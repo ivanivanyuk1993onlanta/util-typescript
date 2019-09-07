@@ -1,0 +1,5 @@
+@import "../../mixin-folder/custom-scrollbar";
+
+.custom-scrollbar {
+  @include custom-scrollbar-light()
+}

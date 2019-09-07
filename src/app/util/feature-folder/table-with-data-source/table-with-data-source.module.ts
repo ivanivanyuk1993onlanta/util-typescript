@@ -8,6 +8,7 @@ import {DynamicContainerModule} from '../dynamic-container/dynamic-container.mod
 import {SelectionDataSourceModule} from '../selection-data-source/selection-data-source.module';
 import {GetRowNgClassContinuous$PurePipe} from './data-source/get-row-ng-class-continuous$-pure/get-row-ng-class-continuous$-pure.pipe';
 import {GetKeyContinuous$PureModule} from './data-source/get-key-continuous$-pure/get-key-continuous$-pure.module';
+import {DragDropModule} from '@angular/cdk/drag-drop';
 
 
 @NgModule({
@@ -26,6 +27,7 @@ import {GetKeyContinuous$PureModule} from './data-source/get-key-continuous$-pur
     GetKeyContinuous$PureModule,
     MatTableModule,
     SelectionDataSourceModule,
+    DragDropModule,
   ]
 })
 export class TableWithDataSourceModule {

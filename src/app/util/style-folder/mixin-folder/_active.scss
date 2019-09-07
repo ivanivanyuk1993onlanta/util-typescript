@@ -1,3 +1,7 @@
-@mixin active {
+@mixin active-dark {
   background: rgba(255, 255, 255, 0.1);
+}
+
+@mixin active-light {
+  background: rgba(0, 0, 0, 0.1);
 }

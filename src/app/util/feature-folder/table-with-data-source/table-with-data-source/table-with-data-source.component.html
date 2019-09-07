@@ -1,6 +1,8 @@
 <table
+  (cdkDropListDropped)="cdkDropListDropped($event)"
   [dataSource]="dataSource | getDataListContinuous$Pure"
   [trackBy]="dataSource.trackByFunc"
+  cdkDropList
   mat-table
 >
   <ng-container
@@ -49,7 +51,9 @@
       (click)="handleRowClick(dataObject, $event)"
       (dblclick)="rowDoubleClick.emit(dataObject)"
       *matRowDef="let dataObject; columns: dataSource | getColumnCodeListContinuous$Pure | async;"
+      [cdkDragData]="dataObject"
       [class.selected]="(keySelectionDataSourceContinuous$ | async) | isSelectedContinuous$Pure: (dataSource | getKeyContinuous$Pure:dataObject | async) | async"
+      cdkDrag
       mat-row
     ></tr>
   </ng-template>
