@@ -1,7 +1,8 @@
 import {SelectionDataSourceInterface} from '../selection-data-source-interface';
 import {SelectionModel} from '@angular/cdk/collections';
 import {BehaviorSubject, Observable, of, Subject} from 'rxjs';
-import {mergeMap, takeUntil, tap, withLatestFrom} from 'rxjs/operators';
+import {map, mergeMap, takeUntil, tap, withLatestFrom} from 'rxjs/operators';
+import {getSharedObservableWithLastValue} from '../../../method-folder/get-shared-observable-with-last-value/get-shared-observable-with-last-value';
 
 // This class uses optimisation - we know data list, hence we can build map of single observables for O(n) on data list
 // change and use it in isSelectedContinuous$, which will allow to call isSelected(dataObject) only in affected
@@ -13,49 +14,49 @@ import {mergeMap, takeUntil, tap, withLatestFrom} from 'rxjs/operators';
 export class OptimisedForDataListSelectionDataSource<DataObjectType> implements SelectionDataSourceInterface<DataObjectType> {
   public readonly selectionModel: SelectionModel<DataObjectType> = new SelectionModel<DataObjectType>(true);
 
-  private _dataObjectToIsSelectedBS$MapBS$ = new BehaviorSubject(new Map<DataObjectType, BehaviorSubject<boolean>>());
+  private _dataObjectToIsSelectedBS$MapContinuous$: Observable<Map<DataObjectType, BehaviorSubject<boolean>>>;
+  private _lastDataObjectToIsSelectedBS$Map = new Map<DataObjectType, BehaviorSubject<boolean>>();
 
   constructor(
     dataListContinuous$: Observable<Array<DataObjectType>>,
     destroyedS$: Subject<void>,
   ) {
-    dataListContinuous$.pipe(
-      withLatestFrom(this._dataObjectToIsSelectedBS$MapBS$),
-      tap(([dataList, dataObjectToIsSelectedBS$Map]) => {
-        // creating list to write deselect values to
-        const deselectList: DataObjectType[] = [];
-        // creating new map from scratch, as we can not optimise to use old map, because we need set of new values anyway
-        const newDataObjectToIsSelectedBS$Map = new Map(dataList.map(dataObject => {
-          // trying to get isSelectedBS$ from last map
-          const isSelectedBS$ = dataObjectToIsSelectedBS$Map.get(dataObject);
-          // if we got isSelectedBS$, returning key-value pair
-          if (isSelectedBS$) {
+    this._dataObjectToIsSelectedBS$MapContinuous$ = getSharedObservableWithLastValue(
+      dataListContinuous$.pipe(
+        map(dataList => {
+          // notice that this solution requires
+          // - n map.set()
+          // - n map.get()
+          // - n_old map.has()
+
+          const lastDataObjectToIsSelectedBS$Map = this._lastDataObjectToIsSelectedBS$Map;
+          // n map.get(), n map.set()
+          const newMap = new Map(dataList.map(dataObject => {
             return [
               dataObject,
-              isSelectedBS$,
+              lastDataObjectToIsSelectedBS$Map.get(dataObject) || new BehaviorSubject(false),
             ];
-            // if we didn't, returning key-value pair with new BehaviorSubject, not forgetting to push key to deselectList to bulk deselect
-            // later
-          } else {
-            deselectList.push(dataObject);
-            return [
-              dataObject,
-              new BehaviorSubject(false),
-            ];
+          }));
+
+          // n_old map.has()
+          const deselectList: DataObjectType[] = [];
+          for (const dataObject of lastDataObjectToIsSelectedBS$Map.keys()) {
+            if (!newMap.has(dataObject)) {
+              deselectList.push(dataObject);
+            }
           }
-        }));
 
-        // deselecting before pushing new map, while removed in new map keys still exist, because if we do it after, we will have to check
-        // for key existence in selectionModel.changed subscription
-        this.selectionModel.deselect(...deselectList);
-
-        this._dataObjectToIsSelectedBS$MapBS$.next(newDataObjectToIsSelectedBS$Map);
-      }),
-      takeUntil(destroyedS$),
-    ).subscribe();
+          this.selectionModel.deselect(...deselectList);
+          return newMap;
+        }),
+        tap(dataObjectToIsSelectedBS$Map => {
+          this._lastDataObjectToIsSelectedBS$Map = dataObjectToIsSelectedBS$Map;
+        }),
+      ),
+    );
 
     this.selectionModel.changed.pipe(
-      withLatestFrom(this._dataObjectToIsSelectedBS$MapBS$),
+      withLatestFrom(this._dataObjectToIsSelectedBS$MapContinuous$),
       takeUntil(destroyedS$),
     ).subscribe(([selectionChange, dataObjectToIsSelectedBS$Map]) => {
       if (selectionChange) {
@@ -72,7 +73,7 @@ export class OptimisedForDataListSelectionDataSource<DataObjectType> implements 
   }
 
   public isSelectedContinuous$(dataObject: DataObjectType): Observable<boolean> {
-    return this._dataObjectToIsSelectedBS$MapBS$.pipe(
+    return this._dataObjectToIsSelectedBS$MapContinuous$.pipe(
       // Notice that we return of(false) when value does not exist in map(it can happen legitimately when map or key
       // stream fired before key or map stream, we do not want creating synchronization outside, hence we return
       // of(false), as it is logical that value, which is not in data list, not selected)
