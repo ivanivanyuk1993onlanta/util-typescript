@@ -28,6 +28,7 @@ export class OptimisedForDataListSelectionDataSource<DataObjectType> implements 
           // - n map.set()
           // - n map.get()
           // - n_old map.has()
+          // also notice that this solution is most optimal when all data list changes, like when pagination page changes
 
           const lastDataObjectToIsSelectedBS$Map = this._lastDataObjectToIsSelectedBS$Map;
           // n map.get(), n map.set()
