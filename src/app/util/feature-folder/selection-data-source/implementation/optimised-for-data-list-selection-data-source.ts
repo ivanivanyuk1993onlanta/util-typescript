@@ -31,7 +31,7 @@ export class OptimisedForDataListSelectionDataSource<DataObjectType> implements 
 
           const lastDataObjectToIsSelectedBS$Map = this._lastDataObjectToIsSelectedBS$Map;
           // n map.get(), n map.set()
-          const newMap = new Map(dataList.map(dataObject => {
+          const newDataObjectToIsSelectedBS$Map = new Map(dataList.map(dataObject => {
             return [
               dataObject,
               lastDataObjectToIsSelectedBS$Map.get(dataObject) || new BehaviorSubject(false),
@@ -41,13 +41,13 @@ export class OptimisedForDataListSelectionDataSource<DataObjectType> implements 
           // n_old map.has()
           const deselectList: DataObjectType[] = [];
           for (const dataObject of lastDataObjectToIsSelectedBS$Map.keys()) {
-            if (!newMap.has(dataObject)) {
+            if (!newDataObjectToIsSelectedBS$Map.has(dataObject)) {
               deselectList.push(dataObject);
             }
           }
 
           this.selectionModel.deselect(...deselectList);
-          return newMap;
+          return newDataObjectToIsSelectedBS$Map;
         }),
         tap(dataObjectToIsSelectedBS$Map => {
           this._lastDataObjectToIsSelectedBS$Map = dataObjectToIsSelectedBS$Map;
