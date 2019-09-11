@@ -1,10 +1,12 @@
 import {Observable, Subject} from 'rxjs';
-import {HttpEvent, HttpHandler, HttpRequest} from '@angular/common/http';
+import {HttpErrorResponse, HttpEvent, HttpHandler, HttpRequest} from '@angular/common/http';
 
 export interface AuthDataSourceInterface<AuthType, CredentialsType> {
-  readonly authErrorS$: Subject<Error>;
+  readonly authRequiredErrorS$: Subject<HttpErrorResponse>;
   readonly displayTextContinuous$: Observable<string>;
+  readonly hasRegistration: boolean;
   readonly isLoggedInContinuous$: Observable<boolean>;
+  readonly loginErrorS$: Subject<HttpErrorResponse>;
 
   interceptHttp$(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>>;
 

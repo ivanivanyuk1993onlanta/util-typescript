@@ -5,8 +5,6 @@ import {MatDialog, MatDialogRef} from '@angular/material';
 import {AuthModalComponent} from '../auth-modal/auth-modal.component';
 import {AuthDataSourceInterface} from '../data-source/auth-data-source-interface';
 import {CredentialsDataSourceInterface} from '../data-source/credentials-data-source-interface';
-import {NotificationService} from '../../notification/notification/notification.service';
-import {MessageTypeEnum} from '../../notification/notification-message-data/message-type-enum';
 import {CREDENTIALS_DATA_SOURCE} from '../../../../config/auth/credentials-data-source-injection-token';
 import {AUTH_DATA_SOURCE} from '../../../../config/auth/auth-data-source-injection-token';
 
@@ -21,49 +19,33 @@ export class AuthService<AuthType, CredentialsType> {
     @Inject(AUTH_DATA_SOURCE) public authDataSource: AuthDataSourceInterface<AuthType, CredentialsType>,
     @Inject(CREDENTIALS_DATA_SOURCE) private _credentialsDataSource: CredentialsDataSourceInterface,
     private _matDialog: MatDialog,
-    private _notificationService: NotificationService,
   ) {
-    authDataSource.authErrorS$.subscribe((error) => {
-      this.openModal();
-      this._notificationService.pushMessage({
-        message: error.message,
-        type: MessageTypeEnum.Error,
-      });
-    });
+    authDataSource.authRequiredErrorS$.pipe(
+      tap(() => {
+        this.openModal();
+      })
+    ).subscribe();
+
+    authDataSource.loginErrorS$.pipe(
+      tap(err => {
+        this._credentialsDataSource.formGroup.setErrors(err);
+      }),
+    ).subscribe();
   }
 
   public closeModal$(): Observable<void> {
     this._matDialogRef.close();
-    return of();
+    return of(null);
   }
 
   public loginAndCloseModal() {
     this.authDataSource.login$(this._credentialsDataSource.formGroup.getRawValue()).pipe(
-      tap(
-        () => {},
-        (error: Error) => {
-          this._notificationService.pushMessage({
-            message: error.message,
-            type: MessageTypeEnum.Error,
-          });
-        }
-      ),
       mergeMap(() => this.closeModal$()),
     ).subscribe();
   }
 
   public logout() {
-    this.authDataSource.logout$().pipe(
-      tap(
-        () => {},
-        (error: Error) => {
-          this._notificationService.pushMessage({
-            message: error.message,
-            type: MessageTypeEnum.Error,
-          });
-        }
-      ),
-    ).subscribe();
+    this.authDataSource.logout$().subscribe();
   }
 
   public openModal() {
@@ -80,12 +62,12 @@ export class AuthService<AuthType, CredentialsType> {
       this._matDialogRef.componentInstance.logoutButtonClickEvent.subscribe(() => {
         this.logout();
       });
-      this._matDialogRef.beforeClose().pipe(
+      this._matDialogRef.beforeClosed().pipe(
         first(),
       ).subscribe(() => {
         this._isDialogOpenedBS$.next(false);
       });
     }
-    return of();
+    return of(null);
   }
 }
