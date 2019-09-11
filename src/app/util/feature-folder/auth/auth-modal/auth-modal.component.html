@@ -13,10 +13,15 @@
         matInput
       >
     </mat-form-field>
+
+    <mat-error
+      *ngIf="(credentialsDataSource.formGroup.statusChanges | async) !== 'VALID'"
+    >{{ credentialsDataSource.formGroup.errors?.error?.message || credentialsDataSource.formGroup.errors?.message }}</mat-error>
   </form>
 </div>
 
 <div
+  align="center"
   mat-dialog-actions
 >
   <button
@@ -38,6 +43,7 @@
   </button>
 
   <button
+    *ngIf="authDataSource.hasRegistration"
     mat-button
   >
     <mat-icon>person_add</mat-icon>

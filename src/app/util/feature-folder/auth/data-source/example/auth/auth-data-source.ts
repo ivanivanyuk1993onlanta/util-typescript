@@ -10,9 +10,11 @@ import {HttpClient, HttpErrorResponse, HttpEvent, HttpHandler, HttpRequest} from
 import * as localForage from 'localforage';
 
 export class AuthDataSource implements AuthDataSourceInterface<AuthInterface, CredentialsInterface> {
-  readonly authErrorS$ = new Subject<Error>();
+  readonly authRequiredErrorS$ = new Subject<HttpErrorResponse>();
   readonly displayTextContinuous$: Observable<string>;
+  readonly hasRegistration = true;
   readonly isLoggedInContinuous$: Observable<boolean>;
+  readonly loginErrorS$ = new Subject<HttpErrorResponse>();
 
   private readonly _authContinuous$: Observable<AuthInterface>;
   private _authBS$WrapBS$ = new BehaviorSubject<BehaviorSubject<AuthInterface>>(null);
@@ -73,7 +75,7 @@ export class AuthDataSource implements AuthDataSourceInterface<AuthInterface, Cr
         if (error.status === 401 && req.url !== this._loginUrl && req.url !== this._logoutUrl) {
           return this._setAuth$(this._getEmptyAuth()).pipe(
             tap(() => {
-              this.authErrorS$.next(error);
+              this.authRequiredErrorS$.next(error);
             }),
             // Waiting for user login
             mergeMap(() => this.isLoggedInContinuous$),

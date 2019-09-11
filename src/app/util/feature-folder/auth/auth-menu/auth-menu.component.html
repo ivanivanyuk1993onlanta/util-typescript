@@ -29,6 +29,7 @@
   </button>
   <button
     (click)="authService.openModal()"
+    *ngIf="authService.authDataSource.hasRegistration"
     mat-menu-item
   >
     <mat-icon>person_add</mat-icon>
