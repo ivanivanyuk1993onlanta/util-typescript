@@ -58,19 +58,20 @@ export class OptimisedForDataListSelectionDataSource<DataObjectType> implements 
 
     this.selectionModel.changed.pipe(
       withLatestFrom(this._dataObjectToIsSelectedBS$MapContinuous$),
+      tap(([selectionChange, dataObjectToIsSelectedBS$Map]) => {
+        if (selectionChange) {
+          // Кидаем новое значение
+          for (const added of selectionChange.added) {
+            dataObjectToIsSelectedBS$Map.get(added).next(true);
+          }
+          // Кидаем новое значение
+          for (const removed of selectionChange.removed) {
+            dataObjectToIsSelectedBS$Map.get(removed).next(false);
+          }
+        }
+      }),
       takeUntil(destroyedS$),
-    ).subscribe(([selectionChange, dataObjectToIsSelectedBS$Map]) => {
-      if (selectionChange) {
-        // Кидаем новое значение
-        for (const added of selectionChange.added) {
-          dataObjectToIsSelectedBS$Map.get(added).next(true);
-        }
-        // Кидаем новое значение
-        for (const removed of selectionChange.removed) {
-          dataObjectToIsSelectedBS$Map.get(removed).next(false);
-        }
-      }
-    });
+    ).subscribe();
   }
 
   public isSelectedContinuous$(dataObject: DataObjectType): Observable<boolean> {
