@@ -8,8 +8,8 @@ import {HttpClient} from '@angular/common/http';
 import {apiUrl} from '../../../../../../config/api-url';
 import {routeListUrlSuffix} from './route-list-url-suffix';
 import {AuthService} from '../../../../auth/auth/auth.service';
-import {getMergedComparatorFunc} from '../../../../../method-folder/get-merged-comparator-func/get-merged-comparator-func';
-import {getComparatorByFuncResult} from '../../../../../method-folder/get-comparator-by-func-result/get-comparator-by-func-result';
+import {getMergedComparatorFunc} from '../../../../../method-folder/comparator-folder/get-merged-comparator-func/get-merged-comparator-func';
+import {getComparatorByFuncResult} from '../../../../../method-folder/comparator-folder/get-comparator-by-func-result/get-comparator-by-func-result';
 
 export class RouteListDataSource implements RouteListDataSourceInterface<RouteData> {
   readonly dataObjectTreeRootListBS$ = new BehaviorSubject<Array<RouteData>>([]);

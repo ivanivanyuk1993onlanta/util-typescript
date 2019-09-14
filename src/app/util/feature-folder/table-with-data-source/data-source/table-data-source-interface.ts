@@ -2,11 +2,8 @@ import {TrackByFunction, Type} from '@angular/core';
 import {Observable} from 'rxjs';
 import {DynamicCellComponentInterface} from './dynamic-cell-component-interface';
 import {DynamicHeaderCellComponentInterface} from './dynamic-header-cell-component-interface';
-import {NgClass} from '@angular/common';
 import {CdkDragDrop} from '@angular/cdk/drag-drop';
-
-// used to get typeof ngClass in generic
-const ngClassInstance = new NgClass(null);
+import {TypeOfNgClass} from './type-of-ng-class';
 
 export interface TableDataSourceInterface<CellComponentType extends DynamicCellComponentInterface<CellComponentType,
   HeaderCellComponentType,
@@ -39,5 +36,5 @@ export interface TableDataSourceInterface<CellComponentType extends DynamicCellC
 
   getKeyListContinuous$(dataObjectList: DataObjectType[]): Observable<KeyType[]>;
 
-  getRowNgClassContinuous$?(dataObject: DataObjectType): Observable<typeof ngClassInstance.ngClass>;
+  getRowNgClassContinuous$?(dataObject: DataObjectType): Observable<TypeOfNgClass>;
 }
