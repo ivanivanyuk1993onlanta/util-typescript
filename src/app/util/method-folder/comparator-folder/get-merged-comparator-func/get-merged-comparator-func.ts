@@ -1,5 +1,5 @@
-import {ComparatorFuncType} from '../../class-folder/comparator/comparator-func-type';
-import {ComparatorFuncResultEnum} from '../../class-folder/comparator/comparator-func-result-enum';
+import {ComparatorFuncType} from '../../../class-folder/comparator/comparator-func-type';
+import {ComparatorFuncResultEnum} from '../../../class-folder/comparator/comparator-func-result-enum';
 
 // What this method helps to achieve, compared with multiple sorts by different criterion:
 // 1) Easier to use (more important comparators go from left(first), which is intuitive, instead of applying more important sort last to
@@ -9,9 +9,9 @@ import {ComparatorFuncResultEnum} from '../../class-folder/comparator/comparator
 
 // comparator func list should be sorted by importance from left to right
 export function getMergedComparatorFunc<T>(comparatorFuncList: Array<ComparatorFuncType<T>>): ComparatorFuncType<T> {
-  return (left, right: T) => {
+  return (left: T, right: T) => {
     // setting initial value in case we got empty array
-    let comparatorFuncResult: ComparatorFuncResultEnum = 0;
+    let comparatorFuncResult = ComparatorFuncResultEnum.Equal;
     for (const comparatorFunc of comparatorFuncList) {
       comparatorFuncResult = comparatorFunc(left, right);
       // Because comparatorFuncList is sorted by importance, if more important comparator returns non-neutral result, we can stop cycle and
