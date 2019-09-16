@@ -1,6 +1,8 @@
 import {ComparatorFuncType} from '../../../class-folder/comparator/comparator-func-type';
 import {ComparatorFuncResultEnum} from '../../../class-folder/comparator/comparator-func-result-enum';
 
+// Todo benchmark solution that doesn't require loop (go from last to first, adding func call to result func(that will effectively remove iterator.next(), but will add func call instead (which may or may not be inlined)))
+
 // What this method helps to achieve, compared with multiple sorts by different criterion:
 // 1) Easier to use (more important comparators go from left(first), which is intuitive, instead of applying more important sort last to
 // beat other sort results)
