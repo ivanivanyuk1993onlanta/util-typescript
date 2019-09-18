@@ -3,11 +3,11 @@ import {Observable} from 'rxjs';
 import {filter, first} from 'rxjs/operators';
 import {getControlObservableWithInitialValue} from './get-control-observable-with-initial-value';
 
-export function waitForFieldNameInFormGroup$<T>(
+export function waitForFieldNameInFormGroup$<ValueType>(
   formGroup: FormGroup,
   fieldName: string,
-): Observable<T> {
-  return getControlObservableWithInitialValue<T>(formGroup).pipe(
+): Observable<ValueType> {
+  return getControlObservableWithInitialValue<ValueType>(formGroup).pipe(
     filter(formValue => fieldName in formValue),
     first(),
   );
