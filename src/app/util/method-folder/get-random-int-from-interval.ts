@@ -1,3 +1,5 @@
+// Todo move to folder, add tests
+
 // min and max inclusively
 export function getRandomIntFromInterval(
   min: number,
