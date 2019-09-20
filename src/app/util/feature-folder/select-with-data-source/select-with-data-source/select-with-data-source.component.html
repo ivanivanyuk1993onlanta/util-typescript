@@ -5,10 +5,10 @@
     [formControl]="dataSource.formControl"
   >
     <mat-option
-      *ngFor="let value of dataSource | getValueListContinuous$Pure | async"
-      [value]="value"
+      *ngFor="let option of dataSource | getOptionListContinuous$Pure | async"
+      [value]="option"
     >
-      {{ dataSource | getDisplayTextContinuous$Pure:value | async }}
+      {{ dataSource | getDisplayTextContinuous$Pure:option | async }}
     </mat-option>
   </mat-select>
 </mat-form-field>

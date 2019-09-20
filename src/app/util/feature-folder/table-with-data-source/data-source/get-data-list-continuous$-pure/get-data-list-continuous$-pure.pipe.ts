@@ -6,16 +6,9 @@ import {DynamicHeaderCellComponentInterface} from '../dynamic-header-cell-compon
 @Pipe({
   name: 'getDataListContinuous$Pure'
 })
-export class GetDataListContinuous$PurePipe<CellComponentType extends DynamicCellComponentInterface<CellComponentType,
-  HeaderCellComponentType,
-  TableDataSourceType,
-  DataObjectType,
-  KeyType>,
-  HeaderCellComponentType extends DynamicHeaderCellComponentInterface<CellComponentType,
-    HeaderCellComponentType,
-    TableDataSourceType,
-    DataObjectType,
-    KeyType>,
+export class GetDataListContinuous$PurePipe<CellComponentType extends DynamicCellComponentInterface<DataObjectType,
+  TableDataSourceType>,
+  HeaderCellComponentType extends DynamicHeaderCellComponentInterface<TableDataSourceType>,
   TableDataSourceType extends TableDataSourceInterface<CellComponentType,
     HeaderCellComponentType,
     TableDataSourceType,

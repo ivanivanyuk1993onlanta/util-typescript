@@ -6,16 +6,9 @@ import {TableDataSourceInterface} from '../table-data-source-interface';
 @Pipe({
   name: 'getRowNgClassContinuous$Pure'
 })
-export class GetRowNgClassContinuous$PurePipe<CellComponentType extends DynamicCellComponentInterface<CellComponentType,
-  HeaderCellComponentType,
-  TableDataSourceType,
-  DataObjectType,
-  KeyType>,
-  HeaderCellComponentType extends DynamicHeaderCellComponentInterface<CellComponentType,
-    HeaderCellComponentType,
-    TableDataSourceType,
-    DataObjectType,
-    KeyType>,
+export class GetRowNgClassContinuous$PurePipe<CellComponentType extends DynamicCellComponentInterface<DataObjectType,
+  TableDataSourceType>,
+  HeaderCellComponentType extends DynamicHeaderCellComponentInterface<TableDataSourceType>,
   TableDataSourceType extends TableDataSourceInterface<CellComponentType,
     HeaderCellComponentType,
     TableDataSourceType,

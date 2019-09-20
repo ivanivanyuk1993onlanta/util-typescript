@@ -10,8 +10,8 @@ import {Broadcaster} from '../../../class-folder/broadcaster/broadcaster';
   styleUrls: ['./select-with-data-source.component.scss'],
   templateUrl: './select-with-data-source.component.html',
 })
-export class SelectWithDataSourceComponent<ValueType> implements OnDestroy {
-  @Input() dataSource: SelectDataSourceInterface<ValueType>;
+export class SelectWithDataSourceComponent<OptionType> implements OnDestroy {
+  @Input() dataSource: SelectDataSourceInterface<OptionType>;
 
   private _changeBroadcaster = new Broadcaster();
 
@@ -20,7 +20,7 @@ export class SelectWithDataSourceComponent<ValueType> implements OnDestroy {
   }
 
   public select(matSelectChange: MatSelectChange) {
-    this.dataSource.setValue$(matSelectChange.value).pipe(
+    this.dataSource.setOption$(matSelectChange.value).pipe(
       takeUntil(this._changeBroadcaster.broadcastS$),
     ).subscribe();
   }
