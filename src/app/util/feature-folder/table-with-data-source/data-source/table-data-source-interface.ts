@@ -5,16 +5,8 @@ import {DynamicHeaderCellComponentInterface} from './dynamic-header-cell-compone
 import {CdkDragDrop} from '@angular/cdk/drag-drop';
 import {TypeOfNgClass} from './type-of-ng-class';
 
-export interface TableDataSourceInterface<CellComponentType extends DynamicCellComponentInterface<CellComponentType,
-  HeaderCellComponentType,
-  TableDataSourceType,
-  DataObjectType,
-  KeyType>,
-  HeaderCellComponentType extends DynamicHeaderCellComponentInterface<CellComponentType,
-    HeaderCellComponentType,
-    TableDataSourceType,
-    DataObjectType,
-    KeyType>,
+export interface TableDataSourceInterface<CellComponentType extends DynamicCellComponentInterface<DataObjectType, TableDataSourceType>,
+  HeaderCellComponentType extends DynamicHeaderCellComponentInterface<TableDataSourceType>,
   TableDataSourceType extends TableDataSourceInterface<CellComponentType,
     HeaderCellComponentType,
     TableDataSourceType,
