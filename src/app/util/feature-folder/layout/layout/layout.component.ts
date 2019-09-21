@@ -1,6 +1,7 @@
 import {ChangeDetectionStrategy, Component, Input, TemplateRef, ViewChild} from '@angular/core';
 import {MediaQueryObserverService} from '../../media-query-observer/media-query-observer.service';
 import {MatSidenav} from '@angular/material';
+import {LayoutDataSourceInterface} from '../data-source/layout-data-source-interface';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -10,6 +11,7 @@ import {MatSidenav} from '@angular/material';
 })
 export class LayoutComponent {
   @Input() contentTemplateRef: TemplateRef<any>;
+  @Input() dataSource: LayoutDataSourceInterface;
   @Input() headerTemplateRef: TemplateRef<any>;
   @Input() leftSidenavTemplateRef: TemplateRef<any>;
   @Input() rightSidenavTemplateRef: TemplateRef<any>;
