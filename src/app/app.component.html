@@ -1,16 +1,21 @@
-<app-layout>
-  <div class="layout__header">
-    <app-flex-spacer></app-flex-spacer>
-    <app-auth-menu></app-auth-menu>
-    <app-locale-selection></app-locale-selection>
-  </div>
-  <div class="layout__sidenav">
-    <app-route-list
-      [dataSource]="routeListDataSource"
-    ></app-route-list>
-  </div>
+<app-layout
+  [contentTemplateRef]="content"
+  [headerTemplateRef]="header"
+  [sidenavTemplateRef]="sidenav"
+></app-layout>
 
-  <div class="layout__content">
-    <router-outlet></router-outlet>
-  </div>
-</app-layout>
+<ng-template #header>
+  <app-flex-spacer></app-flex-spacer>
+  <app-auth-menu></app-auth-menu>
+  <app-locale-selection></app-locale-selection>
+</ng-template>
+
+<ng-template #sidenav>
+  <app-route-list
+    [dataSource]="routeListDataSource"
+  ></app-route-list>
+</ng-template>
+
+<ng-template #content>
+  <router-outlet></router-outlet>
+</ng-template>
