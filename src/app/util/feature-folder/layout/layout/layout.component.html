@@ -3,15 +3,6 @@
     <mat-toolbar
       color="primary"
     >
-      <button
-        (click)="drawer.toggle()"
-        aria-label="Toggle sidenav"
-        mat-icon-button
-        type="button"
-      >
-        <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
-      </button>
-
       <ng-container *ngTemplateOutlet="headerTemplateRef"></ng-container>
     </mat-toolbar>
   </div>
@@ -20,19 +11,32 @@
     autosize
     class="height-filler__row-rest-height"
   >
+
     <mat-sidenav
-      #drawer
+      #leftSidenav
       [disableClose]="!(mediaQueryObserverService.isHandset$ | async)"
       [mode]="(mediaQueryObserverService.isHandset$ | async) ? 'over' : 'side'"
       [opened]="true"
       position="start"
       role="navigation"
     >
-      <ng-container *ngTemplateOutlet="sidenavTemplateRef"></ng-container>
+      <ng-container *ngTemplateOutlet="leftSidenavTemplateRef"></ng-container>
+    </mat-sidenav>
+
+    <mat-sidenav
+      #rightSidenav
+      [disableClose]="!(mediaQueryObserverService.isHandset$ | async)"
+      [mode]="(mediaQueryObserverService.isHandset$ | async) ? 'over' : 'side'"
+      [opened]="true"
+      position="end"
+      role="navigation"
+    >
+      <ng-container *ngTemplateOutlet="rightSidenavTemplateRef"></ng-container>
     </mat-sidenav>
 
     <mat-sidenav-content>
       <ng-container *ngTemplateOutlet="contentTemplateRef"></ng-container>
     </mat-sidenav-content>
+
   </mat-sidenav-container>
 </div>
