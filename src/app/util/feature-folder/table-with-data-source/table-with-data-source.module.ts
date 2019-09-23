@@ -23,6 +23,7 @@ import {DragDropModule} from '@angular/cdk/drag-drop';
   ],
   imports: [
     CommonModule,
+// Todo use template outlet instead of dynamic container
     DynamicContainerModule,
     GetKeyContinuous$PureModule,
     MatTableModule,
