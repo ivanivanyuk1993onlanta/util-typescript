@@ -18,11 +18,12 @@ export class OptimisedForDataListSelectionDataSource<DataObjectType> implements 
   private _lastDataObjectToIsSelectedBS$Map = new Map<DataObjectType, BehaviorSubject<boolean>>();
 
   constructor(
-    dataListContinuous$: Observable<Array<DataObjectType>>,
-    destroyedS$: Subject<void>,
+    private _dataListContinuous$: Observable<Array<DataObjectType>>,
+    private _destroyedS$: Subject<void>,
+    private _isSelectedByDefault = false,
   ) {
     this._dataObjectToIsSelectedBS$MapContinuous$ = getSharedObservableWithLastValue(
-      dataListContinuous$.pipe(
+      _dataListContinuous$.pipe(
         map(dataList => {
           // notice that this solution requires
           // - n map.set()
@@ -35,7 +36,7 @@ export class OptimisedForDataListSelectionDataSource<DataObjectType> implements 
           const newDataObjectToIsSelectedBS$Map = new Map(dataList.map(dataObject => {
             return [
               dataObject,
-              lastDataObjectToIsSelectedBS$Map.get(dataObject) || new BehaviorSubject(false),
+              lastDataObjectToIsSelectedBS$Map.get(dataObject) || new BehaviorSubject(_isSelectedByDefault),
             ];
           }));
 
@@ -70,8 +71,27 @@ export class OptimisedForDataListSelectionDataSource<DataObjectType> implements 
           }
         }
       }),
-      takeUntil(destroyedS$),
+      takeUntil(_destroyedS$),
     ).subscribe();
+
+    // If we should select by default (as in expandedModel with opened by default nodes), we should notify selection
+    // model about selections
+    if (_isSelectedByDefault) {
+      this._dataObjectToIsSelectedBS$MapContinuous$.pipe(
+        tap(dataObjectToIsSelectedBS$Map => {
+          // Getting list of objects, which are selected in dataObjectToIsSelectedBS$Map, but not in selectionModel
+          const newObjectList = Array.from(dataObjectToIsSelectedBS$Map)
+            .filter(([dataObject, isSelectedBS$]) => {
+              return isSelectedBS$.getValue() && !this.selectionModel.isSelected(dataObject);
+            })
+            .map(([dataObject, _]) => dataObject);
+
+          // Selecting them
+          this.selectionModel.select(...newObjectList);
+        }),
+        takeUntil(_destroyedS$),
+      ).subscribe();
+    }
   }
 
   public isSelectedContinuous$(dataObject: DataObjectType): Observable<boolean> {
