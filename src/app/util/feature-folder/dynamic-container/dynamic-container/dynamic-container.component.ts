@@ -6,9 +6,9 @@ import {
   OnChanges,
   SimpleChanges,
   Type,
-  ViewChild
+  ViewChild,
+  ViewContainerRef
 } from '@angular/core';
-import {ViewContainerRefDirective} from '../../view-container-ref/view-container-ref.directive';
 import {DynamicComponentInterface} from './dynamic-component-interface';
 
 @Component({
@@ -21,7 +21,10 @@ export class DynamicContainerComponent<InputType, ComponentType extends DynamicC
   @Input() componentType: Type<ComponentType>;
   @Input() input: InputType;
 
-  @ViewChild(ViewContainerRefDirective, {static: true}) private _viewContainerRef: ViewContainerRefDirective;
+  @ViewChild('template', {
+    read: ViewContainerRef,
+    static: true,
+  }) private _viewContainerRef: ViewContainerRef;
 
   private _componentInstance: ComponentType;
 
@@ -32,16 +35,13 @@ export class DynamicContainerComponent<InputType, ComponentType extends DynamicC
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.componentType) {
-      this._viewContainerRef.viewContainerRef.clear();
-      this._componentInstance = (this._viewContainerRef.viewContainerRef.createComponent(
+      this._viewContainerRef.clear();
+      this._componentInstance = this._viewContainerRef.createComponent(
         this._componentFactoryResolver.resolveComponentFactory(this.componentType),
-      ).instance as ComponentType);
-
-      this._componentInstance.input = this.input;
-      this._componentInstance.ngOnChanges(this.input as unknown as SimpleChanges);
-    } else if (changes.input) {
-      this._componentInstance.input = this.input;
-      this._componentInstance.ngOnChanges(changes);
+      ).instance;
     }
+    // todo add ChangeDetector call
+    this._componentInstance.input = this.input;
+    this._componentInstance.ngOnChanges(changes);
   }
 }

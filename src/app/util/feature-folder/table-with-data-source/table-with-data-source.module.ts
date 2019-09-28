@@ -19,7 +19,9 @@ import {DragDropModule} from '@angular/cdk/drag-drop';
     TableWithDataSourceComponent,
   ],
   exports: [
-    TableWithDataSourceComponent
+    TableWithDataSourceComponent,
+    // todo вынести GetDataListContinuous$PurePipe в модуль
+    GetDataListContinuous$PurePipe
   ],
   imports: [
     CommonModule,
