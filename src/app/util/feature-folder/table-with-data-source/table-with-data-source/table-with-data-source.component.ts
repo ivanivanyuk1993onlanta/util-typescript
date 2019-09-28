@@ -18,6 +18,30 @@ import {Broadcaster} from '../../../class-folder/broadcaster/broadcaster';
 import {getSharedObservableWithLastValue} from '../../../method-folder/get-shared-observable-with-last-value/get-shared-observable-with-last-value';
 import {CdkDragDrop} from '@angular/cdk/drag-drop';
 
+// todo this component is still in progress of active development/accumulating usage data. On this moment it is
+//  expected to be removed, as it's usage proved to be limiting/inconvenient
+//  What it should be replaced with:
+//  - selection logic should be moved to reusable TableSelectionDataSource, which should be used like
+//  this.tableSelectionDataSource = new TableSelectionDataSource(this) inside TableDataSource implementation
+//  - same should happen for drag/drop logic, notice that drag drop may happen in tree table, so there should be
+//  TableDragDropDataSource variants for both flat and tree table
+//  - most common table row definitions should be moved to reusable templates/components (for example row
+//  definition(*matRowDef) with selection and drag-drop, which should notify TableDataSource about click event and apply
+//  selected (or maybe css class 'selected' should be applied in getRowNgClassContinuous$))
+//  - About table in template - I believe every table should have trackBy func, hence this logic is a candidate to be
+//  reusable, together with this line [dataSource]="dataSource | getDataListContinuous$Pure". The only thing that may
+//  change among different tables is cdkDropList and (cdkDropListDropped)="cdkDropListDropped($event)", hence maybe
+//  there should be a component that will take as input dataSource and it's colDef/rowDef ng-template, which will decide,
+//  depending on some method in dataSource, whether it should use cdkDropList directive/listener/cdkDropListConnectedTo.
+//  I forgot that it also has to apply multiTemplateDataRows
+//  - row definition templates should be passed either as array of ng-templates and getColumnCodeList by their index, or
+//  as one ng-template with columnCode list decided in template (smells, but it eases row communication (otherwise the
+//  only way will be through data source))(have to make decision here, for now I am strongly for getColumnCodeList by
+//  their index)
+//  - column defs may be passed all inside one ng-template, as they do not need different column code lists
+
+// todo Described above changes will allow to build tables of any complexity(like tree tables), without much copy-paste
+
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-table-with-data-source',
