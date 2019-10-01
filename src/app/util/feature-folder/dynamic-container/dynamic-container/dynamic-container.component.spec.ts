@@ -3,8 +3,8 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { DynamicContainerComponent } from './dynamic-container.component';
 
 describe('DynamicContainerComponent', () => {
-  let component: DynamicContainerComponent<unknown, unknown>;
-  let fixture: ComponentFixture<DynamicContainerComponent<unknown, unknown>>;
+  let component: DynamicContainerComponent<unknown, any>;
+  let fixture: ComponentFixture<DynamicContainerComponent<unknown, any>>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({

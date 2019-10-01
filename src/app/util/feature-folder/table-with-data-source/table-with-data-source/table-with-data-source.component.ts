@@ -6,7 +6,7 @@ import {
   OnChanges,
   OnDestroy,
   Output,
-  SimpleChanges
+  SimpleChanges, TrackByFunction
 } from '@angular/core';
 import {OptimisedForDataListSelectionDataSource} from '../../selection-data-source/implementation/optimised-for-data-list-selection-data-source';
 import {filter, first, mergeMap, takeUntil, tap, withLatestFrom} from 'rxjs/operators';
@@ -61,7 +61,8 @@ export class TableWithDataSourceComponent<CellComponentType extends DynamicCellC
   @Input() dataSource: TableDataSourceType;
   @Output() rowDoubleClick = new EventEmitter<DataObjectType>();
 
-  public keySelectionDataSourceContinuous$: Observable<OptimisedForDataListSelectionDataSource<KeyType>>;
+  keySelectionDataSourceContinuous$: Observable<OptimisedForDataListSelectionDataSource<KeyType>>;
+  trackByFunc: TrackByFunction<DataObjectType>;
 
   private _changeBroadcaster = new Broadcaster();
   private _keyListContinuous$: Observable<KeyType[]>;
@@ -134,31 +135,35 @@ export class TableWithDataSourceComponent<CellComponentType extends DynamicCellC
   public ngOnChanges(changes: SimpleChanges): void {
     this._changeBroadcaster.broadcast();
 
-    this._keyListContinuous$ = getSharedObservableWithLastValue(
-      this.dataSource.getDataListContinuous$().pipe(
-        mergeMap(dataList => this.dataSource.getKeyListContinuous$(dataList)),
-        tap(keyList => {
-          // Строим здесь map за O(n), чтобы не тратить O(n) при каждом вызове _getRowIndexByKey
-          this._keyToRowIndexMapBS$.next(
-            new Map<KeyType, number>(keyList.map((key, index) => {
-              return [
-                key,
-                index,
-              ];
-            })),
-          );
+    if (this.dataSource) {
+      this.trackByFunc = (index, item) => this.dataSource.trackByFunc(index, item);
 
-          // Обнуляем lastClickedWithoutShiftKey, если такого ключа больше нет
-          if (!this._keyToRowIndexMapBS$.getValue().has(this._lastClickedWithoutShiftKeyBS$.getValue())) {
-            this._lastClickedWithoutShiftKeyBS$.next(null);
-          }
-        }),
-      ),
-    );
+      this._keyListContinuous$ = getSharedObservableWithLastValue(
+        this.dataSource.getDataListContinuous$().pipe(
+          mergeMap(dataList => this.dataSource.getKeyListContinuous$(dataList)),
+          tap(keyList => {
+            // Строим здесь map за O(n), чтобы не тратить O(n) при каждом вызове _getRowIndexByKey
+            this._keyToRowIndexMapBS$.next(
+              new Map<KeyType, number>(keyList.map((key, index) => {
+                return [
+                  key,
+                  index,
+                ];
+              })),
+            );
 
-    this._keySelectionDataSourceBS$.next(
-      new OptimisedForDataListSelectionDataSource(this._keyListContinuous$, this._changeBroadcaster.broadcastS$),
-    );
+            // Обнуляем lastClickedWithoutShiftKey, если такого ключа больше нет
+            if (!this._keyToRowIndexMapBS$.getValue().has(this._lastClickedWithoutShiftKeyBS$.getValue())) {
+              this._lastClickedWithoutShiftKeyBS$.next(null);
+            }
+          }),
+        ),
+      );
+
+      this._keySelectionDataSourceBS$.next(
+        new OptimisedForDataListSelectionDataSource(this._keyListContinuous$, this._changeBroadcaster.broadcastS$),
+      );
+    }
   }
 
   public ngOnDestroy(): void {

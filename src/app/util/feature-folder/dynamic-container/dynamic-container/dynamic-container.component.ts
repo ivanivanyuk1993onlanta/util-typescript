@@ -10,6 +10,7 @@ import {
   ViewContainerRef
 } from '@angular/core';
 import {DynamicComponentInterface} from './dynamic-component-interface';
+import {BehaviorSubject} from 'rxjs';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -26,7 +27,7 @@ export class DynamicContainerComponent<InputType, ComponentType extends DynamicC
     static: true,
   }) private _viewContainerRef: ViewContainerRef;
 
-  private _componentInstance: ComponentType;
+  private _inputBS$ = new BehaviorSubject<InputType>(null);
 
   constructor(
     private _componentFactoryResolver: ComponentFactoryResolver,
@@ -36,12 +37,10 @@ export class DynamicContainerComponent<InputType, ComponentType extends DynamicC
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.componentType) {
       this._viewContainerRef.clear();
-      this._componentInstance = this._viewContainerRef.createComponent(
+      this._viewContainerRef.createComponent(
         this._componentFactoryResolver.resolveComponentFactory(this.componentType),
-      ).instance;
+      ).instance.input$ = this._inputBS$;
     }
-    // todo add ChangeDetector call
-    this._componentInstance.input = this.input;
-    this._componentInstance.ngOnChanges(changes);
+    this._inputBS$.next(this.input);
   }
 }
