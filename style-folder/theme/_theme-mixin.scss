@@ -1,0 +1,5 @@
+@import "../../node_modules/@angular/material/theming";
+
+$typography-config: mat-typography-config(
+  $font-family: '"Roboto Mono", monospace'
+) !default;
