@@ -1,8 +1,8 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Inject, Output} from '@angular/core';
 import {CredentialsDataSourceInterface} from '../data-source/credentials-data-source-interface';
 import {AuthDataSourceInterface} from '../data-source/auth-data-source-interface';
-import {AUTH_DATA_SOURCE} from '../../../src/app/config/auth/auth-data-source-injection-token';
-import {CREDENTIALS_DATA_SOURCE} from '../../../src/app/config/auth/credentials-data-source-injection-token';
+import {AUTH_DATA_SOURCE} from '../../../../config/auth/auth-data-source-injection-token';
+import {CREDENTIALS_DATA_SOURCE} from '../../../../config/auth/credentials-data-source-injection-token';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
