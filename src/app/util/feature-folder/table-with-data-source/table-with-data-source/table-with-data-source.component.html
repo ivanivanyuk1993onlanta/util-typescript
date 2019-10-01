@@ -1,7 +1,8 @@
 <table
   (cdkDropListDropped)="cdkDropListDropped($event)"
+  *ngIf="dataSource"
   [dataSource]="dataSource | getDataListContinuous$Pure"
-  [trackBy]="dataSource.trackByFunc"
+  [trackBy]="trackByFunc"
   cdkDropList
   mat-table
 >
