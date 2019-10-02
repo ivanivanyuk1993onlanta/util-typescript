@@ -1,2 +1,0 @@
-- This folder contains data-source example for demo app, which should work without server, but still can contain some optimisations for server to ease migration to existing apps
-- I recommend moving folder_name to /src/app/config/folder_name
