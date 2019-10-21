@@ -5,8 +5,8 @@ import {MatDialog, MatDialogRef} from '@angular/material';
 import {AuthModalComponent} from '../auth-modal/auth-modal.component';
 import {AuthDataSourceInterface} from '../data-source/auth-data-source-interface';
 import {CredentialsDataSourceInterface} from '../data-source/credentials-data-source-interface';
-import {CREDENTIALS_DATA_SOURCE} from '../../../../config/auth/credentials-data-source-injection-token';
 import {AUTH_DATA_SOURCE} from '../../../../config/auth/auth-data-source-injection-token';
+import {CREDENTIALS_DATA_SOURCE} from '../../../../config/auth/credentials-data-source-injection-token';
 
 @Injectable({
   providedIn: 'root'
