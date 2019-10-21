@@ -12,33 +12,33 @@ html, body {
 
 // util
 // colors
-@import "app/util/style-folder/color-folder/color-partial";
+@import "app/util-angular/style-folder/color-folder/color-partial";
 
 // fonts
-@import "app/util/style-folder/font-folder/material-icons";
-@import "app/util/style-folder/font-folder/roboto-fontface";
+@import "app/util-angular/style-folder/font-folder/material-icons";
+@import "app/util-angular/style-folder/font-folder/roboto-fontface";
 
 // theme
-@import "app/util/style-folder/theme/theme-core-partial";
-@import "app/util/style-folder/theme/theme-light-partial";
+@import "app/util-angular/style-folder/theme/theme-core-partial";
+@import "app/util-angular/style-folder/theme/theme-light-partial";
 
 // partials
-@import "app/util/style-folder/partial-folder/active/active-light";
-@import "app/util/style-folder/partial-folder/cdk-drag-drop";
-@import "app/util/style-folder/partial-folder/custom-scrollbar/custom-scrollbar-light";
-@import "app/util/style-folder/partial-folder/height-filler";
-@import "app/util/style-folder/partial-folder/hidden";
-@import "app/util/style-folder/partial-folder/mat-snack-bar";
-@import "app/util/style-folder/partial-folder/no-select";
+@import "app/util-angular/style-folder/partial-folder/active/active-light";
+@import "app/util-angular/style-folder/partial-folder/cdk-drag-drop";
+@import "app/util-angular/style-folder/partial-folder/custom-scrollbar/custom-scrollbar-light";
+@import "app/util-angular/style-folder/partial-folder/height-filler";
+@import "app/util-angular/style-folder/partial-folder/hidden";
+@import "app/util-angular/style-folder/partial-folder/mat-snack-bar";
+@import "app/util-angular/style-folder/partial-folder/no-select";
 
 .dark-theme {
-  @import "app/util/style-folder/partial-folder/active/active-dark";
-  @import "app/util/style-folder/partial-folder/custom-scrollbar/custom-scrollbar-dark";
-  @import "app/util/style-folder/theme/theme-dark-partial";
+  @import "app/util-angular/style-folder/partial-folder/active/active-dark";
+  @import "app/util-angular/style-folder/partial-folder/custom-scrollbar/custom-scrollbar-dark";
+  @import "app/util-angular/style-folder/theme/theme-dark-partial";
 }
 
 .light-theme {
-  @import "app/util/style-folder/partial-folder/active/active-light";
-  @import "app/util/style-folder/partial-folder/custom-scrollbar/custom-scrollbar-light";
-  @import "app/util/style-folder/theme/theme-light-partial";
+  @import "app/util-angular/style-folder/partial-folder/active/active-light";
+  @import "app/util-angular/style-folder/partial-folder/custom-scrollbar/custom-scrollbar-light";
+  @import "app/util-angular/style-folder/theme/theme-light-partial";
 }
