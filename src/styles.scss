@@ -24,12 +24,12 @@ body {
 
 // theme
 @import "app/util-angular/style-folder/theme/theme-core-partial";
-@import "app/util-angular/style-folder/theme/theme-light-partial";
+@import "app/util-angular/style-folder/theme/theme-dark-partial";
 
 // partials
-@import "app/util-angular/style-folder/partial-folder/active/active-light";
+@import "app/util-angular/style-folder/partial-folder/active/active-dark";
 @import "app/util-angular/style-folder/partial-folder/cdk-drag-drop";
-@import "app/util-angular/style-folder/partial-folder/custom-scrollbar/custom-scrollbar-light";
+@import "app/util-angular/style-folder/partial-folder/custom-scrollbar/custom-scrollbar-dark";
 @import "app/util-angular/style-folder/partial-folder/height-filler";
 @import "app/util-angular/style-folder/partial-folder/hidden";
 @import "app/util-angular/style-folder/partial-folder/mat-snack-bar";
