@@ -1,9 +1,0 @@
-<button
-  (click)="dataSource.actionFunc()"
-  mat-raised-button
->
-  <mat-icon
-    *ngIf="dataSource | getIconContinuous$Pure | async"
-  >{{ dataSource | getIconContinuous$Pure | async }}</mat-icon>
-  {{ dataSource | getDisplayTextContinuous$Pure | async }}
-</button>
