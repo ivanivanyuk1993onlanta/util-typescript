@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+export BRANCH_NAME=dev
+export REPOSITORY_NAME=git@github.com:ivanivanyuk1993/util-typescript.git
+export SUBTREE_PREFIX=src/app/util-angular/util-typescript

@@ -1,12 +1,9 @@
 This project is not to be used/edited as not part of other projects, hence it doesnt't have neither npm, nor tsconfig
 
-Helpful scripts to work with subtree
-```
-# add
-git subtree add --prefix util-typescript https://github.com/ivanivanyuk1993/util-typescript.git dev --squash
+Helpful scripts to work with sub-tree are placed in .sub-tree
 
-# pull
-git subtree pull --prefix util-typescript https://github.com/ivanivanyuk1993/util-typescript.git dev --squash
-
-# push
-git subtree push --prefix util-typescript git@github.com:ivanivanyuk1993/util-typescript.git dev
+How to work with .sub-tree
+- Copy .sub-tree/variable-file.sh.example to .sub-tree/variable-file.sh
+- Fill .sub-tree/variable-file.sh with actual values
+- Open script pull.sh or push.sh in IDE
+- Click run
