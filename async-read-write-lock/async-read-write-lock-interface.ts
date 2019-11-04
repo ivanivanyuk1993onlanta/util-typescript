@@ -9,9 +9,9 @@ export interface AsyncReadWriteLockInterface {
   // this writer)
   acquireWriteLock(): Promise<void>;
 
-  // Method should run inside read lock release logic
+  // Method should contain read lock release logic
   releaseReadLock();
 
-  // Method should run inside write lock release logic
-  releaseWriteLock(): Promise<void>;
+  // Method should contain write lock release logic
+  releaseWriteLock();
 }
