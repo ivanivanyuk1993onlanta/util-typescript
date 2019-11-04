@@ -17,10 +17,16 @@ export class AsyncReadWriteLock implements AsyncReadWriteLockInterface {
       if (readerCount !== writerLockNumber) {
         // Last lock is reader lock, hence we should increment it's read lock
         // count
-        this._incrementReadLockCountListTail();
+        this._readLockCountList.append(this._readLockCountList.removeTail() + 1);
       } else {
-        // Last lock is writer lock, hence we should run _appendReadLockAfterWriteLock
-        this._appendReadLockAfterWriteLock();
+        // Last lock is writer lock, hence we need to append Read lock after
+        // write lock, hence we need to initialize new _readLockCountList with
+        // value 1, create and store new unresolved readAcquirePromise and it's
+        // resolver
+        this._readLockCountList.append(1);
+        this._lastReadAcquirePromise = new Promise<void>((onFulfilled) => {
+          this._lockReleaserList.append(onFulfilled);
+        });
       }
     } else {
       // _readLockCountList is empty here, hence we can append 1 to
@@ -56,7 +62,7 @@ export class AsyncReadWriteLock implements AsyncReadWriteLockInterface {
     // count in head, hence we can safely assume that 0 doesn't mean
     // writerLockNumber, but means that we can remove lock and try to call next
     // lock releaser, if it exists
-    this._decrementReadLockCountListHead();
+    this._readLockCountList.prepend(this._readLockCountList.removeHead() - 1);
     if (this._readLockCountList.head < 1) {
       this._releaseNextLock();
     }
@@ -66,24 +72,6 @@ export class AsyncReadWriteLock implements AsyncReadWriteLockInterface {
     // releaseWriteLock should be called only when _readLockCountList has writer
     // number in head, hence we can safely run _releaseNextLock logic
     this._releaseNextLock();
-  }
-
-  private _appendReadLockAfterWriteLock() {
-    // We need to append Read lock after write lock, hence we need to initialize
-    // new _readLockCountList with value 1, create and store new unresolved
-    // readAcquirePromise and it's resolver
-    this._readLockCountList.append(1);
-    this._lastReadAcquirePromise = new Promise<void>((onFulfilled) => {
-      this._lockReleaserList.append(onFulfilled);
-    });
-  }
-
-  private _decrementReadLockCountListHead() {
-    this._readLockCountList.prepend(this._readLockCountList.removeHead() - 1);
-  }
-
-  private _incrementReadLockCountListTail() {
-    this._readLockCountList.append(this._readLockCountList.removeTail() + 1);
   }
 
   private _releaseNextLock() {
