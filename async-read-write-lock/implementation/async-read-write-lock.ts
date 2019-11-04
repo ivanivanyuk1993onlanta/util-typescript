@@ -56,8 +56,8 @@ export class AsyncReadWriteLock implements AsyncReadWriteLockInterface {
 
   private _appendReadLockAfterWriteLock() {
     // We need to append Read lock after write lock, hence we need to initialize
-    // new _readLockCountList with value 1, append new unresolved
-    // readAcquirePromise and it's resolver to lists
+    // new _readLockCountList with value 1, create and store new unresolved
+    // readAcquirePromise and it's resolver
     this._readLockCountList.append(1);
     this._lastReadAcquirePromise = new Promise<void>((onFulfilled) => {
       this._lockReleaserList.append(onFulfilled);
