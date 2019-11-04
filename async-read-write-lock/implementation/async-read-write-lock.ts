@@ -23,10 +23,10 @@ export class AsyncReadWriteLock implements AsyncReadWriteLockInterface {
         this._appendReadLockAfterWriteLock();
       }
     } else {
-      // _readLockCountList is empty here, hence we can append 1 to _readLockCountList,
-      // append resolved Promise to _readAcquirePromiseList(for reuse in next
-      // readers) and we have no need to append _lockReleaserList, as appended
-      // to _readAcquirePromiseList Promise is already resolved
+      // _readLockCountList is empty here, hence we can append 1 to
+      // _readLockCountList, store resolved Promise(for reuse in next readers),
+      // we have no need to append _lockReleaserList, as new Promise is
+      // already resolved
       this._readLockCountList.append(1);
       this._lastReadAcquirePromise = Promise.resolve();
     }
@@ -34,7 +34,21 @@ export class AsyncReadWriteLock implements AsyncReadWriteLockInterface {
   }
 
   acquireWriteLock(): Promise<void> {
-    return undefined;
+    // Write lock, unlike read locks, can not share access with other write
+    // locks, it should always append new node to lists
+    this._readLockCountList.append(writerLockNumber);
+    if (this._readLockCountList.length !== 0) {
+      // We return unresolved Promise, hence we need to append also
+      // _lockReleaserList here
+      return new Promise<void>((onFulfilled) => {
+        this._lockReleaserList.append(onFulfilled);
+      });
+    } else {
+      // _readLockCountList is empty here, hence we return resolved Promise,
+      // we have no need to append _lockReleaserList, as returned Promise is
+      // already resolved
+      return Promise.resolve();
+    }
   }
 
   releaseReadLock() {
