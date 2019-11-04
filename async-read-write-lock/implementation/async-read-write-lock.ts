@@ -58,14 +58,14 @@ export class AsyncReadWriteLock implements AsyncReadWriteLockInterface {
     // lock releaser, if it exists
     this._decrementReadLockCountListHead();
     if (this._readLockCountList.head < 1) {
-      this._readLockCountList.removeHead();
-      if (this._lockReleaserList.length > 0) {
-        this._lockReleaserList.removeHead()();
-      }
+      this._releaseNextLock();
     }
   }
 
   releaseWriteLock() {
+    // releaseWriteLock should be called only when _readLockCountList has writer
+    // number in head, hence we can safely run _releaseNextLock logic
+    this._releaseNextLock();
   }
 
   private _appendReadLockAfterWriteLock() {
@@ -84,5 +84,12 @@ export class AsyncReadWriteLock implements AsyncReadWriteLockInterface {
 
   private _incrementReadLockCountListTail() {
     this._readLockCountList.append(this._readLockCountList.removeTail() + 1);
+  }
+
+  private _releaseNextLock() {
+    this._readLockCountList.removeHead();
+    if (this._lockReleaserList.length > 0) {
+      this._lockReleaserList.removeHead()();
+    }
   }
 }
