@@ -21,7 +21,7 @@ export class AsyncReadWriteLock implements AsyncReadWriteLockInterface {
         if (readerCount !== writerLockNumber) {
           // Last lock is reader lock, hence we can increment it's reader count
           // and return last Promise from _readerLockNotifierList
-          this._heldLockList.append(this._heldLockList.removeTail() + 1);
+          this._incrementHeldLockListTail();
           return this._readerLockNotifierList.tail;
         } else {
           // Last lock is writer lock, hence we should append 1 to
@@ -39,7 +39,7 @@ export class AsyncReadWriteLock implements AsyncReadWriteLockInterface {
         if (readerCount !== writerLockNumber) {
           // We have exactly one reader lock here, hence we can increment it's
           // reader count and resolve immediately
-          this._heldLockList.append(this._heldLockList.removeTail() + 1);
+          this._incrementHeldLockListTail();
           return Promise.resolve();
         } else {
           // We have exactly one writer lock here, hence we should append 1 to
@@ -70,5 +70,9 @@ export class AsyncReadWriteLock implements AsyncReadWriteLockInterface {
   }
 
   releaseWriteLock() {
+  }
+
+  private _incrementHeldLockListTail() {
+    this._heldLockList.append(this._heldLockList.removeTail() + 1);
   }
 }
