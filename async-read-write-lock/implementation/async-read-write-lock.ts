@@ -5,61 +5,32 @@ const writerLockNumber = 0;
 
 export class AsyncReadWriteLock implements AsyncReadWriteLockInterface {
   // This list holds locked reader counts, or writerLockNumber-s for writer locks
-  private _heldLockList = new LinkedList<number | typeof writerLockNumber>();
+  private _readLockCountList = new LinkedList<number | typeof writerLockNumber>();
   // This list holds functions, which resolve Promises, returned by acquireLock
   private _lockReleaserList = new LinkedList<() => void>();
   // This list holds promises, which should be used to notify multiple readers
-  private _readerLockNotifierList = new LinkedList<Promise<void>>();
+  private _readAcquirePromiseList = new LinkedList<Promise<void>>();
 
-  // todo DRY. This code looks very similar, DRY it when more time is available
-  //  (also think about returning this._readerLockNotifierList.tail instead of
-  //  Promise.resolve())
   acquireReadLock(): Promise<void> {
-    if (this._heldLockList.length !== 0) {
-      const readerCount = this._heldLockList.tail;
-      if (this._heldLockList.length !== 1) {
-        if (readerCount !== writerLockNumber) {
-          // Last lock is reader lock, hence we can increment it's reader count
-          // and return last Promise from _readerLockNotifierList
-          this._incrementHeldLockListTail();
-          return this._readerLockNotifierList.tail;
-        } else {
-          // Last lock is writer lock, hence we should append 1 to
-          // _heldLockList, create promise with resolver, push resolver to
-          // _lockReleaserList and Promise to _readerLockNotifierList(to reuse
-          // Promise in next readers), then return Promise
-          this._heldLockList.append(1);
-          const readerLockNotifier = new Promise<void>((onFulfilled) => {
-            this._lockReleaserList.append(onFulfilled);
-          });
-          this._readerLockNotifierList.append(readerLockNotifier);
-          return readerLockNotifier;
-        }
+    if (this._readLockCountList.length !== 0) {
+      const readerCount = this._readLockCountList.tail;
+      if (readerCount !== writerLockNumber) {
+        // Last lock is reader lock, hence we should increment it's read lock
+        // count
+        this._incrementHeldLockListTail();
       } else {
-        if (readerCount !== writerLockNumber) {
-          // We have exactly one reader lock here, hence we can increment it's
-          // reader count and resolve immediately
-          this._incrementHeldLockListTail();
-          return Promise.resolve();
-        } else {
-          // We have exactly one writer lock here, hence we should append 1 to
-          // _heldLockList, create promise with resolver, push resolver to
-          // _lockReleaserList and Promise to _readerLockNotifierList(to reuse
-          // Promise in next readers), then return Promise
-          this._heldLockList.append(1);
-          const readerLockNotifier = new Promise<void>((onFulfilled) => {
-            this._lockReleaserList.append(onFulfilled);
-          });
-          this._readerLockNotifierList.append(readerLockNotifier);
-          return readerLockNotifier;
-        }
+        // Last lock is writer lock, hence we should run _appendReadLockAfterWriteLock
+        this._appendReadLockAfterWriteLock();
       }
     } else {
-      // _heldLockList is empty here, hence we can append 1 to _heldLockList and
-      // resolve Promise lock immediately
-      this._heldLockList.append(1);
-      return Promise.resolve();
+      // _readLockCountList is empty here, hence we can append 1 to _readLockCountList,
+      // append resolved Promise to _readAcquirePromiseList(for reuse in next
+      // readers) and we have no need to append _lockReleaserList, as appended
+      // to _readAcquirePromiseList Promise is already resolved
+      this._readLockCountList.append(1);
+      this._readAcquirePromiseList.append(Promise.resolve());
     }
+    return this._readAcquirePromiseList.tail;
   }
 
   acquireWriteLock(): Promise<void> {
@@ -72,7 +43,18 @@ export class AsyncReadWriteLock implements AsyncReadWriteLockInterface {
   releaseWriteLock() {
   }
 
+  private _appendReadLockAfterWriteLock() {
+    // We need to append Read lock after write lock, hence we need to initialize
+    // new _readLockCountList with value 1, append new unresolved
+    // readAcquirePromise and it's resolver to lists
+    this._readLockCountList.append(1);
+    const readAcquirePromise = new Promise<void>((onFulfilled) => {
+      this._lockReleaserList.append(onFulfilled);
+    });
+    this._readAcquirePromiseList.append(readAcquirePromise);
+  }
+
   private _incrementHeldLockListTail() {
-    this._heldLockList.append(this._heldLockList.removeTail() + 1);
+    this._readLockCountList.append(this._readLockCountList.removeTail() + 1);
   }
 }
