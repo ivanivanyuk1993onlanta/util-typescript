@@ -45,9 +45,8 @@ export class AsyncReadWriteLock implements AsyncReadWriteLockInterface {
     this._decrementReadLockCountListHead();
     if (this._readLockCountList.head < 1) {
       this._readLockCountList.removeHead();
-      const lockReleaser = this._lockReleaserList.removeHead();
-      if (lockReleaser) {
-        lockReleaser();
+      if (this._lockReleaserList.length > 0) {
+        this._lockReleaserList.removeHead()();
       }
     }
   }
