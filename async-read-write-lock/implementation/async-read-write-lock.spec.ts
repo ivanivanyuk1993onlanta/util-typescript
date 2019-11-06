@@ -1,4 +1,5 @@
 // Simple tests are to test automatized/randomized tests
+// todo write automatized/randomized tests
 
 import {AsyncReadWriteLock} from './async-read-write-lock';
 
@@ -22,9 +23,9 @@ describe('AsyncReadWriteLock', () => {
   let lock: AsyncReadWriteLock;
   let startTime: number;
   const timeList = [
-    1500,
-    1000,
-    500,
+    30,
+    20,
+    10,
     // Sorting to make logic work with any numbers and enforce descending order
   ].sort((a, b) => a - b).reverse();
 
@@ -140,6 +141,7 @@ describe('AsyncReadWriteLock', () => {
       done();
     });
   });
+
   it('simpleTestRWR', (done: DoneFn) => {
     const promiseList = [
       lock.acquireReadLock().then(() => {
@@ -191,8 +193,57 @@ describe('AsyncReadWriteLock', () => {
       done();
     });
   });
+
   it('simpleTestRRW', (done: DoneFn) => {
-    done();
+    const promiseList = [
+      lock.acquireReadLock().then(() => {
+        return new Promise(((resolve, reject) => {
+          setTimeout(() => {
+            logList.push(accessNameMap.rs1);
+            lock.releaseReadLock();
+            logList.push(accessNameMap.rf1);
+            resolve();
+          }, timeList[0]);
+        }));
+      }),
+      lock.acquireReadLock().then(() => {
+        return new Promise(((resolve, reject) => {
+          setTimeout(() => {
+            logList.push(accessNameMap.rs2);
+            lock.releaseReadLock();
+            logList.push(accessNameMap.rf2);
+            resolve();
+          }, timeList[1]);
+        }));
+      }),
+      lock.acquireWriteLock().then(() => {
+        return new Promise(((resolve, reject) => {
+          setTimeout(() => {
+            logList.push(accessNameMap.ws3);
+            lock.releaseWriteLock();
+            logList.push(accessNameMap.wf3);
+            resolve();
+          }, timeList[2]);
+        }));
+      }),
+    ];
+    Promise.all(promiseList).then(() => {
+      const finishTime = performance.now();
+
+      const expectedTimePassed = Math.max(timeList[0], timeList[1]) + timeList[2];
+      const timePassed = finishTime - startTime;
+      expect(expectedTimePassed < timePassed && timePassed < expectedTimePassed + allowedTimeDifference).toBeTruthy();
+
+      expect(logList).toEqual([
+        accessNameMap.rs2,
+        accessNameMap.rf2,
+        accessNameMap.rs1,
+        accessNameMap.rf1,
+        accessNameMap.ws3,
+        accessNameMap.wf3,
+      ]);
+      done();
+    });
   });
   it('simpleTestRWW', (done: DoneFn) => {
     done();
