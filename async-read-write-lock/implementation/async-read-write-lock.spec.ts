@@ -297,10 +297,106 @@ describe('AsyncReadWriteLock', () => {
     });
   });
   it('simpleTestWRW', (done: DoneFn) => {
-    done();
+    const promiseList = [
+      lock.acquireWriteLock().then(() => {
+        return new Promise(((resolve, reject) => {
+          setTimeout(() => {
+            logList.push(accessNameMap.ws1);
+            lock.releaseWriteLock();
+            logList.push(accessNameMap.wf1);
+            resolve();
+          }, timeList[0]);
+        }));
+      }),
+      lock.acquireReadLock().then(() => {
+        return new Promise(((resolve, reject) => {
+          setTimeout(() => {
+            logList.push(accessNameMap.rs2);
+            lock.releaseReadLock();
+            logList.push(accessNameMap.rf2);
+            resolve();
+          }, timeList[1]);
+        }));
+      }),
+      lock.acquireWriteLock().then(() => {
+        return new Promise(((resolve, reject) => {
+          setTimeout(() => {
+            logList.push(accessNameMap.ws3);
+            lock.releaseWriteLock();
+            logList.push(accessNameMap.wf3);
+            resolve();
+          }, timeList[2]);
+        }));
+      }),
+    ];
+    Promise.all(promiseList).then(() => {
+      const finishTime = performance.now();
+
+      const expectedTimePassed = timeList.reduce((acc, time) => acc + time, 0);
+      const timePassed = finishTime - startTime;
+      expect(expectedTimePassed < timePassed && timePassed < expectedTimePassed + allowedTimeDifference).toBeTruthy();
+
+      expect(logList).toEqual([
+        accessNameMap.ws1,
+        accessNameMap.wf1,
+        accessNameMap.rs2,
+        accessNameMap.rf2,
+        accessNameMap.ws3,
+        accessNameMap.wf3,
+      ]);
+      done();
+    });
   });
   it('simpleTestWWR', (done: DoneFn) => {
-    done();
+    const promiseList = [
+      lock.acquireWriteLock().then(() => {
+        return new Promise(((resolve, reject) => {
+          setTimeout(() => {
+            logList.push(accessNameMap.ws1);
+            lock.releaseWriteLock();
+            logList.push(accessNameMap.wf1);
+            resolve();
+          }, timeList[0]);
+        }));
+      }),
+      lock.acquireWriteLock().then(() => {
+        return new Promise(((resolve, reject) => {
+          setTimeout(() => {
+            logList.push(accessNameMap.ws2);
+            lock.releaseWriteLock();
+            logList.push(accessNameMap.wf2);
+            resolve();
+          }, timeList[1]);
+        }));
+      }),
+      lock.acquireReadLock().then(() => {
+        return new Promise(((resolve, reject) => {
+          setTimeout(() => {
+            logList.push(accessNameMap.rs3);
+            lock.releaseReadLock();
+            logList.push(accessNameMap.rf3);
+            resolve();
+          }, timeList[2]);
+        }));
+      }),
+    ];
+    Promise.all(promiseList).then(() => {
+      const finishTime = performance.now();
+
+      const expectedTimePassed = timeList.reduce((acc, time) => acc + time, 0);
+      const timePassed = finishTime - startTime;
+      expect(expectedTimePassed < timePassed && timePassed < expectedTimePassed + allowedTimeDifference).toBeTruthy();
+
+      expect(logList).toEqual([
+        accessNameMap.ws1,
+        accessNameMap.wf1,
+        accessNameMap.ws2,
+        accessNameMap.wf2,
+        accessNameMap.rs3,
+        accessNameMap.rf3,
+      ]);
+      done();
+    });
   });
   it('simpleTestWWW', (done: DoneFn) => {
     done();
