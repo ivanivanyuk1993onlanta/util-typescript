@@ -245,6 +245,7 @@ describe('AsyncReadWriteLock', () => {
       done();
     });
   });
+
   it('simpleTestRWW', (done: DoneFn) => {
     const promiseList = [
       lock.acquireReadLock().then(() => {
@@ -296,6 +297,7 @@ describe('AsyncReadWriteLock', () => {
       done();
     });
   });
+
   it('simpleTestWRW', (done: DoneFn) => {
     const promiseList = [
       lock.acquireWriteLock().then(() => {
@@ -347,6 +349,7 @@ describe('AsyncReadWriteLock', () => {
       done();
     });
   });
+
   it('simpleTestWWR', (done: DoneFn) => {
     const promiseList = [
       lock.acquireWriteLock().then(() => {
@@ -398,7 +401,56 @@ describe('AsyncReadWriteLock', () => {
       done();
     });
   });
+
   it('simpleTestWWW', (done: DoneFn) => {
-    done();
+    const promiseList = [
+      lock.acquireWriteLock().then(() => {
+        return new Promise(((resolve, reject) => {
+          setTimeout(() => {
+            logList.push(accessNameMap.ws1);
+            lock.releaseWriteLock();
+            logList.push(accessNameMap.wf1);
+            resolve();
+          }, timeList[0]);
+        }));
+      }),
+      lock.acquireWriteLock().then(() => {
+        return new Promise(((resolve, reject) => {
+          setTimeout(() => {
+            logList.push(accessNameMap.ws2);
+            lock.releaseWriteLock();
+            logList.push(accessNameMap.wf2);
+            resolve();
+          }, timeList[1]);
+        }));
+      }),
+      lock.acquireWriteLock().then(() => {
+        return new Promise(((resolve, reject) => {
+          setTimeout(() => {
+            logList.push(accessNameMap.ws3);
+            lock.releaseWriteLock();
+            logList.push(accessNameMap.wf3);
+            resolve();
+          }, timeList[2]);
+        }));
+      }),
+    ];
+    Promise.all(promiseList).then(() => {
+      const finishTime = performance.now();
+
+      const expectedTimePassed = timeList.reduce((acc, time) => acc + time, 0);
+      const timePassed = finishTime - startTime;
+      expect(expectedTimePassed < timePassed && timePassed < expectedTimePassed + allowedTimeDifference).toBeTruthy();
+
+      expect(logList).toEqual([
+        accessNameMap.ws1,
+        accessNameMap.wf1,
+        accessNameMap.ws2,
+        accessNameMap.wf2,
+        accessNameMap.ws3,
+        accessNameMap.wf3,
+      ]);
+      done();
+    });
   });
 });
