@@ -43,7 +43,9 @@ export class AsyncReadWriteLock implements AsyncReadWriteLockInterface {
     // Write lock, unlike read locks, can not share access with other write
     // locks, it should always append new node to lists
     this._readLockCountList.append(writerLockNumber);
-    if (this._readLockCountList.length !== 0) {
+    // Checking for 1 instead of 0, because we added lock in previous line(we
+    // don't do it later in if/else block to avoid code duplication)
+    if (this._readLockCountList.length !== 1) {
       // We return unresolved Promise, hence we need to append also
       // _lockReleaserList here
       return new Promise<void>((onFulfilled) => {
