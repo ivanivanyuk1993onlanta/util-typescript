@@ -1,3 +1,5 @@
+// Simple tests are to test automatized/randomized tests
+
 import {AsyncReadWriteLock} from './async-read-write-lock';
 
 describe('AsyncReadWriteLock', () => {
@@ -33,7 +35,6 @@ describe('AsyncReadWriteLock', () => {
     startTime = performance.now();
   });
 
-  // Simple tests are to test automatized/randomized tests
   it('simpleTestRRR', (done: DoneFn) => {
     const promiseList = [
       lock.acquireReadLock().then(() => {
