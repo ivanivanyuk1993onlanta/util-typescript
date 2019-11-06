@@ -141,7 +141,55 @@ describe('AsyncReadWriteLock', () => {
     });
   });
   it('simpleTestRWR', (done: DoneFn) => {
-    done();
+    const promiseList = [
+      lock.acquireReadLock().then(() => {
+        return new Promise(((resolve, reject) => {
+          setTimeout(() => {
+            logList.push(accessNameMap.rs1);
+            lock.releaseReadLock();
+            logList.push(accessNameMap.rf1);
+            resolve();
+          }, timeList[0]);
+        }));
+      }),
+      lock.acquireWriteLock().then(() => {
+        return new Promise(((resolve, reject) => {
+          setTimeout(() => {
+            logList.push(accessNameMap.ws2);
+            lock.releaseWriteLock();
+            logList.push(accessNameMap.wf2);
+            resolve();
+          }, timeList[1]);
+        }));
+      }),
+      lock.acquireReadLock().then(() => {
+        return new Promise(((resolve, reject) => {
+          setTimeout(() => {
+            logList.push(accessNameMap.rs3);
+            lock.releaseReadLock();
+            logList.push(accessNameMap.rf3);
+            resolve();
+          }, timeList[2]);
+        }));
+      }),
+    ];
+    Promise.all(promiseList).then(() => {
+      const finishTime = performance.now();
+
+      const expectedTimePassed = timeList.reduce((acc, time) => acc + time, 0);
+      const timePassed = finishTime - startTime;
+      expect(expectedTimePassed < timePassed && timePassed < expectedTimePassed + allowedTimeDifference).toBeTruthy();
+
+      expect(logList).toEqual([
+        accessNameMap.rs1,
+        accessNameMap.rf1,
+        accessNameMap.ws2,
+        accessNameMap.wf2,
+        accessNameMap.rs3,
+        accessNameMap.rf3,
+      ]);
+      done();
+    });
   });
   it('simpleTestRRW', (done: DoneFn) => {
     done();
