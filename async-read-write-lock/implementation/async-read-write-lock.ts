@@ -13,8 +13,7 @@ export class AsyncReadWriteLock implements AsyncReadWriteLockInterface {
 
   acquireReadLock(): Promise<void> {
     if (this._readLockCountList.length !== 0) {
-      const readerCount = this._readLockCountList.tail;
-      if (readerCount !== writerLockNumber) {
+      if (this._readLockCountList.tail !== writerLockNumber) {
         // Last lock is reader lock, hence we should increment it's read lock
         // count
         this._readLockCountList.append(this._readLockCountList.removeTail() + 1);
