@@ -1,7 +1,6 @@
 // Simple tests are to test automatized/randomized tests
-// todo write automatized/randomized tests
 
-import {AsyncReadWriteLock} from './async-read-write-lock';
+import {AsyncReadWriteLock} from '../async-read-write-lock';
 
 describe('AsyncReadWriteLock', () => {
   const accessNameMap = {
@@ -90,14 +89,14 @@ describe('AsyncReadWriteLock', () => {
     });
   });
 
-  it('simpleTestWRR', (done: DoneFn) => {
+  it('simpleTestRRW', (done: DoneFn) => {
     const promiseList = [
-      lock.acquireWriteLock().then(() => {
+      lock.acquireReadLock().then(() => {
         return new Promise(((resolve, reject) => {
           setTimeout(() => {
-            logList.push(accessNameMap.ws1);
-            lock.releaseWriteLock();
-            logList.push(accessNameMap.wf1);
+            logList.push(accessNameMap.rs1);
+            lock.releaseReadLock();
+            logList.push(accessNameMap.rf1);
             resolve();
           }, timeList[0]);
         }));
@@ -112,12 +111,12 @@ describe('AsyncReadWriteLock', () => {
           }, timeList[1]);
         }));
       }),
-      lock.acquireReadLock().then(() => {
+      lock.acquireWriteLock().then(() => {
         return new Promise(((resolve, reject) => {
           setTimeout(() => {
-            logList.push(accessNameMap.rs3);
-            lock.releaseReadLock();
-            logList.push(accessNameMap.rf3);
+            logList.push(accessNameMap.ws3);
+            lock.releaseWriteLock();
+            logList.push(accessNameMap.wf3);
             resolve();
           }, timeList[2]);
         }));
@@ -126,17 +125,20 @@ describe('AsyncReadWriteLock', () => {
     Promise.all(promiseList).then(() => {
       const finishTime = performance.now();
 
-      const expectedTimePassed = Math.max(timeList[0] + Math.max(...timeList.slice(1)));
+      const expectedTimePassed = Math.max(timeList[0], timeList[1]) +
+        timeList[2];
       const timePassed = finishTime - startTime;
-      expect(expectedTimePassed < timePassed && timePassed < expectedTimePassed + allowedTimeDifference).toBeTruthy();
+      expect(
+        expectedTimePassed < timePassed && timePassed < expectedTimePassed +
+        allowedTimeDifference).toBeTruthy();
 
       expect(logList).toEqual([
-        accessNameMap.ws1,
-        accessNameMap.wf1,
-        accessNameMap.rs3,
-        accessNameMap.rf3,
         accessNameMap.rs2,
         accessNameMap.rf2,
+        accessNameMap.rs1,
+        accessNameMap.rf1,
+        accessNameMap.ws3,
+        accessNameMap.wf3,
       ]);
       done();
     });
@@ -180,7 +182,9 @@ describe('AsyncReadWriteLock', () => {
 
       const expectedTimePassed = timeList.reduce((acc, time) => acc + time, 0);
       const timePassed = finishTime - startTime;
-      expect(expectedTimePassed < timePassed && timePassed < expectedTimePassed + allowedTimeDifference).toBeTruthy();
+      expect(
+        expectedTimePassed < timePassed && timePassed < expectedTimePassed +
+        allowedTimeDifference).toBeTruthy();
 
       expect(logList).toEqual([
         accessNameMap.rs1,
@@ -189,58 +193,6 @@ describe('AsyncReadWriteLock', () => {
         accessNameMap.wf2,
         accessNameMap.rs3,
         accessNameMap.rf3,
-      ]);
-      done();
-    });
-  });
-
-  it('simpleTestRRW', (done: DoneFn) => {
-    const promiseList = [
-      lock.acquireReadLock().then(() => {
-        return new Promise(((resolve, reject) => {
-          setTimeout(() => {
-            logList.push(accessNameMap.rs1);
-            lock.releaseReadLock();
-            logList.push(accessNameMap.rf1);
-            resolve();
-          }, timeList[0]);
-        }));
-      }),
-      lock.acquireReadLock().then(() => {
-        return new Promise(((resolve, reject) => {
-          setTimeout(() => {
-            logList.push(accessNameMap.rs2);
-            lock.releaseReadLock();
-            logList.push(accessNameMap.rf2);
-            resolve();
-          }, timeList[1]);
-        }));
-      }),
-      lock.acquireWriteLock().then(() => {
-        return new Promise(((resolve, reject) => {
-          setTimeout(() => {
-            logList.push(accessNameMap.ws3);
-            lock.releaseWriteLock();
-            logList.push(accessNameMap.wf3);
-            resolve();
-          }, timeList[2]);
-        }));
-      }),
-    ];
-    Promise.all(promiseList).then(() => {
-      const finishTime = performance.now();
-
-      const expectedTimePassed = Math.max(timeList[0], timeList[1]) + timeList[2];
-      const timePassed = finishTime - startTime;
-      expect(expectedTimePassed < timePassed && timePassed < expectedTimePassed + allowedTimeDifference).toBeTruthy();
-
-      expect(logList).toEqual([
-        accessNameMap.rs2,
-        accessNameMap.rf2,
-        accessNameMap.rs1,
-        accessNameMap.rf1,
-        accessNameMap.ws3,
-        accessNameMap.wf3,
       ]);
       done();
     });
@@ -284,7 +236,9 @@ describe('AsyncReadWriteLock', () => {
 
       const expectedTimePassed = timeList.reduce((acc, time) => acc + time, 0);
       const timePassed = finishTime - startTime;
-      expect(expectedTimePassed < timePassed && timePassed < expectedTimePassed + allowedTimeDifference).toBeTruthy();
+      expect(
+        expectedTimePassed < timePassed && timePassed < expectedTimePassed +
+        allowedTimeDifference).toBeTruthy();
 
       expect(logList).toEqual([
         accessNameMap.rs1,
@@ -293,6 +247,61 @@ describe('AsyncReadWriteLock', () => {
         accessNameMap.wf2,
         accessNameMap.ws3,
         accessNameMap.wf3,
+      ]);
+      done();
+    });
+  });
+
+  it('simpleTestWRR', (done: DoneFn) => {
+    const promiseList = [
+      lock.acquireWriteLock().then(() => {
+        return new Promise(((resolve, reject) => {
+          setTimeout(() => {
+            logList.push(accessNameMap.ws1);
+            lock.releaseWriteLock();
+            logList.push(accessNameMap.wf1);
+            resolve();
+          }, timeList[0]);
+        }));
+      }),
+      lock.acquireReadLock().then(() => {
+        return new Promise(((resolve, reject) => {
+          setTimeout(() => {
+            logList.push(accessNameMap.rs2);
+            lock.releaseReadLock();
+            logList.push(accessNameMap.rf2);
+            resolve();
+          }, timeList[1]);
+        }));
+      }),
+      lock.acquireReadLock().then(() => {
+        return new Promise(((resolve, reject) => {
+          setTimeout(() => {
+            logList.push(accessNameMap.rs3);
+            lock.releaseReadLock();
+            logList.push(accessNameMap.rf3);
+            resolve();
+          }, timeList[2]);
+        }));
+      }),
+    ];
+    Promise.all(promiseList).then(() => {
+      const finishTime = performance.now();
+
+      const expectedTimePassed = Math.max(
+        timeList[0] + Math.max(...timeList.slice(1)));
+      const timePassed = finishTime - startTime;
+      expect(
+        expectedTimePassed < timePassed && timePassed < expectedTimePassed +
+        allowedTimeDifference).toBeTruthy();
+
+      expect(logList).toEqual([
+        accessNameMap.ws1,
+        accessNameMap.wf1,
+        accessNameMap.rs3,
+        accessNameMap.rf3,
+        accessNameMap.rs2,
+        accessNameMap.rf2,
       ]);
       done();
     });
@@ -336,7 +345,9 @@ describe('AsyncReadWriteLock', () => {
 
       const expectedTimePassed = timeList.reduce((acc, time) => acc + time, 0);
       const timePassed = finishTime - startTime;
-      expect(expectedTimePassed < timePassed && timePassed < expectedTimePassed + allowedTimeDifference).toBeTruthy();
+      expect(
+        expectedTimePassed < timePassed && timePassed < expectedTimePassed +
+        allowedTimeDifference).toBeTruthy();
 
       expect(logList).toEqual([
         accessNameMap.ws1,
@@ -388,7 +399,9 @@ describe('AsyncReadWriteLock', () => {
 
       const expectedTimePassed = timeList.reduce((acc, time) => acc + time, 0);
       const timePassed = finishTime - startTime;
-      expect(expectedTimePassed < timePassed && timePassed < expectedTimePassed + allowedTimeDifference).toBeTruthy();
+      expect(
+        expectedTimePassed < timePassed && timePassed < expectedTimePassed +
+        allowedTimeDifference).toBeTruthy();
 
       expect(logList).toEqual([
         accessNameMap.ws1,
@@ -440,7 +453,9 @@ describe('AsyncReadWriteLock', () => {
 
       const expectedTimePassed = timeList.reduce((acc, time) => acc + time, 0);
       const timePassed = finishTime - startTime;
-      expect(expectedTimePassed < timePassed && timePassed < expectedTimePassed + allowedTimeDifference).toBeTruthy();
+      expect(
+        expectedTimePassed < timePassed && timePassed < expectedTimePassed +
+        allowedTimeDifference).toBeTruthy();
 
       expect(logList).toEqual([
         accessNameMap.ws1,
