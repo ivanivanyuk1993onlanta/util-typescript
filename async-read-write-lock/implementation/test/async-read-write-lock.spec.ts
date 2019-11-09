@@ -1,7 +1,6 @@
 // Simple tests are to test automatized/randomized tests
-// todo write automatized/randomized tests
 
-import {AsyncReadWriteLock} from './async-read-write-lock';
+import {AsyncReadWriteLock} from '../async-read-write-lock';
 
 describe('AsyncReadWriteLock', () => {
   const accessNameMap = {
@@ -126,9 +125,12 @@ describe('AsyncReadWriteLock', () => {
     Promise.all(promiseList).then(() => {
       const finishTime = performance.now();
 
-      const expectedTimePassed = Math.max(timeList[0] + Math.max(...timeList.slice(1)));
+      const expectedTimePassed = Math.max(
+        timeList[0] + Math.max(...timeList.slice(1)));
       const timePassed = finishTime - startTime;
-      expect(expectedTimePassed < timePassed && timePassed < expectedTimePassed + allowedTimeDifference).toBeTruthy();
+      expect(
+        expectedTimePassed < timePassed && timePassed < expectedTimePassed +
+        allowedTimeDifference).toBeTruthy();
 
       expect(logList).toEqual([
         accessNameMap.ws1,
@@ -180,7 +182,9 @@ describe('AsyncReadWriteLock', () => {
 
       const expectedTimePassed = timeList.reduce((acc, time) => acc + time, 0);
       const timePassed = finishTime - startTime;
-      expect(expectedTimePassed < timePassed && timePassed < expectedTimePassed + allowedTimeDifference).toBeTruthy();
+      expect(
+        expectedTimePassed < timePassed && timePassed < expectedTimePassed +
+        allowedTimeDifference).toBeTruthy();
 
       expect(logList).toEqual([
         accessNameMap.rs1,
@@ -230,9 +234,12 @@ describe('AsyncReadWriteLock', () => {
     Promise.all(promiseList).then(() => {
       const finishTime = performance.now();
 
-      const expectedTimePassed = Math.max(timeList[0], timeList[1]) + timeList[2];
+      const expectedTimePassed = Math.max(timeList[0], timeList[1]) +
+        timeList[2];
       const timePassed = finishTime - startTime;
-      expect(expectedTimePassed < timePassed && timePassed < expectedTimePassed + allowedTimeDifference).toBeTruthy();
+      expect(
+        expectedTimePassed < timePassed && timePassed < expectedTimePassed +
+        allowedTimeDifference).toBeTruthy();
 
       expect(logList).toEqual([
         accessNameMap.rs2,
@@ -284,7 +291,9 @@ describe('AsyncReadWriteLock', () => {
 
       const expectedTimePassed = timeList.reduce((acc, time) => acc + time, 0);
       const timePassed = finishTime - startTime;
-      expect(expectedTimePassed < timePassed && timePassed < expectedTimePassed + allowedTimeDifference).toBeTruthy();
+      expect(
+        expectedTimePassed < timePassed && timePassed < expectedTimePassed +
+        allowedTimeDifference).toBeTruthy();
 
       expect(logList).toEqual([
         accessNameMap.rs1,
@@ -336,7 +345,9 @@ describe('AsyncReadWriteLock', () => {
 
       const expectedTimePassed = timeList.reduce((acc, time) => acc + time, 0);
       const timePassed = finishTime - startTime;
-      expect(expectedTimePassed < timePassed && timePassed < expectedTimePassed + allowedTimeDifference).toBeTruthy();
+      expect(
+        expectedTimePassed < timePassed && timePassed < expectedTimePassed +
+        allowedTimeDifference).toBeTruthy();
 
       expect(logList).toEqual([
         accessNameMap.ws1,
@@ -388,7 +399,9 @@ describe('AsyncReadWriteLock', () => {
 
       const expectedTimePassed = timeList.reduce((acc, time) => acc + time, 0);
       const timePassed = finishTime - startTime;
-      expect(expectedTimePassed < timePassed && timePassed < expectedTimePassed + allowedTimeDifference).toBeTruthy();
+      expect(
+        expectedTimePassed < timePassed && timePassed < expectedTimePassed +
+        allowedTimeDifference).toBeTruthy();
 
       expect(logList).toEqual([
         accessNameMap.ws1,
@@ -440,7 +453,9 @@ describe('AsyncReadWriteLock', () => {
 
       const expectedTimePassed = timeList.reduce((acc, time) => acc + time, 0);
       const timePassed = finishTime - startTime;
-      expect(expectedTimePassed < timePassed && timePassed < expectedTimePassed + allowedTimeDifference).toBeTruthy();
+      expect(
+        expectedTimePassed < timePassed && timePassed < expectedTimePassed +
+        allowedTimeDifference).toBeTruthy();
 
       expect(logList).toEqual([
         accessNameMap.ws1,
