@@ -11,3 +11,4 @@ This project is not to be used/edited as not part of other projects, hence it do
 - Subtree is too complicated to work with (it is to easy to break history with it)
 - This solution gives more control, like hard reset of local child changes, or using local child repo branches with differences and even cherrypicking some of them
 
+
