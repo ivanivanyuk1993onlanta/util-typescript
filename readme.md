@@ -1,12 +1,12 @@
+# util-typescript
 This project is not to be used/edited as not part of other projects, hence it doesnt't have neither npm, nor tsconfig
 
-Helpful scripts to work with sub-tree are placed in .sub-tree
+# Expected workflow
+1. Clone this repo to some directory in parent repo
+1. Edit files in parent repo
+1. Open this repos' root in terminal/IDE, commit changes in this repo separately for parent and child
 
-How to work with .sub-tree
-On first run
-- Clone repo into desired folder
-- Copy `/.sub-tree/variable-file.sh.example` to `/.sub-tree/variable-file.sh`
-- Fill `/.sub-tree/variable-file.sh` with actual values
-- Then run `/.subtree/add.sh` from parent repo root (skipping this step will break history and force you to manually push unsaved changes to child repo, then repeating steps)
-
-To work run `/.subtree/pull.sh` or `/.subtree/push.sh` from parent repo root
+# Why this approach instead of subtree/submodules
+- Submodules do not store files, only references to repo, which limits it's use cases
+- Subtree is too complicated to work with (it is to easy to break history with it)
+- This solution gives more control, like hard reset of local child changes, or using local child repo branches with differences and even cherrypicking some of them
