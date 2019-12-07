@@ -4,7 +4,7 @@
   "description": "This project is not to be used/edited as not part of other projects, hence it doesnt't have neither npm, nor tsconfig",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jasmine"
   },
   "repository": {
     "type": "git",
@@ -15,5 +15,9 @@
   "bugs": {
     "url": "https://github.com/ivanivanyuk1993/util-typescript/npm access restrictednpm access restrictedissues"
   },
-  "homepage": "https://github.com/ivanivanyuk1993/util-typescript#readme"
+  "homepage": "https://github.com/ivanivanyuk1993/util-typescript#readme",
+  "devDependencies": {
+    "@types/jasmine": "^3.5.0",
+    "jasmine": "^3.5.0"
+  }
 }
