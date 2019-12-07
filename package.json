@@ -2,10 +2,21 @@
   "name": "util-typescript",
   "version": "1.0.0",
   "description": "This project is not to be used/edited as not part of other projects, hence it doesnt't have neither npm, nor tsconfig",
-  "main": "index.js",
+  "main": "dist",
+  "files": [
+    "dist/**/*"
+  ],
   "scripts": {
     "build": "tsc",
-    "test": "jasmine"
+    "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
+    "lint": "tslint -p tsconfig.json",
+    "postversion": "git push && git push --tags",
+    "prepare": "npm run build",
+    "prepublish": "tsc",
+    "prepublishOnly": "npm test && npm run lint",
+    "preversion": "npm run lint",
+    "test": "jest",
+    "version": "npm run format && git add -A src"
   },
   "repository": {
     "type": "git",
@@ -18,10 +29,17 @@
   },
   "homepage": "https://github.com/ivanivanyuk1993/util-typescript#readme",
   "devDependencies": {
-    "@types/jasmine": "^3.5.0",
-    "jasmine": "^3.5.0",
+    "@types/jest": "^24.0.23",
+    "@types/node": "^12.12.14",
+    "jest": "^24.9.0",
+    "prettier": "^1.19.1",
+    "ts-jest": "^24.2.0",
     "tslint": "^5.20.1",
+    "tslint-config-prettier": "^1.18.0",
     "typescript": "^3.7.3"
   },
-  "dependencies": {}
+  "dependencies": {
+    "linked-list-typescript": "^1.0.15",
+    "rxjs": "^6.5.3"
+  }
 }
