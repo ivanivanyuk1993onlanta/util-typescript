@@ -1,0 +1,19 @@
+{
+  "name": "util-typescript",
+  "version": "1.0.0",
+  "description": "This project is not to be used/edited as not part of other projects, hence it doesnt't have neither npm, nor tsconfig",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ivanivanyuk1993/util-typescript.git"
+  },
+  "author": "ivanivanyuk1993",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/ivanivanyuk1993/util-typescript/npm access restrictednpm access restrictedissues"
+  },
+  "homepage": "https://github.com/ivanivanyuk1993/util-typescript#readme"
+}
