@@ -8,14 +8,8 @@
   ],
   "scripts": {
     "build": "tsc",
-    "lint": "eslint \"src/**\" --fix",
-    "postversion": "git push && git push --tags",
-    "prepare": "npm run build",
-    "prepublish": "tsc",
-    "prepublishOnly": "npm lint && npm test",
-    "preversion": "npm lint && npm test",
-    "test": "jest",
-    "version": "npm lint && npm test && git add -A src"
+    "lint": "prettier --write \"src/**\"; eslint \"src/**\" --fix",
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -34,8 +28,6 @@
     "@typescript-eslint/parser": "^2.10.0",
     "eslint": "^6.7.2",
     "eslint-config-google": "^0.14.0",
-    "eslint-config-prettier": "^6.7.0",
-    "eslint-plugin-prettier": "^3.1.1",
     "jest": "^24.9.0",
     "prettier": "^1.19.1",
     "ts-jest": "^24.2.0",
