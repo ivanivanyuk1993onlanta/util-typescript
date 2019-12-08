@@ -1,4 +1,4 @@
-import {Subject} from 'rxjs';
+import { Subject } from "rxjs";
 
 // This class is used to effectively dispose of unused subscriptions in ngOnChanges hook
 // In the beginning of ngOnChanges method there should be this._broadcaster.broadcast() call,
