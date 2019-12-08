@@ -1,5 +1,5 @@
-import {ComparatorFuncType} from '../comparator-func-type';
-import {ComparatorFuncResultEnum} from '../comparator-func-result-enum';
+import { ComparatorFuncType } from "../ComparatorFuncType";
+import { ComparatorFuncResultEnum } from "../ComparatorFuncResultEnum";
 
 // Todo benchmark solution that doesn't require loop (go from last to first, adding func call to result func(that will effectively remove iterator.next(), but will add func call instead (which may or may not be inlined)))
 
@@ -9,9 +9,11 @@ import {ComparatorFuncResultEnum} from '../comparator-func-result-enum';
 // 2) Less important comparators are applied lazily, only if more important returned neutrality, which is effective
 // 3) n*log(n)*m (m - number of criteria) is still the same
 
-// comparator func list should be sorted by importance from left to right
-export function getMergedComparatorFunc<T>(comparatorFuncList: Array<ComparatorFuncType<T>>): ComparatorFuncType<T> {
-  return (left: T, right: T) => {
+// Comparator func list should be sorted by importance from left to right
+export function getMergedComparatorFunc<ValueType>(
+  comparatorFuncList: Array<ComparatorFuncType<ValueType>>
+): ComparatorFuncType<ValueType> {
+  return (left: ValueType, right: ValueType): ComparatorFuncResultEnum => {
     // setting initial value in case we got empty array
     let comparatorFuncResult = ComparatorFuncResultEnum.Equal;
     for (const comparatorFunc of comparatorFuncList) {

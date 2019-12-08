@@ -1,10 +1,10 @@
-import {ComparatorFuncType} from '../comparator-func-type';
-import {ComparatorFuncResultEnum} from '../comparator-func-result-enum';
+import { ComparatorFuncType } from "../ComparatorFuncType";
+import { ComparatorFuncResultEnum } from "../ComparatorFuncResultEnum";
 
 export function getComparatorByFuncResult<ItemType, FuncResultType>(
-  func: (item: ItemType) => FuncResultType,
+  func: (item: ItemType) => FuncResultType
 ): ComparatorFuncType<ItemType> {
-  return (left: ItemType, right: ItemType) => {
+  return (left: ItemType, right: ItemType): ComparatorFuncResultEnum => {
     const leftFuncResult = func(left);
     const rightFuncResult = func(right);
     if (leftFuncResult < rightFuncResult) {
