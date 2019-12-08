@@ -1,7 +1,7 @@
 // // Randomized tests are to test cases human can't predict
 //
 // import {FairAsyncReadWriteLock} from '../FairAsyncReadWriteLock';
-// import {getRandomIntFromInterval} from '../../../get-random-int-from-interval/get-random-int-from-interval';
+// import {getRandomIntFromInterval} from '../../../getRandomIntFromInterval/getRandomIntFromInterval';
 //
 // enum OperationTypeEnum {
 //   Read,
