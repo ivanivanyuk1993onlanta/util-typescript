@@ -11,12 +11,12 @@ import { ComparatorFuncResultEnum } from "../ComparatorFuncResultEnum";
 
 // Comparator func list should be sorted by importance from left to right
 export function getMergedComparatorFunc<ValueType>(
-  comparatorFuncList: Array<ComparatorFuncType<ValueType>>
+  sortedByImportanceComparatorFuncList: Array<ComparatorFuncType<ValueType>>
 ): ComparatorFuncType<ValueType> {
   return (left: ValueType, right: ValueType): ComparatorFuncResultEnum => {
     // setting initial value in case we got empty array
     let comparatorFuncResult = ComparatorFuncResultEnum.Equal;
-    for (const comparatorFunc of comparatorFuncList) {
+    for (const comparatorFunc of sortedByImportanceComparatorFuncList) {
       comparatorFuncResult = comparatorFunc(left, right);
       // Because comparatorFuncList is sorted by importance, if more important comparator returns non-neutral result, we can stop cycle and
       // return comparator result
