@@ -9,9 +9,13 @@ export interface AsyncReadWriteLockInterface {
   // this writer)
   acquireWriteLock(): Promise<void>;
 
-  // Method should contain read lock release logic
-  releaseReadLock();
+  // Method should contain read lock release logic and return Promise to be able
+  // to do something after this operation is complete, and allow some async
+  // Redis lock implementation
+  releaseReadLock(): Promise<void>;
 
-  // Method should contain write lock release logic
-  releaseWriteLock();
+  // Method should contain write lock release logic and return Promise to be able
+  // to do something after this operation is complete, and allow some async
+  // Redis lock implementation
+  releaseWriteLock(): Promise<void>;
 }

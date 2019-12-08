@@ -1,29 +1,34 @@
-import {AsyncReadWriteLockInterface} from '../async-read-write-lock-interface';
-import {LinkedList} from 'linked-list-typescript';
+import { AsyncReadWriteLockInterface } from "../AsyncReadWriteLockInterface";
+import { LinkedList } from "linked-list-typescript";
 
 const writerLockNumber = 0;
 
-export class AsyncReadWriteLock implements AsyncReadWriteLockInterface {
+export class FairAsyncReadWriteLock implements AsyncReadWriteLockInterface {
   // This list holds locked reader counts, or writerLockNumber-s for writer locks
-  private _readLockCountList = new LinkedList<number | typeof writerLockNumber>();
+  private _readLockCountList = new LinkedList<
+    number | typeof writerLockNumber
+  >();
+
   // This list holds functions, which resolve Promises, returned by acquireLock
   private _lockReleaserList = new LinkedList<() => void>();
   // _lastReadAcquirePromise is needed to reuse Promise for new readers
-  private _lastReadAcquirePromise: Promise<void>;
+  private _lastReadAcquirePromise?: Promise<void>;
 
   acquireReadLock(): Promise<void> {
     if (this._readLockCountList.length !== 0) {
       if (this._readLockCountList.tail !== writerLockNumber) {
         // Last lock is reader lock, hence we should increment it's read lock
         // count
-        this._readLockCountList.append(this._readLockCountList.removeTail() + 1);
+        this._readLockCountList.append(
+          this._readLockCountList.removeTail() + 1
+        );
       } else {
         // Last lock is writer lock, hence we need to append Read lock after
         // write lock, hence we need to initialize new _readLockCountList with
         // value 1, create and store new unresolved readAcquirePromise and it's
         // resolver
         this._readLockCountList.append(1);
-        this._lastReadAcquirePromise = new Promise<void>((onFulfilled) => {
+        this._lastReadAcquirePromise = new Promise<void>(onFulfilled => {
           this._lockReleaserList.append(onFulfilled);
         });
       }
@@ -35,7 +40,7 @@ export class AsyncReadWriteLock implements AsyncReadWriteLockInterface {
       this._readLockCountList.append(1);
       this._lastReadAcquirePromise = Promise.resolve();
     }
-    return this._lastReadAcquirePromise;
+    return this._lastReadAcquirePromise as Promise<void>;
   }
 
   acquireWriteLock(): Promise<void> {
@@ -47,7 +52,7 @@ export class AsyncReadWriteLock implements AsyncReadWriteLockInterface {
     if (this._readLockCountList.length !== 1) {
       // We return unresolved Promise, hence we need to append also
       // _lockReleaserList here
-      return new Promise<void>((onFulfilled) => {
+      return new Promise<void>(onFulfilled => {
         this._lockReleaserList.append(onFulfilled);
       });
     } else {
@@ -58,7 +63,7 @@ export class AsyncReadWriteLock implements AsyncReadWriteLockInterface {
     }
   }
 
-  releaseReadLock() {
+  releaseReadLock(): Promise<void> {
     // releaseReadLock should be called only when _readLockCountList has reader
     // count in head, hence we can safely assume that 0 doesn't mean
     // writerLockNumber, but means that we can remove lock and try to call next
@@ -67,15 +72,17 @@ export class AsyncReadWriteLock implements AsyncReadWriteLockInterface {
     if (this._readLockCountList.head < 1) {
       this._releaseNextLock();
     }
+    return Promise.resolve();
   }
 
-  releaseWriteLock() {
+  releaseWriteLock(): Promise<void> {
     // releaseWriteLock should be called only when _readLockCountList has writer
     // number in head, hence we can safely run _releaseNextLock logic
     this._releaseNextLock();
+    return Promise.resolve();
   }
 
-  private _releaseNextLock() {
+  private _releaseNextLock(): void {
     this._readLockCountList.removeHead();
     if (this._lockReleaserList.length > 0) {
       this._lockReleaserList.removeHead()();
