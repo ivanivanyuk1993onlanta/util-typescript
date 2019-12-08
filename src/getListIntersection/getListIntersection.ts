@@ -1,6 +1,6 @@
 export function getListIntersection<ItemType>(
   listA: ItemType[],
-  listB: ItemType[],
+  listB: ItemType[]
 ): ItemType[] {
   let longerList: ItemType[];
   let shorterList: ItemType[];
