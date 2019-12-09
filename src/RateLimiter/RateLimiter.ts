@@ -1,5 +1,5 @@
-import {RateLimiterConfigInterface} from './rate-limiter-config-interface';
-import {LinkedList} from 'linked-list-typescript';
+import { RateLimiterConfigInterface } from "./RateLimiterConfigInterface";
+import { LinkedList } from "linked-list-typescript";
 
 export class RateLimiter<CallbackResultType> {
   private _callForPeriodCount = 0;
@@ -12,7 +12,9 @@ export class RateLimiter<CallbackResultType> {
     this._periodInMs = config.periodInMs;
   }
 
-  public async callOrDelay(callback: () => CallbackResultType): Promise<CallbackResultType> {
+  public async callOrDelay(
+    callback: () => CallbackResultType
+  ): Promise<CallbackResultType> {
     if (this._callForPeriodCount < this._allowedCallCountPerPeriod) {
       ++this._callForPeriodCount;
       this._setTimeoutToResolveDelay();
@@ -24,7 +26,7 @@ export class RateLimiter<CallbackResultType> {
     }
   }
 
-  private _setTimeoutToResolveDelay() {
+  private _setTimeoutToResolveDelay(): void {
     // Call should be counted only while it's period lasts, then it can be
     // ignored, hence we set timeout, which either calls next delay resolve,
     // without decrementing/incrementing_again _callForPeriodCount to save CPU
