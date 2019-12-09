@@ -1,4 +1,4 @@
-import { getListIntersection } from '../getListIntersection';
+import { getListIntersection } from "../getListIntersection";
 
 describe("getListIntersection", () => {
   it("getListIntersection", () => {

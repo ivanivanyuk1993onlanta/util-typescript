@@ -1,1 +1,1 @@
-export const jsStringTypeName = typeof '';
+export const jsStringTypeName = typeof "";
