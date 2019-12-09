@@ -1,2 +1,2 @@
 // Крестик как на бюллетени
-export const unicodeBallotX = '\u2717';
+export const unicodeBallotX = "\u2717";

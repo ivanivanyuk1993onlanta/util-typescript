@@ -1,2 +1,2 @@
 // Галочка как на бюллетени
-export const unicodeCheckMark = '\u2713';
+export const unicodeCheckMark = "\u2713";
