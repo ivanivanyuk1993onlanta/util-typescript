@@ -1,3 +1,1 @@
-export class StoreResultNotActualError extends Error {
-  name: 'StoreResultOutdatedError';
-}
+// export class StoreResultNotActualError extends Error {}

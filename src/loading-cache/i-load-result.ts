@@ -1,4 +1,4 @@
-export interface ILoadResult<V> {
-  timestamp: number;
-  value: V;
-}
+// export interface ILoadResult<V> {
+//   timestamp: number;
+//   value: V;
+// }
