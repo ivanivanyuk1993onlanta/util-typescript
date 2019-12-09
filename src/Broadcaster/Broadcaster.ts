@@ -7,11 +7,11 @@ import { Subject } from "rxjs";
 export class Broadcaster {
   public readonly broadcastS$ = new Subject<void>();
 
-  public broadcast() {
+  broadcast(): void {
     this.broadcastS$.next();
   }
 
-  public broadcastAndComplete() {
+  broadcastAndComplete(): void {
     this.broadcast();
     this.broadcastS$.complete();
   }

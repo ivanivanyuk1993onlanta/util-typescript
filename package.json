@@ -8,7 +8,7 @@
   ],
   "scripts": {
     "build": "tsc",
-    "lint": "prettier --write \"src/**\"; eslint \"src/**\" --fix",
+    "lint": "prettier --write \"src/**\"; eslint \"src/**/*.ts\" --fix",
     "test": "jest"
   },
   "repository": {
