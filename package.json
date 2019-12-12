@@ -3,7 +3,7 @@
   "version": "1.0.4",
   "description": "This project is not to be used/edited as not part of other projects, hence it doesnt't have neither npm, nor tsconfig",
   "files": [
-    "*"
+    "src"
   ],
   "scripts": {
     "build": "tsc",
@@ -13,6 +13,7 @@
     "preversion": "npm run lint; npm run test",
     "test": "jest"
   },
+  "types": "*.ts",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ivanivanyuk1993/util-typescript.git"
