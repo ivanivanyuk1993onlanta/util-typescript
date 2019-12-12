@@ -2,13 +2,10 @@
   "name": "util-typescript",
   "version": "1.0.2",
   "description": "This project is not to be used/edited as not part of other projects, hence it doesnt't have neither npm, nor tsconfig",
-  "main": "dist",
-  "files": [
-    "src"
-  ],
   "scripts": {
     "build": "tsc",
     "lint": "prettier --write \"src/**\"; eslint \"src/**/*.ts\" --fix",
+    "postinstall": "npm run build",
     "postversion": "git push --follow-tags",
     "preversion": "npm run lint; npm run test",
     "test": "jest"
