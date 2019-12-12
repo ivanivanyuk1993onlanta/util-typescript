@@ -1,3 +1,9 @@
+describe("LoadingCache", () => {
+  it("shouldPass", () => {
+    expect(true).toBeTruthy();
+  });
+});
+
 // import { LoadingCache } from "./loading-cache";
 // import {
 //   forkJoin,
