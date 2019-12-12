@@ -1,6 +1,6 @@
 {
   "name": "util-typescript",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "This project is not to be used/edited as not part of other projects, hence it doesnt't have neither npm, nor tsconfig",
   "main": "dist",
   "files": [
