@@ -1,3 +1,9 @@
+describe("LoadingCache", () => {
+  it("shouldPass2", () => {
+    expect(true).toBeTruthy();
+  });
+});
+
 // import { Observable, timer } from "rxjs";
 // import { ILoadResult } from "./i-load-result";
 // import { getRandomIntFromInterval } from "../getRandomIntFromInterval/getRandomIntFromInterval";

@@ -1,3 +1,9 @@
+describe("AsyncReadWriteLock", () => {
+  it("shouldPass2", () => {
+    expect(true).toBeTruthy();
+  });
+});
+
 // // Randomized tests are to test cases human can't predict
 //
 // import {FairAsyncReadWriteLock} from '../FairAsyncReadWriteLock';

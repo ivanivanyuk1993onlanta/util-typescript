@@ -1,16 +1,18 @@
 {
   "name": "util-typescript",
-  "version": "1.0.0",
+  "version": "1.0.6",
   "description": "This project is not to be used/edited as not part of other projects, hence it doesnt't have neither npm, nor tsconfig",
-  "main": "dist",
   "files": [
     "src"
   ],
   "scripts": {
     "build": "tsc",
     "lint": "prettier --write \"src/**\"; eslint \"src/**/*.ts\" --fix",
+    "postversion": "git push --follow-tags",
+    "preversion": "npm run lint; npm run test",
     "test": "jest"
   },
+  "types": "*.ts",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ivanivanyuk1993/util-typescript.git"

@@ -1,3 +1,9 @@
+describe("AsyncReadWriteLock", () => {
+  it("shouldPass", () => {
+    expect(true).toBeTruthy();
+  });
+});
+
 // todo study why finishTime - startTime is sometimes less than expectedTime
 
 // // Simple tests are to test automatized/randomized tests
