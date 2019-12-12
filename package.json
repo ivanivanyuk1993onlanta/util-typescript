@@ -9,6 +9,7 @@
   "scripts": {
     "build": "tsc",
     "lint": "prettier --write \"src/**\"; eslint \"src/**/*.ts\" --fix",
+    "preversion": "npm run lint; npm run test",
     "test": "jest"
   },
   "repository": {
