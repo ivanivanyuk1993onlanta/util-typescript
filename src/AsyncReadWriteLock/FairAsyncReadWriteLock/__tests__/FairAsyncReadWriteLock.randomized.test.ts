@@ -1,4 +1,4 @@
-expect(true)
+expect(true).toBeTruthy();
 
 // // Randomized tests are to test cases human can't predict
 //
