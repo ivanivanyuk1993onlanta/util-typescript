@@ -10,7 +10,7 @@
     "lint": "prettier --write \"src/**\"; eslint \"src/**/*.ts\" --fix",
     "postversion": "git push --follow-tags",
     "prepare": "npm run build",
-    "preversion": "git fetch && $(git status -uno -eq '' || echo 'Branch is up to date') && npm run lint && npm run test",
+    "preversion": "git fetch && $($(git status -uno) = '' || echo 'Branch is up to date') && npm run lint && npm run test",
     "test": "jest"
   },
   "types": "*.ts",
