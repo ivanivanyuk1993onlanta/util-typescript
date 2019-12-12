@@ -8,7 +8,7 @@
   "scripts": {
     "build": "tsc",
     "lint": "prettier --write \"src/**\"; eslint \"src/**/*.ts\" --fix",
-    "postversion": "git push --follow-tags",
+    "postversion": "git push && git push --follow-tags",
     "preversion": "npm run lint; npm run test",
     "test": "jest"
   },
