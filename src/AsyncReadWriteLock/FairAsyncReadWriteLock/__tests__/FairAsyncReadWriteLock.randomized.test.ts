@@ -1,3 +1,5 @@
+expect(true)
+
 // // Randomized tests are to test cases human can't predict
 //
 // import {FairAsyncReadWriteLock} from '../FairAsyncReadWriteLock';
