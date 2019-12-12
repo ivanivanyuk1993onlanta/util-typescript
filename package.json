@@ -9,7 +9,7 @@
     "build": "tsc",
     "lint": "prettier --write \"src/**\"; eslint \"src/**/*.ts\" --fix",
     "postversion": "git push --follow-tags",
-    "preversion": "npm run lint; npm run test; git push",
+    "preversion": "npm run lint && npm run test && git push",
     "test": "jest"
   },
   "types": "*.ts",
