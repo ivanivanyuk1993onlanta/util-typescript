@@ -1,7 +1,7 @@
 describe("AsyncReadWriteLock", () => {
-  it("shouldPass", () => {
+  it("shouldPass2", () => {
     expect(true).toBeTruthy();
-  })
+  });
 });
 
 // // Randomized tests are to test cases human can't predict

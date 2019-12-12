@@ -1,7 +1,7 @@
 describe("AsyncReadWriteLock", () => {
   it("shouldPass", () => {
     expect(true).toBeTruthy();
-  })
+  });
 });
 
 // todo study why finishTime - startTime is sometimes less than expectedTime
