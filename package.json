@@ -9,6 +9,8 @@
   "scripts": {
     "build": "tsc",
     "lint": "prettier --write \"src/**\"; eslint \"src/**/*.ts\" --fix",
+    "postinstall": "tsc",
+    "preinstall": "tsc",
     "test": "jest"
   },
   "repository": {
