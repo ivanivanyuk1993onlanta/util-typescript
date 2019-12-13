@@ -1,18 +1,19 @@
 {
   "name": "util-typescript",
-  "version": "1.0.15",
+  "version": "1.0.27",
   "description": "This project is not to be used/edited as not part of other projects, hence it doesnt't have neither npm, nor tsconfig",
   "files": [
-    "src"
+    "*"
   ],
   "scripts": {
     "build": "tsc",
     "lint": "prettier --write \"src/**\"; eslint \"src/**/*.ts\" --fix",
     "postversion": "git push --follow-tags",
-    "preversion": "npm run lint && npm run test",
+    "prepare": "npm run build",
+    "preversion": "git fetch; if [ $(git rev-parse HEAD) == $(git rev-parse @{u}) ]; then echo \"Branch up to date\"; exit 1; fi; npm run lint && npm run test",
     "test": "jest"
   },
-  "types": "*.ts",
+  "types": "dist/**/*.d.ts",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ivanivanyuk1993/util-typescript.git"
