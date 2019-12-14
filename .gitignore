@@ -4,3 +4,6 @@
 # Build artifacts
 /dist
 node_modules
+
+# Git (for npm)
+.git
