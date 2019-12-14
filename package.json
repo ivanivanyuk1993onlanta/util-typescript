@@ -8,8 +8,9 @@
   "scripts": {
     "build": "tsc",
     "lint": "prettier --write \"src/**\"; eslint \"src/**/*.ts\" --fix",
+    "postinstall": "rm -rf .git",
     "postversion": "git push --follow-tags",
-    "prepare": "npm run build; rm -rf .git",
+    "prepare": "npm run build",
     "preversion": "npm run lint && npm run test",
     "test": "jest"
   },
