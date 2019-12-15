@@ -5,7 +5,7 @@ import { FieldMessageDataType } from "../../FieldMessageData/FieldMessageDataTyp
 export interface AuthDataSourceInterface {
   /**
    * Implementation of property should contain Subject, which should fire, when
-   * AuthRequiredError occurs, like when server return 401
+   * AuthRequiredError occurs, like when server returns 401
    */
   readonly authRequiredErrorS$: Subject<AuthRequiredError>;
 
@@ -22,8 +22,8 @@ export interface AuthDataSourceInterface {
   readonly isLoggedInContinuous$: Observable<boolean>;
 
   /**
-   * Implementation of property should contain Observable with boolean whether
-   * data source allows registration or not
+   * Implementation of property should contain boolean whether data source
+   * allows registration or not
    */
   readonly hasRegistration: boolean;
 
