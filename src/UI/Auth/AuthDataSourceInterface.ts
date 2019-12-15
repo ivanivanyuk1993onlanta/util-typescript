@@ -1,7 +1,8 @@
 import { Observable, Subject } from "rxjs";
 import { AuthRequiredError } from "./AuthRequiredError";
+import { FieldMessageDataType } from "../../FieldMessageData/FieldMessageDataType";
 
-export interface AuthDataSourceInterface<CredentialsType> {
+export interface AuthDataSourceInterface {
   /**
    * Implementation of property should contain Subject, which should fire, when
    * AuthRequiredError occurs, like when server return 401
@@ -29,7 +30,9 @@ export interface AuthDataSourceInterface<CredentialsType> {
   /**
    * Method implementation should log in and return void after success
    */
-  logIn$(credentials: CredentialsType): Observable<void>;
+  logIn$(
+    credentialsFieldMessageDataList: FieldMessageDataType[]
+  ): Observable<void>;
 
   /**
    * Method implementation should log out and return void after success
