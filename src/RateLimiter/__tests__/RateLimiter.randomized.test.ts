@@ -1,4 +1,4 @@
-// Randomized tests are to __tests__ not predicted by programmer errors
+// Randomized tests are to test not predicted by programmer errors
 
 import { RateLimiter } from "../RateLimiter";
 import { getRandomIntFromInterval } from "../../getRandomIntFromInterval/getRandomIntFromInterval";
