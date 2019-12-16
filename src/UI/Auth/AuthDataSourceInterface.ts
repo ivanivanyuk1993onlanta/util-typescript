@@ -1,7 +1,7 @@
-import { Observable, Subject } from 'rxjs';
-import { AuthRequiredError } from './AuthRequiredError';
-import { FieldMessageDataType } from '../../FieldMessageData/FieldMessageDataType';
-import { AuthInterface } from './AuthInterface';
+import { Observable, Subject } from "rxjs";
+import { AuthRequiredError } from "./AuthRequiredError";
+import { FieldMessageDataType } from "../../FieldMessageData/FieldMessageDataType";
+import { AuthInterface } from "./AuthInterface";
 
 export interface AuthDataSourceInterface {
   /**
@@ -26,7 +26,7 @@ export interface AuthDataSourceInterface {
    * Method implementation should log in and return void after success
    */
   logIn$(
-    credentialsFieldMessageDataList: FieldMessageDataType[],
+    credentialsFieldMessageDataList: FieldMessageDataType[]
   ): Observable<void>;
 
   /**
