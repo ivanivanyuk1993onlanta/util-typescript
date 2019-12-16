@@ -2,7 +2,7 @@
 
 import { RateLimiter } from "../RateLimiter";
 
-const allowedTimeDifference = 2;
+const allowedTimeDifference = 5;
 
 describe("RateLimiter", () => {
   let rateLimiter: RateLimiter<number>;

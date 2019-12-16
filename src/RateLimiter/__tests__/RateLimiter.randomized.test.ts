@@ -3,7 +3,7 @@
 import { RateLimiter } from "../RateLimiter";
 import { getRandomIntFromInterval } from "../../getRandomIntFromInterval/getRandomIntFromInterval";
 
-const allowedTimeDifference = 10;
+const allowedTimeDifference = 20;
 
 describe("RateLimiter", () => {
   let allowedCallCountPerPeriod: number;
