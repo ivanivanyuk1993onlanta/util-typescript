@@ -2,8 +2,9 @@ import { Observable, Subject } from "rxjs";
 import { AuthRequiredError } from "./AuthRequiredError";
 import { FieldMessageDataType } from "../../FieldMessageData/FieldMessageDataType";
 import { AuthInterface } from "./AuthInterface";
+import { HttpInterceptorInterface } from '../Http/HttpInterceptor/HttpInterceptorInterface';
 
-export interface AuthDataSourceInterface {
+export interface AuthDataSourceInterface extends HttpInterceptorInterface {
   /**
    * Implementation of property should contain Observable with auth object,
    * notice that auth object should always exist

@@ -1,10 +1,12 @@
 import { PersistentStorageInterface } from "../../PersistentStorage/PersistentStorageInterface";
-import { HttpClientInterface } from "../../HttpClient/HttpClientInterface";
+import { HttpClientInterface } from "../../Http/HttpClient/HttpClientInterface";
 
 export interface AuthDataSourceConfigInterface {
+  authIdHeaderName: string;
   hasRegistration: boolean;
   httpClient: HttpClientInterface;
-  persistentStorage: PersistentStorageInterface;
   logInUrl: string;
   logOutUrl: string;
+  persistentStorage: PersistentStorageInterface;
+  tokenHeaderName: string;
 }
