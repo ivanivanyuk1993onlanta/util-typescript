@@ -37,9 +37,6 @@ describe("RateLimiter", () => {
       const timePassedList = timeList.map(time => time - startTime);
 
       timePassedList.forEach((timePassed, index) => {
-        console.log(`allowedCallCountPerPeriod: ${allowedCallCountPerPeriod}`);
-        console.log(`periodInMs: ${periodInMs}`);
-        console.log(`index: ${index}`);
         const expectedTimePassed =
           periodInMs * Math.floor(index / allowedCallCountPerPeriod);
         expect(expectedTimePassed).toBeLessThanOrEqual(timeList[index]);
