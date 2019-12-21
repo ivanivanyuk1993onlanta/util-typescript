@@ -1,6 +1,8 @@
 import { ComparatorFuncType } from "../ComparatorFuncType";
 import { ComparatorFuncResultEnum } from "../ComparatorFuncResultEnum";
 
+// todo add readme
+
 export function getComparatorByFuncResult<ItemType, FuncResultType>(
   func: (item: ItemType) => FuncResultType
 ): ComparatorFuncType<ItemType> {
