@@ -1,7 +1,7 @@
 import { AuthDataSourceInterface } from "../AuthDataSourceInterface";
 import { BehaviorSubject, Observable, Subject } from "rxjs";
 import { AuthRequiredError } from "../AuthRequiredError";
-import { FieldMessageDataType } from "../../../TransferMessage/FieldMessageDataType";
+import { FieldMessageDataType } from "../../../MessageTransfer/FieldMessageDataType";
 import { AuthDataSourceConfigInterface } from "./AuthDataSourceConfigInterface";
 import { HttpClientInterface } from "../../HttpClient/HttpClientInterface";
 import { PersistentStorageInterface } from "../../PersistentStorage/PersistentStorageInterface";

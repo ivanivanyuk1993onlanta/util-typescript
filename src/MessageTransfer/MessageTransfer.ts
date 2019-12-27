@@ -3,7 +3,7 @@ import { SchemalessDataObjectType } from "./SchemalessDataObjectType";
 import { fieldIdIndex } from "./fieldIdIndex";
 import { fieldValueIndex } from "./fieldValueIndex";
 
-export class TransferMessage {
+export class MessageTransfer {
   static deserialize(
     fieldMessageDataList: FieldMessageDataType[]
   ): SchemalessDataObjectType {
