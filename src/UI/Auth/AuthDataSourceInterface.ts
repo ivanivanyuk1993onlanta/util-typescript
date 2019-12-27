@@ -1,6 +1,6 @@
 import { Observable, Subject } from "rxjs";
 import { AuthRequiredError } from "./AuthRequiredError";
-import { FieldMessageDataType } from "../../FieldMessageData/FieldMessageDataType";
+import { FieldMessageDataType } from "../../TransferMessage/FieldMessageDataType";
 import { AuthInterface } from "./AuthInterface";
 
 export interface AuthDataSourceInterface {
