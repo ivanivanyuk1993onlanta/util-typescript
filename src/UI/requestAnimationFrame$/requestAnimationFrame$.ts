@@ -1,7 +1,8 @@
-import { animationFrameScheduler, of } from "rxjs";
+import { animationFrameScheduler } from "rxjs";
 import { repeat } from "rxjs/operators";
 import { getSharedObservableWithLastValue } from "../../getSharedObservableWithLastValue/getSharedObservableWithLastValue";
+import { scheduleArray } from "rxjs/internal/scheduled/scheduleArray";
 
 export const requestAnimationFrame$ = getSharedObservableWithLastValue(
-  of(0, animationFrameScheduler).pipe(repeat())
+  scheduleArray([undefined], animationFrameScheduler).pipe(repeat())
 );
