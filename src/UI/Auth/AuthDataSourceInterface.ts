@@ -1,7 +1,7 @@
 import { Observable, Subject } from "rxjs";
 import { AuthRequiredError } from "./AuthRequiredError";
 import { AuthInterface } from "./AuthInterface";
-import { SchemalessDataObjectType } from '../../MessageTransfer/SchemalessDataObjectType'
+import { SchemalessDataObjectType } from "../../MessageTransfer/SchemalessDataObjectType";
 
 export interface AuthDataSourceInterface {
   /**
@@ -25,9 +25,7 @@ export interface AuthDataSourceInterface {
   /**
    * Method implementation should log in and return void after success
    */
-  logIn$(
-    credentials: SchemalessDataObjectType
-  ): Observable<void>;
+  logIn$(credentials: SchemalessDataObjectType): Observable<void>;
 
   /**
    * Method implementation should log out and return void after success

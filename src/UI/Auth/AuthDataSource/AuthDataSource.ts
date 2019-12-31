@@ -6,7 +6,7 @@ import { HttpClientInterface } from "../../HttpClient/HttpClientInterface";
 import { PersistentStorageInterface } from "../../PersistentStorage/PersistentStorageInterface";
 import { map, tap } from "rxjs/operators";
 import { AuthInterface } from "../AuthInterface";
-import { SchemalessDataObjectType } from '../../../MessageTransfer/SchemalessDataObjectType'
+import { SchemalessDataObjectType } from "../../../MessageTransfer/SchemalessDataObjectType";
 
 export class AuthDataSource implements AuthDataSourceInterface {
   readonly authContinuous$: Observable<AuthInterface | undefined>;
@@ -47,9 +47,7 @@ export class AuthDataSource implements AuthDataSourceInterface {
       });
   }
 
-  logIn$(
-    credentials: SchemalessDataObjectType
-  ): Observable<void> {
+  logIn$(credentials: SchemalessDataObjectType): Observable<void> {
     return this._httpClient
       .fetch$(this._logInUrl, {
         body: JSON.stringify(credentials)
