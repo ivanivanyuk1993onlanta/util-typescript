@@ -6,7 +6,7 @@ export interface FilterDescriptionInterface<
   FilterDescriptionType
 > {
   /**
-   * Filter data for type, like FieldMessageDataType for ConditionEquals, or FilterData[] for ConditionGroup
+   * Filter data for type, like {fieldId,fieldValue} for ConditionEquals, or FilterData[] for ConditionGroup
    */
   filterData: FilterDataType;
   /**

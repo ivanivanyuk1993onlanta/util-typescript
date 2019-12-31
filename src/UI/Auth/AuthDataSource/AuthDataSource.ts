@@ -1,12 +1,12 @@
 import { AuthDataSourceInterface } from "../AuthDataSourceInterface";
 import { BehaviorSubject, Observable, Subject } from "rxjs";
 import { AuthRequiredError } from "../AuthRequiredError";
-import { FieldMessageDataType } from "../../../MessageTransfer/FieldMessageDataType";
 import { AuthDataSourceConfigInterface } from "./AuthDataSourceConfigInterface";
 import { HttpClientInterface } from "../../HttpClient/HttpClientInterface";
 import { PersistentStorageInterface } from "../../PersistentStorage/PersistentStorageInterface";
 import { map, tap } from "rxjs/operators";
 import { AuthInterface } from "../AuthInterface";
+import { SchemalessDataObjectType } from '../../../MessageTransfer/SchemalessDataObjectType'
 
 export class AuthDataSource implements AuthDataSourceInterface {
   readonly authContinuous$: Observable<AuthInterface | undefined>;
@@ -48,11 +48,11 @@ export class AuthDataSource implements AuthDataSourceInterface {
   }
 
   logIn$(
-    credentialsFieldMessageDataList: FieldMessageDataType[]
+    credentials: SchemalessDataObjectType
   ): Observable<void> {
     return this._httpClient
       .fetch$(this._logInUrl, {
-        body: JSON.stringify(credentialsFieldMessageDataList)
+        body: JSON.stringify(credentials)
       })
       .pipe(
         tap(response => {
