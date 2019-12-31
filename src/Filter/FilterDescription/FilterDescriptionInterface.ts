@@ -16,9 +16,7 @@ export interface FilterDescriptionInterface<
    */
   filterType: FilterDescriptionType;
   /**
-   * Type of logical join, like ((filterCondition1 && filterCondition2) || filterCondition3) && filterCondition4
-   * Notice parentheses, which do not respect mathematical join rules, but allow us to apply filters lazily, for
-   * grouping there should be ConditionGroup, which should be treated as 1 filter
+   * Type of logical join, like filterCondition1 && filterCondition2 || filterCondition3 && filterCondition4
    */
   logicalJoinType: LogicalJoinTypeEnum;
 }
