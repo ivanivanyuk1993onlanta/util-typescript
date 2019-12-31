@@ -51,7 +51,7 @@ export function getMergedFilterFunc<ValueType>(
     });
 
     // On this step we have list of functions, joined by Or operator. We can safely assume that if any filter
-    // of list returns true, whole group returns true, hence we merge lists according to this knowledge
+    // of list returns true, whole group returns true, hence we merge list according to this knowledge
     return mergedFilterList.length !== 1
       ? (value: ValueType): boolean => {
           for (const filter of mergedFilterList) {
