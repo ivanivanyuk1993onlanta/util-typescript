@@ -7,7 +7,7 @@ import { getRandomIntFromInterval } from "../../../getRandomIntFromInterval/getR
 describe("getMergedFilterFunc", () => {
   it("getMergedComparatorFuncRandomized", () => {
     const funcCount = 10;
-    const numberCount = 1e3;
+    const numberCount = 1e5;
 
     const logicalJoinTypeList = [...Array(funcCount)].map(() =>
       getRandomIntFromInterval(0, 1)

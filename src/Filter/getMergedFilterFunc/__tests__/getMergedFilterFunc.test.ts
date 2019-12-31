@@ -14,7 +14,7 @@ describe("getMergedFilterFunc", () => {
     array = [
       {
         a: 10
-      },
+      }
     ];
   });
 
