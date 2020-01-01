@@ -38,12 +38,7 @@ export function getMergedFilterFunc<ValueType>(
     >[] = andFilterGroupList.map(filterList => {
       if (filterList.length !== 1) {
         return (value: ValueType): boolean => {
-          for (const filter of filterList) {
-            if (!filter(value)) {
-              return false;
-            }
-          }
-          return true;
+          return filterList.every(filter => filter(value));
         };
       } else {
         return filterList[0];
@@ -54,12 +49,7 @@ export function getMergedFilterFunc<ValueType>(
     // of list returns true, whole group returns true, hence we merge list according to this knowledge
     return mergedFilterList.length !== 1
       ? (value: ValueType): boolean => {
-          for (const filter of mergedFilterList) {
-            if (filter(value)) {
-              return true;
-            }
-          }
-          return false;
+          return mergedFilterList.some(filter => filter(value));
         }
       : mergedFilterList[0];
   }
