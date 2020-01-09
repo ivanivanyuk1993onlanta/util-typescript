@@ -6,8 +6,8 @@ import { getRandomIntFromInterval } from "../../../getRandomIntFromInterval/getR
 
 describe("getMergedFilterFunc", () => {
   it("getMergedComparatorFuncRandomized", () => {
-    const funcCount = 10;
-    const numberCount = 1e5;
+    const funcCount = 4;
+    const numberCount = 1e4;
 
     const logicalJoinTypeList = [...Array(funcCount)].map(() =>
       getRandomIntFromInterval(0, 1)
@@ -53,9 +53,15 @@ describe("getMergedFilterFunc", () => {
       getRandomIntFromInterval(0, 50)
     );
 
+    const filterTime = performance.now();
     const filteredList = valueList.filter(mergedFilter);
+    const filterTime2 = performance.now();
+
+    const filterTime3 = performance.now();
     const testList = valueList.filter(testFilter);
+    const filterTime4 = performance.now();
 
     expect(filteredList).toEqual(testList);
+    expect(filterTime2 - filterTime).toBeLessThan(filterTime4 - filterTime3);
   });
 });
